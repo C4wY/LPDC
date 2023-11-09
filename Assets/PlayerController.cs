@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
         newVelocity.z = Input.GetAxis("Vertical") * speed;
         rb.velocity = newVelocity;
         
-        // rb.velocity = new Vector3(newVelocity.x * walkSpeed, rb.velocity.y, newVelocity.y * walkSpeed);    
+        rb.velocity = new Vector3(newVelocity.x * walkSpeed, rb.velocity.z, newVelocity.z * walkSpeed);    
         
         anim.SetFloat("Speed", rb.velocity.magnitude);
         
