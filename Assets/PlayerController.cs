@@ -16,24 +16,24 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed;
     public float runSpeed;
     public float jumpForce;
-    
+
     public LayerMask whatIsGround;
     public Transform groundPoint;
     private bool isGrounded;
-    
+
     public Animator anim;
 
     public SpriteRenderer theSR;
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void FixedUpdate()
@@ -43,33 +43,34 @@ public class PlayerController : MonoBehaviour
         newVelocity.x = Input.GetAxis("Horizontal") * speed;
         newVelocity.z = Input.GetAxis("Vertical") * speed;
         rb.velocity = newVelocity;
-        
-        rb.velocity = new Vector3(newVelocity.x * walkSpeed, rb.velocity.z, newVelocity.z * walkSpeed);    
-        
+
+        rb.velocity = new Vector3(newVelocity.x * walkSpeed, rb.velocity.z, newVelocity.z * walkSpeed);
+
         anim.SetFloat("Speed", rb.velocity.magnitude);
-        
-        RaycastHit hit;
-        if(Physics.Raycast(groundPoint.position, Vector3.down, out hit, .3f, whatIsGround))
-        {
-            isGrounded = true;
-        } else 
+
+        if (Physics.Raycast(groundPoint.position, Vector3.down, out var hit, .3f, whatIsGround))
         {
             isGrounded = true;
         }
+        else
+        {
+            isGrounded = false;
+        }
 
-        if(Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.velocity += new Vector3(0f, jumpForce, 0f);
         }
 
-        anim.SetBool("onGround", isGrounded); 
-        
-        if(theSR.flipX && newVelocity.x < 0)
+        anim.SetBool("onGround", isGrounded);
+
+        if (theSR.flipX && newVelocity.x < 0)
         {
             theSR.flipX = true;
-        } else if(theSR.flipX && newVelocity.x > 0)
+        }
+        else if (theSR.flipX && newVelocity.x > 0)
         {
-            theSR.flipX = false; 
+            theSR.flipX = false;
         }
     }
 }

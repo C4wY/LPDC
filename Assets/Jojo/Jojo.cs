@@ -48,7 +48,7 @@ public class Jojo : MonoBehaviour
         }
         else
         {
-            isGrounded = true;
+            isGrounded = false;
         }
         animator.SetBool("OnGround", isGrounded);
 
