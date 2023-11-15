@@ -7,49 +7,32 @@ using UnityEngine;
 public class Follower : MonoBehaviour
 {
 
+    public Transform target;
     public float speed = 5f;
     public float targetDistanceMax = 3f;
+
     float targetDistanceMin = 0.5f;
     new Rigidbody rigidbody;
     Animator animator;
-    Transform target;
+    SpriteRenderer spriteRenderer;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         rigidbody = GetComponent<Rigidbody>();
-
-
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if (target == null)
-        {
-            Targeting();
-        }
         TargetFollow();
         FlipSprite();
     }
 
-    private void Targeting()
-    {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-
-        if (players.Length > 0)
-        {
-            Debug.Log("Player found!");
-            target = players[0].transform;
-        }
-        else
-        {
-            Debug.Log("No player found!");
-        }
-    }
 
     void TargetFollow()
     {
@@ -75,11 +58,11 @@ public class Follower : MonoBehaviour
     {
         if (target.position.x > transform.position.x)
         {
-            transform.localScale = new(1f, 1f, 1f);
+            spriteRenderer.flipX = false;
         }
         else
         {
-            transform.localScale = new(-1f, 1, 1);
+            spriteRenderer.flipX = true;
         }
     }
 

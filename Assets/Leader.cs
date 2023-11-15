@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Jojo : MonoBehaviour
+public class Leader : MonoBehaviour
 {
     public float walkSpeed = 10f;
     public float runSpeed = 20f;
