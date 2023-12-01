@@ -8,10 +8,10 @@ public class Follower : MonoBehaviour
 {
 
     public Transform target;
-    public float speed = 5f;
-    public float targetDistanceMax = 3f;
+    float speed = 8f;
+    float targetDistanceMax = 3f;
 
-    float targetDistanceMin = 0.5f;
+    float targetDistanceMin = 1f;
     new Rigidbody rigidbody;
     Animator animator;
     SpriteRenderer spriteRenderer;

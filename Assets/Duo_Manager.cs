@@ -69,7 +69,7 @@ public class Duo_Manager : MonoBehaviour
     {
         var sr = avatar.GetComponentInChildren<SpriteRenderer>();
         sr.sortingOrder = 0;
-        sr.color = new Color(0.8f, 0.8f, 0.8f);
+        sr.color = new Color(0.5f, 0.5f, 0.5f);
 
         avatar.GetComponent<Leader>().enabled = false;
         avatar.GetComponent<Follower>().enabled = true;
@@ -77,8 +77,6 @@ public class Duo_Manager : MonoBehaviour
 
     void UpdateCamera()
     {
-        // camera.transform.position = Vector3.Lerp(camera.transform.position, leader.position + cameraOffset, 3.5f * Time.deltaTime);
-        // camera.transform.position = leader.position + cameraOffset;
         camera.transform.position += (leader.position + cameraOffset - camera.transform.position) * (1f - Mathf.Pow(0.01f, Time.deltaTime));
     }
 

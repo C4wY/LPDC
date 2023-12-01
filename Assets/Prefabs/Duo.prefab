@@ -233,6 +233,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sora
       objectReference: {fileID: 0}
+    - target: {fileID: 2285900282407973433, guid: cca0993fd7fb1f44e94c95ad26ae736d,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cca0993fd7fb1f44e94c95ad26ae736d, type: 3}
 --- !u!4 &1638583105262334075 stripped
@@ -311,7 +316,7 @@ PrefabInstance:
     - target: {fileID: 2285900282407973433, guid: cca0993fd7fb1f44e94c95ad26ae736d,
         type: 3}
       propertyPath: m_SortingOrder
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cca0993fd7fb1f44e94c95ad26ae736d, type: 3}
