@@ -11,8 +11,8 @@ public class Duo_Manager : MonoBehaviour
         Sora,
         Doom,
     }
-
     public AvatarID currentAvatarID = AvatarID.Sora;
+    public int baseSortingOrder = 100;
 
     Transform sora, doom;
     Transform leader, follower;
@@ -58,7 +58,7 @@ public class Duo_Manager : MonoBehaviour
     void ActiveAvatar(Transform avatar)
     {
         var sr = avatar.GetComponentInChildren<SpriteRenderer>();
-        sr.sortingOrder = 1;
+        sr.sortingOrder = baseSortingOrder + 1;
         sr.color = Color.white;
 
         avatar.GetComponent<Leader>().enabled = true;
@@ -68,7 +68,7 @@ public class Duo_Manager : MonoBehaviour
     void UnActiveAvatar(Transform avatar)
     {
         var sr = avatar.GetComponentInChildren<SpriteRenderer>();
-        sr.sortingOrder = 0;
+        sr.sortingOrder = baseSortingOrder;
         sr.color = new Color(0.5f, 0.5f, 0.5f);
 
         avatar.GetComponent<Leader>().enabled = false;

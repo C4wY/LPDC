@@ -408,7 +408,7 @@ Transform:
   m_GameObject: {fileID: 46866603}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.9077, y: -1.3863, z: 0}
-  m_LocalScale: {x: 14.872951, y: 2.2327, z: 1}
+  m_LocalScale: {x: 150, y: 2.2327, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -438,7 +438,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 67756338}
   m_LocalRotation: {x: 0.055471487, y: -0, z: -0, w: 0.9984603}
-  m_LocalPosition: {x: -0.5899998, y: 2.293, z: -6.25}
+  m_LocalPosition: {x: -0.5899998, y: 1.68, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4319,37 +4319,42 @@ PrefabInstance:
     - target: {fileID: 1638583104931692163, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1638583104941689940, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1638583105262334079, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3029206063986503192, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3029206064303198771, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3029206064318456036, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3294291724037531189, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Name
       value: Duo
+      objectReference: {fileID: 0}
+    - target: {fileID: 3294291724037531189, guid: ed97c2888f803a1449c28683959bc5de,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6201366513717551083, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
@@ -4409,7 +4414,7 @@ PrefabInstance:
     - target: {fileID: 7687747573813453089, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed97c2888f803a1449c28683959bc5de, type: 3}
