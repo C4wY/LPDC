@@ -561,7 +561,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4793586546069067864
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1098,6 +1098,12 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6600326554020369693, guid: cca0993fd7fb1f44e94c95ad26ae736d,
+        type: 3}
+      propertyPath: ropeSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fd18ae2676c500b4cb9add6bd61de539,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cca0993fd7fb1f44e94c95ad26ae736d, type: 3}
 --- !u!4 &1638583105262334075 stripped

@@ -80,6 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f05a9d11cd91046bba1e679129e4f655, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveMode: 0
   walkSpeed: 10
   runSpeed: 20
   jumpForce: 12
@@ -113,6 +114,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 10
+  grabVelocity: 7.5
+  grapplinDuration: 0.75
+  grapplinDistance: 2
+  grapplinForce: 100
+  ropeSprite: {fileID: 21300000, guid: fd18ae2676c500b4cb9add6bd61de539, type: 3}
+  grabDirection: {x: 1, y: 0, z: 0}
+  gizmoColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &2285900282407973436
 GameObject:
   m_ObjectHideFlags: 0
