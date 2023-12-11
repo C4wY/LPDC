@@ -5,6 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Leader : MonoBehaviour
 {
+    public enum MoveMode
+    {
+        FreeMove,
+        NoFreeMove,
+    }
+
+    public MoveMode moveMode = MoveMode.FreeMove;
+
     public float walkSpeed = 10f;
     public float runSpeed = 20f;
     public float jumpForce = 8f;
@@ -26,7 +34,7 @@ public class Leader : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 
-    void Update()
+    void FreeMoveUpdate()
     {
         Vector3 newVelocity = new(0, rigidbody.velocity.y, 0);
 
@@ -56,5 +64,11 @@ public class Leader : MonoBehaviour
         {
             spriteRenderer.flipX = newVelocity.x < 0;
         }
+    }
+
+    void Update()
+    {
+        if (moveMode == MoveMode.FreeMove)
+            FreeMoveUpdate();
     }
 }
