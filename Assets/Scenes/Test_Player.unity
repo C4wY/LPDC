@@ -4411,10 +4411,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6833858373339547003, guid: ed97c2888f803a1449c28683959bc5de,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 75.00003
+      objectReference: {fileID: 0}
+    - target: {fileID: 6833858373339547003, guid: ed97c2888f803a1449c28683959bc5de,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -60
+      objectReference: {fileID: 0}
     - target: {fileID: 7687747573813453089, guid: ed97c2888f803a1449c28683959bc5de,
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8094530987609222420, guid: ed97c2888f803a1449c28683959bc5de,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TogglePause
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed97c2888f803a1449c28683959bc5de, type: 3}
