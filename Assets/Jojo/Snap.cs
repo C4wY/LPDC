@@ -13,14 +13,19 @@ public class Snap : MonoBehaviour
         Quarter,
     }
 
+    public static float StepToFloat(Step step) => step switch
+    {
+
+    };
+
     public Step step = Step.Unit;
 
     void SnapUpdate()
     {
         var p = transform.localPosition;
         var s = transform.localScale;
-        var min = Vector3Int.FloorToInt(p - s / 2);
-        var max = Vector3Int.CeilToInt(p + s / 2);
+        var min = Vector3Int.RoundToInt(p - s / 2);
+        var max = Vector3Int.RoundToInt(p + Vector3.one * 0.01f + s / 2);
         var bounds = new BoundsInt(min, max - min);
         transform.localPosition = bounds.center;
         transform.localScale = bounds.size;
