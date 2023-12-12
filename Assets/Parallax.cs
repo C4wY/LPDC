@@ -22,7 +22,7 @@ public class Parallax : MonoBehaviour
     void Update()
     {
         float temp = (cam.transform.position.x * (1 - parallaxEffect));
-        float dist = (cam.transform.position.x * parallaxEffect);
+        float dist = (cam.transform.position.x * parallaxEffect + 10f);
 
         transform.position = new Vector3(startposition + dist, transform.position.y, transform.position.z);
 
