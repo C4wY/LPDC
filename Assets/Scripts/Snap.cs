@@ -18,6 +18,7 @@ public class Snap : MonoBehaviour
         Step.Unit => 1,
         Step.Half => .5f,
         Step.Quarter => .25f,
+        _ => throw new("Invalid step!"),
     };
 
     public Step step = Step.Unit;
