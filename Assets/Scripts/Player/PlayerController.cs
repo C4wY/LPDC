@@ -22,9 +22,24 @@ public class PlayerController : MonoBehaviour
             velocity.y = GetJumpVelocityY();
             rigidbody.velocity = velocity;
         }
+    }
 
-        Vector3 newVelocity = new(0, rigidbody.velocity.y, 0);
-        newVelocity.x = Input.GetAxis("Horizontal") * speed;
-        rigidbody.velocity = newVelocity;
+    void FixedUpdate()
+    {
+        var rigidbody = GetComponent<Rigidbody>();
+
+        var velocityX = Input.GetAxis("Horizontal") * speed;
+        rigidbody.velocity = new(
+            velocityX,
+            rigidbody.velocity.y,
+            0);
+
+        var ground = GetComponent<Ground>();
+        if (ground.HasGroundPoint(out var groundPoint))
+        {
+            var (x, y, z) = rigidbody.position;
+            z = Mathf.Lerp(z, groundPoint.z, 0.33f);
+            rigidbody.position = new(x, y, z);
+        }
     }
 }
