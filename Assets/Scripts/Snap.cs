@@ -5,7 +5,7 @@ using UnityEngine;
 [ExecuteAlways]
 public class Snap : MonoBehaviour
 {
-    public enum Step 
+    public enum Step
     {
         Free,
         Unit,
@@ -26,16 +26,26 @@ public class Snap : MonoBehaviour
     {
         if (step != Step.Free)
         {
-            var p = transform.localPosition;
-            var s = transform.localScale;
-            var scalar = StepToFloat(step);
-            var min = (Vector3)Vector3Int.RoundToInt((p - s / 2) / scalar) * scalar;
-            var max = (Vector3)Vector3Int.RoundToInt((p + Vector3.one * 0.01f + s / 2) / scalar) * scalar;
-            var bounds = new Bounds((min + max) / 2, max - min);
-            transform.localPosition = bounds.center;
-            transform.localScale = bounds.size;
-            transform.rotation = Quaternion.identity;
+            ApplySnap();
         }
+    }
+
+    void ApplySnap()
+    {
+        var scalar = StepToFloat(step);
+
+        var position = transform.localPosition / scalar;
+        var scale = transform.localScale / scalar;
+
+        var size = scale;
+        var min = Vector3Int.RoundToInt(position - size / 2);
+        var sizeInt = Vector3Int.Max(Vector3Int.RoundToInt(size), Vector3Int.one);
+        var bounds = new BoundsInt(min, sizeInt);
+
+        transform.localScale = (Vector3)bounds.size * scalar;
+        transform.SetLocalPositionAndRotation(
+            bounds.center * scalar,
+            Quaternion.identity);
     }
 
     // Update is called once per frame
