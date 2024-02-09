@@ -8,4 +8,17 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Main Menu/Scenes/MainMenu.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Main Menu/Scenes/Controles.unity
+    guid: 58f6f296f37d8594bb8026df7e033556
+  - enabled: 1
+    path: Assets/Main Menu/Scenes/Son.unity
+    guid: d499e7da2a2291044b27f829330f292f
+  - enabled: 1
+    path: Assets/Main Menu/Scenes/Video.unity
+    guid: 7fed90baea6d7554d84c3a47f40f45e3
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
