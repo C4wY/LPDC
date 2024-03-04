@@ -11,6 +11,19 @@ public class jnc_UISprite : MonoBehaviour
 
     public Color overrideColor = Color.white;
 
+    void OnEnable()
+    {
+        if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
+        {
+            spriteRenderer.material = new Material(spriteRenderer.material);
+        }
+
+        if (TryGetComponent<Image>(out var image))
+        {
+            image.material = new Material(image.material);
+        }
+    }
+
     void Update()
     {
         if (TryGetComponent<SpriteRenderer>(out var spriteRenderer))
