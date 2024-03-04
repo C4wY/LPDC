@@ -7,7 +7,7 @@ public class Controles : MonoBehaviour
 {
     public void ShowControl ()
     {
-        SceneManager.LoadSceneAsync(2);
+        SceneManager.LoadSceneAsync(1);
     }
     
 }

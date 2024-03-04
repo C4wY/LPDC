@@ -7,7 +7,7 @@ public class Video : MonoBehaviour
 {
     public void VideoO ()
     {
-        SceneManager.LoadSceneAsync(4);
+        SceneManager.LoadSceneAsync(3);
     }
     
 }
