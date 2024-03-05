@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d3a03cc3c51c7a44893c6cab6c99b6fe
+timeCreated: 1476054271
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 73504
+  packageName: Toon Bear Sprites with Animations
+  packageVersion: 1.0
+  assetPath: Assets/2D ToonBear/Animations/2D ToonBear Idle.anim
+  uploadId: 141805

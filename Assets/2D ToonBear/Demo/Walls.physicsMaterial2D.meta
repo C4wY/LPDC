@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7ce4581f021d9c045a1dad5e67b2a152
+timeCreated: 1476114638
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 73504
+  packageName: Toon Bear Sprites with Animations
+  packageVersion: 1.0
+  assetPath: Assets/2D ToonBear/Demo/Walls.physicsMaterial2D
+  uploadId: 141805
