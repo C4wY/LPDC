@@ -1,7 +1,5 @@
 using System.Linq;
 using UnityEngine;
-using System;
-
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,6 +8,19 @@ using UnityEditor;
 [ExecuteAlways]
 public class Ground : MonoBehaviour
 {
+    [System.Serializable]
+    public class GroundParameters
+    {
+        [Range(0, 1)]
+        public float pivotOffsetY = 0.95f;
+
+        [Tooltip("The maximum distance of the raycast from the offseted pivot point.")]
+        public float rayMaxDistance = 3;
+
+        [Tooltip("The maximum distance from the ground to be considered as a being on the ground.")]
+        public float maxDistance = 0.1f;
+    }
+
     public struct GroundRaycastInfo
     {
         public bool wallHit;
@@ -42,9 +53,7 @@ public class Ground : MonoBehaviour
 
     public static float[] layerZPositions = { 0.5f, 1.5f, 2.5f, 3.5f };
 
-    [Range(0, 1)]
-    public float offsetY = 0.9f;
-    public float maxDistance = 3;
+    public GroundParameters parameters = new();
 
     public int lockLayerIndex = -1;
 
@@ -54,6 +63,8 @@ public class Ground : MonoBehaviour
     public bool HasGroundPoint { get; private set; } = false;
     public int GroundPointLayerIndex { get; private set; } = -1;
     public Vector3 GroundPoint { get; private set; }
+    public float GroundDistance { get; private set; }
+    public bool IsGrounded { get; private set; }
 
     void UpdateHitInfos()
     {
@@ -71,14 +82,14 @@ public class Ground : MonoBehaviour
 
                 var zDelta = layerZPosition - z;
                 var zDeltaAbs = Mathf.Abs(zDelta);
-                var wallRayOrigin = new Vector3(x, y - offsetY, z);
+                var wallRayOrigin = new Vector3(x, y - parameters.pivotOffsetY, z);
                 var wallRayDirection = zDelta > 0 ? Vector3.forward : Vector3.back;
                 var wallRay = new Ray(wallRayOrigin, wallRayDirection);
                 var wallHit = zDeltaAbs > 0.5f && Physics.Raycast(wallRay, out wallInfo, maxDistance: zDeltaAbs, layerMask, QueryTriggerInteraction.Ignore);
 
                 var groundOrigin = new Vector3(x, y, layerZPosition);
                 var groundRay = new Ray(groundOrigin, Vector3.down);
-                var groundHit = wallHit == false && Physics.Raycast(groundRay, out groundInfo, maxDistance + offsetY, layerMask, QueryTriggerInteraction.Ignore);
+                var groundHit = wallHit == false && Physics.Raycast(groundRay, out groundInfo, parameters.rayMaxDistance + parameters.pivotOffsetY, layerMask, QueryTriggerInteraction.Ignore);
 
                 return new GroundRaycastInfo(wallHit, wallRay, wallInfo, groundHit, groundRay, groundInfo);
             })
@@ -153,6 +164,17 @@ public class Ground : MonoBehaviour
         CurrentLayerIndex = Mathf.FloorToInt(transform.position.z);
         UpdateHitInfos();
         UpdateNearestGroundPoint();
+
+        if (HasGroundPoint)
+        {
+            GroundDistance = transform.position.y + parameters.pivotOffsetY - GroundPoint.y;
+            IsGrounded = GroundDistance < parameters.maxDistance;
+        }
+        else
+        {
+            GroundDistance = float.PositiveInfinity;
+            IsGrounded = false;
+        }
     }
 
     void OnDrawGizmos()
@@ -178,7 +200,7 @@ public class Ground : MonoBehaviour
                 }
                 else
                 {
-                    Gizmos.DrawRay(groundRay.origin, groundRay.direction * (maxDistance + offsetY));
+                    Gizmos.DrawRay(groundRay.origin, groundRay.direction * (parameters.rayMaxDistance + parameters.pivotOffsetY));
                 }
             }
         }
