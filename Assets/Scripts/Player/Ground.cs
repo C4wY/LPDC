@@ -1,5 +1,11 @@
 using System.Linq;
 using UnityEngine;
+using System;
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [ExecuteAlways]
 public class Ground : MonoBehaviour
@@ -39,20 +45,15 @@ public class Ground : MonoBehaviour
     [Range(0, 1)]
     public float offsetY = 0.9f;
     public float maxDistance = 3;
-    public bool forceDown;
+
+    public int lockLayerIndex = -1;
 
     GroundRaycastInfo[] raycastInfos = { };
 
-    int currentLayerIndex;
-    bool hasGroundPoint;
-    int groundPointLayerIndex;
-    Vector3 groundPoint;
-
-    public bool HasGroundPoint(out Vector3 groundPoint)
-    {
-        groundPoint = this.groundPoint;
-        return hasGroundPoint;
-    }
+    public int CurrentLayerIndex { get; private set; } = -1;
+    public bool HasGroundPoint { get; private set; } = false;
+    public int GroundPointLayerIndex { get; private set; } = -1;
+    public Vector3 GroundPoint { get; private set; }
 
     void UpdateHitInfos()
     {
@@ -86,48 +87,70 @@ public class Ground : MonoBehaviour
 
     void UpdateNearestGroundPoint()
     {
-        hasGroundPoint = false;
+        HasGroundPoint = false;
         for (int index = 0; index < layerZPositions.Length; index++)
         {
             var info = raycastInfos[index];
             if (info.groundHit)
             {
-                if (hasGroundPoint == false)
+                if (HasGroundPoint == false)
                 {
-                    hasGroundPoint = true;
-                    groundPoint = info.groundInfo.point;
-                    groundPointLayerIndex = index;
+                    HasGroundPoint = true;
+                    GroundPoint = info.groundInfo.point;
+                    GroundPointLayerIndex = index;
                 }
                 else
                 {
-                    if (groundPoint.y < info.groundInfo.point.y)
+                    switch (MathUtils.Compare(GroundPoint.y, info.groundInfo.point.y))
                     {
-                        groundPoint = info.groundInfo.point;
-                        groundPointLayerIndex = index;
-                    }
-                }
-            }
-        }
+                        case MathUtils.CompareResult.Equal:
+                            // If the ground points are at the same height, choose the nearest one.
+                            if (Mathf.Abs(GroundPoint.z - transform.position.z) > Mathf.Abs(info.groundInfo.point.z - transform.position.z))
+                            {
+                                GroundPoint = info.groundInfo.point;
+                                GroundPointLayerIndex = index;
+                            }
+                            break;
 
-        if (Input.GetAxis("Vertical") < -0.1f || forceDown)
-        {
-            if (hasGroundPoint)
-            {
-                if (groundPointLayerIndex > 0 && Mathf.Abs(layerZPositions[groundPointLayerIndex] - transform.position.z) < 1.1f)
-                {
-                    var previous = raycastInfos[groundPointLayerIndex - 1];
-                    if (previous.groundHit)
-                    {
-                        groundPoint = previous.groundInfo.point;
+                        case MathUtils.CompareResult.Less:
+                            GroundPoint = info.groundInfo.point;
+                            GroundPointLayerIndex = index;
+                            break;
                     }
                 }
+
+                if (HasGroundPoint && lockLayerIndex == GroundPointLayerIndex && lockLayerIndex == index)
+                    break; // Don't go further (to the next layer, to the background).
             }
         }
     }
 
+    /// <summary>
+    /// Tries to go down to the nearest foreground layer. Returns true if it's possible.
+    /// </summary>
+    public bool TryGetReachableForegroundLayerIndex(out int layerIndex)
+    {
+        layerIndex = -1;
+        if (HasGroundPoint == false)
+            // Currently in the air.
+            return false;
+
+        if (GroundPointLayerIndex == 0)
+            // Already at the most foreground layer (0).
+            return false;
+
+        var previous = raycastInfos[GroundPointLayerIndex - 1];
+        if (previous.groundHit == false)
+            // No ground at the foreground layer.
+            return false;
+
+        layerIndex = GroundPointLayerIndex - 1;
+        return true;
+    }
+
     void Update()
     {
-        currentLayerIndex = Mathf.FloorToInt(transform.position.z);
+        CurrentLayerIndex = Mathf.FloorToInt(transform.position.z);
         UpdateHitInfos();
         UpdateNearestGroundPoint();
     }
@@ -160,11 +183,28 @@ public class Ground : MonoBehaviour
             }
         }
 
-        if (hasGroundPoint)
+        if (HasGroundPoint)
         {
             Gizmos.color = Color.yellow;
-            GizmosUtils.DrawCircle(groundPoint, Vector3.up, 0.2f);
-            GizmosUtils.DrawCircle(groundPoint, Vector3.up, 0.3f);
+            GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.2f);
+            GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.3f);
         }
     }
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(Ground))]
+    public class GroundEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+
+            var Target = (Ground)target;
+            GUILayout.Label($"CurrentLayerIndex: {Target.CurrentLayerIndex}");
+            GUILayout.Label($"HasGroundPoint: {Target.HasGroundPoint}");
+            GUILayout.Label($"GroundPointLayerIndex: {Target.GroundPointLayerIndex}");
+            GUILayout.Label($"GroundPoint: {Target.GroundPoint}");
+        }
+    }
+#endif
 }
