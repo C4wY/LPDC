@@ -1,25 +1,31 @@
 using UnityEngine;
 
-public class SpriteHandler : MonoBehaviour
+namespace Player
 {
-    Animator animator;
-    new Rigidbody rigidbody;
-    SpriteRenderer spriteRenderer;
-
-    void OnEnable()
+    public class SpriteHandler : MonoBehaviour
     {
-        rigidbody = GetComponentInParent<Rigidbody>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
+        Player player;
+        Animator animator;
+        new Rigidbody rigidbody;
+        SpriteRenderer spriteRenderer;
 
-    void FixedUpdate()
-    {
-        var moveXInput = Input.GetAxis("Horizontal");
-        animator.SetFloat("HSpeed", Mathf.Abs(moveXInput));
+        void OnEnable()
+        {
+            player = GetComponentInParent<Player>();
+            rigidbody = GetComponentInParent<Rigidbody>();
+            animator = GetComponent<Animator>();
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        }
 
-        var velocity = rigidbody.velocity;
-        if (Mathf.Abs(velocity.x) > 0.1f)
-            spriteRenderer.flipX = velocity.x < 0;
+        void FixedUpdate()
+        {
+            var velocity = rigidbody.velocity;
+
+            var x = player.IsLeader ? Input.GetAxis("Horizontal") : velocity.x;
+            animator.SetFloat("HSpeed", Mathf.Abs(x));
+
+            if (Mathf.Abs(velocity.x) > 0.1f)
+                spriteRenderer.flipX = velocity.x < 0;
+        }
     }
 }

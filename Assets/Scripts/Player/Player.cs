@@ -16,19 +16,26 @@ namespace Player
 
         public PairRole role;
 
-        LeaderController leader;
-        FollowerController follower;
+        public bool IsLeader =>
+            role == PairRole.Leader;
+
+        public bool IsFollower =>
+            role == PairRole.Follower;
+
+        LeaderController leaderController;
+        FollowerController followerController;
 
         void RoleUpdate()
         {
-            leader.enabled = role == PairRole.Leader;
-            follower.enabled = role == PairRole.Follower;
+            leaderController.enabled = role == PairRole.Leader;
+            followerController.enabled = role == PairRole.Follower;
+            gameObject.name = $"{GetType().Name} ({role})";
         }
 
         void OnEnable()
         {
-            leader = GetComponent<LeaderController>();
-            follower = GetComponent<FollowerController>();
+            leaderController = GetComponent<LeaderController>();
+            followerController = GetComponent<FollowerController>();
 
             RoleUpdate();
         }
@@ -43,8 +50,20 @@ namespace Player
         {
             EditorApplication.delayCall += () =>
             {
-                if (leader != null)
+                // Debug.Log($"leader: {leader}, follower: {follower}");
+                if (leaderController != null)
+                {
                     RoleUpdate();
+
+                    foreach (var player in FindObjectsByType<Player>(FindObjectsSortMode.None))
+                    {
+                        if (player == this)
+                            continue;
+
+                        player.role = role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
+                        player.RoleUpdate();
+                    }
+                }
             };
         }
 #endif
