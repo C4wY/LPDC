@@ -66,25 +66,54 @@ namespace Avatar
         }
 
 #if UNITY_EDITOR
+        void UpdateAllAvatar()
+        {
+            foreach (var player in FindObjectsByType<Avatar>(FindObjectsSortMode.None))
+            {
+                if (player != this)
+                    player.role = role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
+
+                player.RoleUpdate();
+            }
+        }
         void OnValidate()
         {
             EditorApplication.delayCall += () =>
             {
                 // Debug.Log($"leader: {leader}, follower: {follower}");
                 if (LeaderController != null)
-                {
-                    RoleUpdate();
+                    UpdateAllAvatar();
+            };
+        }
 
+        [CustomEditor(typeof(Avatar))]
+        public class AvatarEditor : Editor
+        {
+            Avatar Target =>
+                (Avatar)target;
+
+            public override void OnInspectorGUI()
+            {
+                base.OnInspectorGUI();
+
+                var otherRole = Target.role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
+                if (GUILayout.Button($"Switch to {otherRole}"))
+                {
+                    Target.role = otherRole;
+                    Target.UpdateAllAvatar();
+                }
+
+                if (GUILayout.Button("Regroup all Avatar"))
+                {
                     foreach (var player in FindObjectsByType<Avatar>(FindObjectsSortMode.None))
                     {
-                        if (player == this)
+                        if (player == Target)
                             continue;
 
-                        player.role = role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
-                        player.RoleUpdate();
+                        player.transform.position = Target.transform.position + Vector3.right * 0.2f;
                     }
                 }
-            };
+            }
         }
 #endif
     }

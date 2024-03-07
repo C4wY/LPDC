@@ -7,7 +7,7 @@ namespace Avatar
     {
         public float jumpHeight = 1.33f;
         public float jumpCooldown = 0.33f;
-        public float speed = 5;
+        public float groundVelocity = 5;
 
         [Tooltip("The time in seconds to wait before being able to go backward again (backward in Unity, is going foreground in a theater).")]
         public float goBackwardCooldown = 0.33f;
@@ -55,7 +55,7 @@ namespace Avatar
 
         public void HorizontalMoveUpdate(float inputX)
         {
-            var x = inputX * Parameters.speed;
+            var x = inputX * Parameters.groundVelocity;
             var y = avatar.Rigidbody.velocity.y;
             avatar.Rigidbody.velocity = new(x, y, 0);
         }

@@ -14,7 +14,7 @@ namespace Avatar
     [System.Serializable]
     public class LeaderControllerParameters
     {
-        public float movePointHistoryDistance = 0.25f;
+        public float traceIntervalDistanceMax = 0.25f;
 
         public bool drawGizmos = true;
     }
@@ -62,7 +62,7 @@ namespace Avatar
         void TraceUpdate()
         {
             var delta = transform.position - trace.Current.position;
-            if (delta.sqrMagnitude > Parameters.movePointHistoryDistance * Parameters.movePointHistoryDistance)
+            if (delta.sqrMagnitude > Parameters.traceIntervalDistanceMax * Parameters.traceIntervalDistanceMax)
             {
                 var movePoint = new TracePoint
                 {

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Avatar
@@ -24,33 +25,40 @@ namespace Avatar
     public class Trace
     {
         public readonly int capacity;
-        public readonly TracePoint[] movePoints;
         public int Count { get; private set; } = 0;
+
+        readonly TracePoint[] points;
         int index;
 
         public Trace(int capacity = 200)
         {
             this.capacity = capacity;
 
-            movePoints = new TracePoint[capacity];
+            points = new TracePoint[capacity];
             index = 0;
             Count = 0;
         }
 
         public void Add(TracePoint movePoint)
         {
-            movePoints[index] = movePoint;
+            points[index] = movePoint;
             index = (index + 1) % capacity;
             Count = Mathf.Min(Count + 1, capacity);
         }
 
         public TracePoint Current =>
-            movePoints[(index - 1 + capacity) % capacity];
+            points[(index - 1 + capacity) % capacity];
 
         public TracePoint GetOld(int historyIndex)
         {
             historyIndex = Mathf.Clamp(historyIndex, 0, Count - 1);
-            return movePoints[(index - 1 - historyIndex + capacity) % capacity];
+            return points[(index - 1 - historyIndex + capacity) % capacity];
+        }
+
+        public IEnumerable<(int index, TracePoint point)> Entries()
+        {
+            for (int i = 0; i < Count; i++)
+                yield return (i, GetOld(i));
         }
 
         public TracePoint GetLatestBefore(float time)
