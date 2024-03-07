@@ -32,4 +32,9 @@ public class ChangementQualite : MonoBehaviour
         Debug.Log("La qualité a changé en : " + qualityIndex.ToString());
         QualitySettings.SetQualityLevel(qualityIndex);
     }
+
+    public void SetFullscreen (bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+    }
 }
