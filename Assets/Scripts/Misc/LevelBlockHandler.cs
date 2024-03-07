@@ -22,6 +22,8 @@ public class LevelBlockHandler : MonoBehaviour
             enabled ??= !mr.enabled;
             mr.enabled = enabled.Value;
             mr.receiveShadows = false;
+
+            mr.gameObject.layer = LayerMask.NameToLayer("LevelBlock");
         }
     }
 

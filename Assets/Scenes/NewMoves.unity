@@ -186,7 +186,7 @@ GameObject:
   - component: {fileID: 45155944}
   - component: {fileID: 45155943}
   - component: {fileID: 45155942}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425,7 +425,7 @@ GameObject:
   - component: {fileID: 160725988}
   - component: {fileID: 160725987}
   - component: {fileID: 160725986}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ramp (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -869,7 +869,7 @@ GameObject:
   - component: {fileID: 285591026}
   - component: {fileID: 285591025}
   - component: {fileID: 285591024}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1295,7 +1295,7 @@ GameObject:
   - component: {fileID: 467406959}
   - component: {fileID: 467406958}
   - component: {fileID: 467406957}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1416,7 +1416,7 @@ GameObject:
   - component: {fileID: 495271047}
   - component: {fileID: 495271046}
   - component: {fileID: 495271045}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1802,7 +1802,7 @@ GameObject:
   - component: {fileID: 702702832}
   - component: {fileID: 702702831}
   - component: {fileID: 702702830}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2088,7 +2088,7 @@ GameObject:
   - component: {fileID: 819039274}
   - component: {fileID: 819039273}
   - component: {fileID: 819039272}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2190,8 +2190,8 @@ Transform:
   m_GameObject: {fileID: 819039271}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.5, y: 0, z: 3.5}
-  m_LocalScale: {x: 3, y: 8, z: 1}
+  m_LocalPosition: {x: -7, y: 0, z: 3.5}
+  m_LocalScale: {x: 6, y: 8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1687154163}
@@ -2320,36 +2320,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 823719470}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &934835361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ground:
-    pivotDownOffset: 0.95
-    rayMaxDistance: 8
-    maxDistance: 0.1
-  sprite:
-    groundDistanceMax: 0.95
-    postLeaveGroundWaiting: 0.1
-  move:
-    jumpHeight: 1.33
-    jumpCooldown: 0.33
-    groundVelocity: 5
-    goBackwardCooldown: 0.33
-  leaderController:
-    traceIntervalDistanceMax: 0.25
-    drawGizmos: 1
-  followerController:
-    distanceToLeaderMin: 1
-    distanceToLeaderMax: 5
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -2533,7 +2503,7 @@ GameObject:
   - component: {fileID: 982646566}
   - component: {fileID: 982646565}
   - component: {fileID: 982646564}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2654,7 +2624,7 @@ GameObject:
   - component: {fileID: 1041804018}
   - component: {fileID: 1041804017}
   - component: {fileID: 1041804016}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2775,7 +2745,7 @@ GameObject:
   - component: {fileID: 1068679441}
   - component: {fileID: 1068679440}
   - component: {fileID: 1068679439}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2983,36 +2953,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 6
---- !u!114 &1123399427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ground:
-    pivotDownOffset: 0.95
-    rayMaxDistance: 8
-    maxDistance: 0.1
-  sprite:
-    groundDistanceMax: 0.95
-    postLeaveGroundWaiting: 0.1
-  move:
-    jumpHeight: 1.33
-    jumpCooldown: 0.33
-    groundVelocity: 5
-    goBackwardCooldown: 0.33
-  leaderController:
-    traceIntervalDistanceMax: 0.25
-    drawGizmos: 1
-  followerController:
-    distanceToLeaderMin: 1
-    distanceToLeaderMax: 5
 --- !u!1 &1160234425
 GameObject:
   m_ObjectHideFlags: 0
@@ -3162,6 +3102,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
+--- !u!114 &1320781081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ground:
+    pivotDownOffset: 0.95
+    rayMaxDistance: 8
+    maxDistance: 0.1
+  sprite:
+    groundDistanceMax: 0.95
+    postLeaveGroundWaiting: 0.1
+  move:
+    jumpHeight: 1.33
+    jumpCooldown: 0.33
+    groundVelocity: 5
+    goBackwardCooldown: 0.33
+  leaderController:
+    traceIntervalDistanceMax: 0.25
+    drawGizmos: 1
+  followerController:
+    distanceToLeaderMin: 1
+    distanceToLeaderMax: 5
 --- !u!1 &1323226451
 GameObject:
   m_ObjectHideFlags: 0
@@ -3375,7 +3345,7 @@ GameObject:
   - component: {fileID: 1364130244}
   - component: {fileID: 1364130243}
   - component: {fileID: 1364130242}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3496,7 +3466,7 @@ GameObject:
   - component: {fileID: 1392964356}
   - component: {fileID: 1392964355}
   - component: {fileID: 1392964354}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3877,7 +3847,7 @@ GameObject:
   - component: {fileID: 1868934323}
   - component: {fileID: 1868934322}
   - component: {fileID: 1868934321}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3998,7 +3968,7 @@ GameObject:
   - component: {fileID: 1980238123}
   - component: {fileID: 1980238122}
   - component: {fileID: 1980238121}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4219,7 +4189,7 @@ GameObject:
   - component: {fileID: 2027150504}
   - component: {fileID: 2027150503}
   - component: {fileID: 2027150502}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4422,6 +4392,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2110444658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ground:
+    pivotDownOffset: 0.95
+    rayMaxDistance: 8
+    maxDistance: 0.1
+  sprite:
+    groundDistanceMax: 0.95
+    postLeaveGroundWaiting: 0.1
+  move:
+    jumpHeight: 1.33
+    jumpCooldown: 0.33
+    groundVelocity: 5
+    goBackwardCooldown: 0.33
+  leaderController:
+    traceIntervalDistanceMax: 0.25
+    drawGizmos: 1
+  followerController:
+    distanceToLeaderMin: 1
+    distanceToLeaderMax: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
