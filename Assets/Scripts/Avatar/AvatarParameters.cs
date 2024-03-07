@@ -12,5 +12,7 @@ namespace Avatar
         public MoveParameters move = new();
 
         public LeaderControllerParameters leaderController = new();
+
+        public FollowerControllerParameters followerController = new();
     }
 }
