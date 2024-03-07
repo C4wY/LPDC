@@ -83,7 +83,8 @@ namespace Avatar
 
             Gizmos.color = Color.red;
             Gizmos.DrawLine(avatar.transform.position, leaderAvatar.transform.position);
-            Gizmos.DrawWireSphere(avatar.transform.position, Parameters.distanceToLeaderMax);
+            GizmosUtils.DrawCircle(transform.position, Vector3.back, Parameters.distanceToLeaderMin);
+            GizmosUtils.DrawCircle(transform.position, Vector3.back, Parameters.distanceToLeaderMax);
 
             if (tracePoint.HasValue)
                 Gizmos.DrawWireSphere(tracePoint.Value.position, avatar.parameters.leaderController.traceIntervalDistanceMax * 1.1f);

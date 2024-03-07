@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class GizmosUtils
 {
-    public static void DrawCircle(Vector3 position, Vector3 axis, float radius = 1, int subdivisions = 24, float aperture = 1)
+    public static void DrawCircle(Vector3 position, Vector3 axis, float radius = 1, int subdivisions = 32, float aperture = 1)
     {
         var U = Vector3.Cross(axis, new(axis.y, axis.z, axis.x)).normalized;
         var V = Vector3.Cross(axis, U);

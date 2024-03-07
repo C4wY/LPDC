@@ -350,7 +350,7 @@ PrefabInstance:
     - target: {fileID: 7295979769435162380, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.853
+      value: 2.16
       objectReference: {fileID: 0}
     - target: {fileID: 7295979769435162380, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
@@ -1182,36 +1182,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1687154163}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &319029359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ground:
-    pivotDownOffset: 0.95
-    rayMaxDistance: 8
-    maxDistance: 0.1
-  sprite:
-    groundDistanceMax: 0.95
-    postLeaveGroundWaiting: 0.1
-  move:
-    jumpHeight: 1.33
-    jumpCooldown: 0.33
-    groundVelocity: 5
-    goBackwardCooldown: 0.33
-  leaderController:
-    traceIntervalDistanceMax: 0.25
-    drawGizmos: 1
-  followerController:
-    distanceToLeaderMin: 1
-    distanceToLeaderMax: 5
 --- !u!1 &338762247
 GameObject:
   m_ObjectHideFlags: 0
@@ -2350,6 +2320,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 823719470}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &934835361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ground:
+    pivotDownOffset: 0.95
+    rayMaxDistance: 8
+    maxDistance: 0.1
+  sprite:
+    groundDistanceMax: 0.95
+    postLeaveGroundWaiting: 0.1
+  move:
+    jumpHeight: 1.33
+    jumpCooldown: 0.33
+    groundVelocity: 5
+    goBackwardCooldown: 0.33
+  leaderController:
+    traceIntervalDistanceMax: 0.25
+    drawGizmos: 1
+  followerController:
+    distanceToLeaderMin: 1
+    distanceToLeaderMax: 5
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -2432,7 +2432,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19117124, g: 0.20398718, b: 0.2264151, a: 0}
+  m_BackGroundColor: {r: 0.32599998, g: 0.32599998, b: 0.30624238, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2983,6 +2983,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 6
+--- !u!114 &1123399427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ground:
+    pivotDownOffset: 0.95
+    rayMaxDistance: 8
+    maxDistance: 0.1
+  sprite:
+    groundDistanceMax: 0.95
+    postLeaveGroundWaiting: 0.1
+  move:
+    jumpHeight: 1.33
+    jumpCooldown: 0.33
+    groundVelocity: 5
+    goBackwardCooldown: 0.33
+  leaderController:
+    traceIntervalDistanceMax: 0.25
+    drawGizmos: 1
+  followerController:
+    distanceToLeaderMin: 1
+    distanceToLeaderMax: 5
 --- !u!1 &1160234425
 GameObject:
   m_ObjectHideFlags: 0
@@ -3232,36 +3262,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 3
---- !u!114 &1355933660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ground:
-    pivotDownOffset: 0.95
-    rayMaxDistance: 8
-    maxDistance: 0.1
-  sprite:
-    groundDistanceMax: 0.95
-    postLeaveGroundWaiting: 0.1
-  move:
-    jumpHeight: 1.33
-    jumpCooldown: 0.33
-    groundVelocity: 5
-    goBackwardCooldown: 0.33
-  leaderController:
-    traceIntervalDistanceMax: 0.25
-    drawGizmos: 1
-  followerController:
-    distanceToLeaderMin: 1
-    distanceToLeaderMax: 5
 --- !u!1 &1361620616
 GameObject:
   m_ObjectHideFlags: 0
@@ -3391,8 +3391,8 @@ Transform:
   m_GameObject: {fileID: 1364130240}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 7.5, z: 2.5}
-  m_LocalScale: {x: 3, y: 1, z: 3}
+  m_LocalPosition: {x: -0.5, y: 7.5, z: 2}
+  m_LocalScale: {x: 3, y: 1, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1687154163}
@@ -3979,8 +3979,8 @@ Transform:
   m_GameObject: {fileID: 1868934320}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.5, y: 6.5, z: 2.5}
-  m_LocalScale: {x: 3, y: 1, z: 3}
+  m_LocalPosition: {x: 4.5, y: 6.5, z: 2}
+  m_LocalScale: {x: 3, y: 1, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1687154163}
