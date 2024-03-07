@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Player
+namespace Avatar
 {
     public class FollowerControllerParameters
     {
@@ -12,7 +12,7 @@ namespace Player
 
     public class FollowerController : MonoBehaviour
     {
-        Player player, leaderPlayer;
+        Avatar player, leaderPlayer;
 
         void FixedUpdate()
         {

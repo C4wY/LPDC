@@ -7,10 +7,10 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace Player
+namespace Avatar
 {
     [ExecuteAlways]
-    public class Player : MonoBehaviour
+    public class Avatar : MonoBehaviour
     {
         public enum PairRole
         {
@@ -18,12 +18,12 @@ namespace Player
             Follower,
         }
 
-        public PlayerParameters parameters;
+        public AvatarParameters parameters;
 
         public PairRole role;
 
-        public PlayerParameters SafeParameters =>
-            parameters == null ? parameters = ScriptableObject.CreateInstance<PlayerParameters>() : parameters;
+        public AvatarParameters SafeParameters =>
+            parameters == null ? parameters = ScriptableObject.CreateInstance<AvatarParameters>() : parameters;
 
         public bool IsLeader =>
             role == PairRole.Leader;
@@ -75,7 +75,7 @@ namespace Player
                 {
                     RoleUpdate();
 
-                    foreach (var player in FindObjectsByType<Player>(FindObjectsSortMode.None))
+                    foreach (var player in FindObjectsByType<Avatar>(FindObjectsSortMode.None))
                     {
                         if (player == this)
                             continue;

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace Player
+namespace Avatar
 {
     [System.Serializable]
     public class GroundParameters
@@ -66,7 +66,7 @@ namespace Player
         public float GroundDistance { get; private set; }
         public bool IsGrounded { get; private set; }
 
-        Player player;
+        Avatar player;
 
         public GroundParameters Parameters =>
             player.SafeParameters.ground;
@@ -166,7 +166,7 @@ namespace Player
 
         void OnEnable()
         {
-            player = GetComponentInParent<Player>();
+            player = GetComponentInParent<Avatar>();
         }
 
         void Update()

@@ -1,7 +1,7 @@
 using Unity.Cinemachine;
 using UnityEngine;
 
-namespace Player
+namespace Avatar
 {
     public struct InputEntry
     {
@@ -26,7 +26,7 @@ namespace Player
 
         public InputEntry input;
 
-        Player player;
+        Avatar player;
 
         public LeaderControllerParameters Parameters =>
             player.SafeParameters.leaderController;
@@ -77,7 +77,7 @@ namespace Player
 
         void OnEnable()
         {
-            player = GetComponent<Player>();
+            player = GetComponent<Avatar>();
         }
 
         bool wannaJump;

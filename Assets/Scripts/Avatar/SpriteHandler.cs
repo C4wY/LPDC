@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Player
+namespace Avatar
 {
     [System.Serializable]
     public class SpriteHandlerParameters
@@ -13,7 +13,7 @@ namespace Player
 
     public class SpriteHandler : MonoBehaviour
     {
-        Player player;
+        Avatar player;
         Animator animator;
         SpriteRenderer spriteRenderer;
 
@@ -31,7 +31,7 @@ namespace Player
 
         void OnEnable()
         {
-            player = GetComponentInParent<Player>();
+            player = GetComponentInParent<Avatar>();
             animator = GetComponent<Animator>();
             spriteRenderer = GetComponent<SpriteRenderer>();
         }

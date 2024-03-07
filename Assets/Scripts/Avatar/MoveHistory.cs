@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Player
+namespace Avatar
 {
     public struct TracePoint
     {

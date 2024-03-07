@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Player
+namespace Avatar
 {
     [System.Serializable]
     public class MoveParameters
@@ -20,7 +20,7 @@ namespace Player
 
         public float JumpTime { get; private set; } = -1;
 
-        Player player;
+        Avatar player;
 
         MoveParameters Parameters =>
             player.SafeParameters.move;
@@ -91,7 +91,7 @@ namespace Player
 
         void OnEnable()
         {
-            player = GetComponentInParent<Player>();
+            player = GetComponentInParent<Avatar>();
         }
     }
 }
