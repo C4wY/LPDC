@@ -1,7 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 
 namespace Player
 {
@@ -14,7 +18,12 @@ namespace Player
             Follower,
         }
 
+        public PlayerParameters parameters;
+
         public PairRole role;
+
+        public PlayerParameters SafeParameters =>
+            parameters == null ? parameters = ScriptableObject.CreateInstance<PlayerParameters>() : parameters;
 
         public bool IsLeader =>
             role == PairRole.Leader;
@@ -22,20 +31,31 @@ namespace Player
         public bool IsFollower =>
             role == PairRole.Follower;
 
-        LeaderController leaderController;
-        FollowerController followerController;
+        public LeaderController LeaderController { get; private set; }
+        public FollowerController FollowerController { get; private set; }
+        public Move Move { get; private set; }
+        public Ground Ground { get; private set; }
+        public Rigidbody Rigidbody { get; private set; }
 
         void RoleUpdate()
         {
-            leaderController.enabled = role == PairRole.Leader;
-            followerController.enabled = role == PairRole.Follower;
-            gameObject.name = $"{GetType().Name} ({role})";
+            LeaderController.enabled = role == PairRole.Leader;
+            FollowerController.enabled = role == PairRole.Follower;
+
+#if UNITY_EDITOR
+            // Do not change the name of the object in prefab mode.
+            if (PrefabStageUtility.GetCurrentPrefabStage() == null)
+                gameObject.name = $"{GetType().Name} ({role})";
+#endif
         }
 
         void OnEnable()
         {
-            leaderController = GetComponent<LeaderController>();
-            followerController = GetComponent<FollowerController>();
+            LeaderController = GetComponent<LeaderController>();
+            FollowerController = GetComponent<FollowerController>();
+            Move = GetComponent<Move>();
+            Ground = GetComponent<Ground>();
+            Rigidbody = GetComponent<Rigidbody>();
 
             RoleUpdate();
         }
@@ -51,7 +71,7 @@ namespace Player
             EditorApplication.delayCall += () =>
             {
                 // Debug.Log($"leader: {leader}, follower: {follower}");
-                if (leaderController != null)
+                if (LeaderController != null)
                 {
                     RoleUpdate();
 

@@ -7,22 +7,22 @@ using UnityEditor;
 
 namespace Player
 {
+    [System.Serializable]
+    public class GroundParameters
+    {
+        [Range(0, 1)]
+        public float pivotDownOffset = 0.95f;
+
+        [Tooltip("The maximum distance of the raycast from the offseted pivot point.")]
+        public float rayMaxDistance = 8;
+
+        [Tooltip("The maximum distance from the ground to be considered as a being on the ground.")]
+        public float maxDistance = 0.1f;
+    }
+
     [ExecuteAlways]
     public class Ground : MonoBehaviour
     {
-        [System.Serializable]
-        public class GroundParameters
-        {
-            [Range(0, 1)]
-            public float pivotDownOffset = 0.95f;
-
-            [Tooltip("The maximum distance of the raycast from the offseted pivot point.")]
-            public float rayMaxDistance = 3;
-
-            [Tooltip("The maximum distance from the ground to be considered as a being on the ground.")]
-            public float maxDistance = 0.1f;
-        }
-
         public struct GroundRaycastInfo
         {
             public bool wallHit;
@@ -55,8 +55,6 @@ namespace Player
 
         public static float[] layerZPositions = { 0.5f, 1.5f, 2.5f, 3.5f };
 
-        public GroundParameters parameters = new();
-
         public int lockLayerIndex = -1;
 
         GroundRaycastInfo[] raycastInfos = { };
@@ -67,6 +65,11 @@ namespace Player
         public Vector3 GroundPoint { get; private set; }
         public float GroundDistance { get; private set; }
         public bool IsGrounded { get; private set; }
+
+        Player player;
+
+        public GroundParameters Parameters =>
+            player.SafeParameters.ground;
 
         void UpdateHitInfos()
         {
@@ -84,14 +87,14 @@ namespace Player
 
                     var zDelta = layerZPosition - z;
                     var zDeltaAbs = Mathf.Abs(zDelta);
-                    var wallRayOrigin = new Vector3(x, y - parameters.pivotDownOffset, z);
+                    var wallRayOrigin = new Vector3(x, y - Parameters.pivotDownOffset, z);
                     var wallRayDirection = zDelta > 0 ? Vector3.forward : Vector3.back;
                     var wallRay = new Ray(wallRayOrigin, wallRayDirection);
                     var wallHit = zDeltaAbs > 0.5f && Physics.Raycast(wallRay, out wallInfo, maxDistance: zDeltaAbs, layerMask, QueryTriggerInteraction.Ignore);
 
                     var groundOrigin = new Vector3(x, y, layerZPosition);
                     var groundRay = new Ray(groundOrigin, Vector3.down);
-                    var groundHit = wallHit == false && Physics.Raycast(groundRay, out groundInfo, parameters.rayMaxDistance + parameters.pivotDownOffset, layerMask, QueryTriggerInteraction.Ignore);
+                    var groundHit = wallHit == false && Physics.Raycast(groundRay, out groundInfo, Parameters.rayMaxDistance + Parameters.pivotDownOffset, layerMask, QueryTriggerInteraction.Ignore);
 
                     return new GroundRaycastInfo(wallHit, wallRay, wallInfo, groundHit, groundRay, groundInfo);
                 })
@@ -161,6 +164,11 @@ namespace Player
             return true;
         }
 
+        void OnEnable()
+        {
+            player = GetComponentInParent<Player>();
+        }
+
         void Update()
         {
             CurrentLayerIndex = Mathf.FloorToInt(transform.position.z);
@@ -169,8 +177,8 @@ namespace Player
 
             if (HasGroundPoint)
             {
-                GroundDistance = transform.position.y - parameters.pivotDownOffset - GroundPoint.y;
-                IsGrounded = GroundDistance < parameters.maxDistance;
+                GroundDistance = transform.position.y - Parameters.pivotDownOffset - GroundPoint.y;
+                IsGrounded = GroundDistance < Parameters.maxDistance;
             }
             else
             {
@@ -202,7 +210,7 @@ namespace Player
                     }
                     else
                     {
-                        Gizmos.DrawRay(groundRay.origin, groundRay.direction * (parameters.rayMaxDistance + parameters.pivotDownOffset));
+                        Gizmos.DrawRay(groundRay.origin, groundRay.direction * (Parameters.rayMaxDistance + Parameters.pivotDownOffset));
                     }
                 }
             }

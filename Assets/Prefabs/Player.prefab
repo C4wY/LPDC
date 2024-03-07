@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 181208504972887940}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0448, z: 0}
+  m_LocalPosition: {x: 0, y: 0.023, z: 0}
   m_LocalScale: {x: 0.8085, y: 0.8085, z: 0.8085}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 7877815942100234459}
   - component: {fileID: 242426361254384893}
   - component: {fileID: 5412993629879299414}
+  - component: {fileID: 4616890706922536240}
   - component: {fileID: 7859190519081527988}
   - component: {fileID: 351878429402260546}
   - component: {fileID: 5584841039608773241}
@@ -235,9 +236,30 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4319842
-  m_Height: 1.7279367
+  m_Height: 1.6935529
   m_Direction: 1
-  m_Center: {x: 0, y: -0.13603163, z: 0}
+  m_Center: {x: 0, y: -0.11883968, z: 0}
+--- !u!135 &4616890706922536240
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7802931173180564744}
+  m_Material: {fileID: 13400000, guid: e8338e31baa974317b240876e4f99f19, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.18475139
+  m_Center: {x: 0, y: -0.8152486, z: 0}
 --- !u!54 &7859190519081527988
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -277,10 +299,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf8154b28a2e8348b5b0439e48a37ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters:
-    pivotOffsetY: 0.9
-    rayMaxDistance: 3
-    maxDistance: 0.1
   lockLayerIndex: -1
 --- !u!114 &5584841039608773241
 MonoBehaviour:
@@ -306,6 +324,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea5ee7589ac3024699507768cde6617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parameters:
+    movePointHistoryDistance: 0.25
+    drawGizmos: 1
 --- !u!114 &6426018546672864112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,11 +339,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe6f21c9639cd45498c27297b1a86872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parameters:
-    jumpHeight: 1.33
-    jumpCooldown: 0.33
-    speed: 5
-    goBackwardCooldown: 0.33
   forceDown: 0
 --- !u!114 &719985179100331000
 MonoBehaviour:
@@ -336,4 +352,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6287240eab89b494a9e13e5993bb4d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parameters: {fileID: 0}
   role: 0

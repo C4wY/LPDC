@@ -11,29 +11,31 @@ namespace Player
         public bool jump;
     }
 
+    [System.Serializable]
+    public class LeaderControllerParameters
+    {
+        public float movePointHistoryDistance = 0.25f;
+
+        public bool drawGizmos = true;
+    }
+
+    [ExecuteAlways]
     public class LeaderController : MonoBehaviour
     {
-        [System.Serializable]
-        public class LeaderControllerParameters
-        {
-            public float movePointHistoryDistance = 0.25f;
+        public readonly Trace trace = new();
 
-            public bool drawGizmos = true;
-        }
+        public InputEntry input;
 
-        public LeaderControllerParameters parameters = new();
+        Player player;
 
-        readonly Trace trace = new();
-
-        InputEntry input;
-
-        Move move;
+        public LeaderControllerParameters Parameters =>
+            player.SafeParameters.leaderController;
 
         void JumpUpdate()
         {
             if (input.jump)
             {
-                if (move.TryToJump())
+                if (player.Move.TryToJump())
                 {
                     var movePoint = new TracePoint
                     {
@@ -57,10 +59,10 @@ namespace Player
             }
         }
 
-        void MoveHistoryUpdate()
+        void TraceUpdate()
         {
             var delta = transform.position - trace.Current.position;
-            if (delta.sqrMagnitude > parameters.movePointHistoryDistance * parameters.movePointHistoryDistance)
+            if (delta.sqrMagnitude > Parameters.movePointHistoryDistance * Parameters.movePointHistoryDistance)
             {
                 var movePoint = new TracePoint
                 {
@@ -75,13 +77,17 @@ namespace Player
 
         void OnEnable()
         {
-            move = GetComponent<Move>();
+            player = GetComponent<Player>();
         }
+
+        bool wannaJump;
 
         void Update()
         {
+            wannaJump |= Input.GetButtonDown("Jump");
+
             JumpUpdate();
-            move.GoForegroundUpdate();
+            player.Move.GoForegroundUpdate();
             FollowUpdate();
         }
 
@@ -90,20 +96,22 @@ namespace Player
             input = new InputEntry
             {
                 time = Time.time,
-                jump = Input.GetButtonDown("Jump"),
+                jump = wannaJump,
                 x = Input.GetAxis("Horizontal"),
                 foreground = Input.GetAxis("Vertical") < -0.1f,
                 background = Input.GetAxis("Vertical") > 0.1f,
             };
 
-            move.HorizontalMoveUpdate(input.x);
-            move.UpdateGroundPoint();
-            MoveHistoryUpdate();
+            wannaJump = false;
+
+            player.Move.HorizontalMoveUpdate(input.x);
+            player.Move.UpdateGroundPoint();
+            TraceUpdate();
         }
 
         void OnDrawGizmos()
         {
-            if (parameters.drawGizmos)
+            if (Parameters.drawGizmos)
             {
                 trace.DrawGizmos();
             }
