@@ -1,5 +1,4 @@
 using UnityEngine;
-using Unity.VisualScripting;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -7,6 +6,33 @@ using UnityEditor;
 
 public class ToggleMeshRenderer : MonoBehaviour
 {
+    public enum Toggle
+    {
+        Ignore,
+        Enable,
+        Disable,
+    }
+
+    public Toggle toggleOnPlay = Toggle.Disable;
+
+    void ToggleMeshRenderers(bool? enabled = null)
+    {
+        foreach (var mr in GetComponentsInChildren<MeshRenderer>())
+        {
+            enabled ??= !mr.enabled;
+            mr.enabled = enabled.Value;
+        }
+    }
+
+    void OnEnable()
+    {
+        if (Application.isPlaying)
+        {
+            if (toggleOnPlay != Toggle.Ignore)
+                ToggleMeshRenderers(toggleOnPlay == Toggle.Enable);
+        }
+    }
+
 #if UNITY_EDITOR
     [CustomEditor(typeof(ToggleMeshRenderer))]
     public class AvatarEditor : Editor
@@ -18,15 +44,8 @@ public class ToggleMeshRenderer : MonoBehaviour
         {
             base.OnInspectorGUI();
 
-            if (GUILayout.Button("Toggle MeshRenderer"))
-            {
-                bool? enabled = null;
-                foreach (var mr in target.GetComponentsInChildren<MeshRenderer>())
-                {
-                    enabled ??= !mr.enabled;
-                    mr.enabled = enabled.Value;
-                }
-            }
+            if (GUILayout.Button("Toggle MeshRenderers"))
+                Target.ToggleMeshRenderers();
         }
     }
 #endif
