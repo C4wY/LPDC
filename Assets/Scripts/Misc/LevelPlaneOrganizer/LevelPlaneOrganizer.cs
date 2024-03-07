@@ -23,6 +23,16 @@ namespace LevelPlaneOrganizer
             }
         }
 
+        bool FirstSpriteRendererEnabled()
+        {
+            var mr = GetComponentInChildren<SpriteRenderer>();
+
+            if (mr != null)
+                return mr.enabled;
+
+            return false;
+        }
+
         void Setup()
         {
             foreach (Transform child in transform)
@@ -62,6 +72,18 @@ namespace LevelPlaneOrganizer
             LevelPlaneOrganizer Target =>
                 (LevelPlaneOrganizer)target;
 
+            void ToggleVisible()
+            {
+                EditorGUI.BeginChangeCheck();
+                var visible = EditorGUILayout.Toggle("Sprite Visible", Target.FirstSpriteRendererEnabled());
+                if (EditorGUI.EndChangeCheck())
+                {
+                    var mrs = Target.GetComponentsInChildren<MeshRenderer>();
+                    Undo.RecordObjects(mrs, "Toggle Sprite Renderers");
+                    Target.ToggleSpriteRenderers(visible);
+                }
+            }
+
             public override void OnInspectorGUI()
             {
                 var attributes = typeof(LevelPlaneOrganizer).GetCustomAttributes(typeof(TooltipAttribute), false)
@@ -73,8 +95,10 @@ namespace LevelPlaneOrganizer
 
                 base.OnInspectorGUI();
 
-                if (GUILayout.Button("Toggle SpriteRenderers"))
-                    Target.ToggleSpriteRenderers();
+                ToggleVisible();
+
+                if (GUILayout.Button("Select Sprites"))
+                    Selection.objects = Target.GetComponentsInChildren<SpriteRenderer>().Select(mr => mr.gameObject).ToArray();
             }
 #endif
         }
