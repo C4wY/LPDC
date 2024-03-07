@@ -26,16 +26,16 @@ namespace Avatar
 
         public InputEntry input;
 
-        Avatar player;
+        Avatar avatar;
 
         public LeaderControllerParameters Parameters =>
-            player.SafeParameters.leaderController;
+            avatar.SafeParameters.leaderController;
 
         void JumpUpdate()
         {
             if (input.jump)
             {
-                if (player.Move.TryToJump())
+                if (avatar.Move.TryToJump())
                 {
                     var movePoint = new TracePoint
                     {
@@ -77,7 +77,7 @@ namespace Avatar
 
         void OnEnable()
         {
-            player = GetComponent<Avatar>();
+            avatar = GetComponent<Avatar>();
         }
 
         bool wannaJump;
@@ -87,7 +87,7 @@ namespace Avatar
             wannaJump |= Input.GetButtonDown("Jump");
 
             JumpUpdate();
-            player.Move.GoForegroundUpdate();
+            avatar.Move.GoForegroundUpdate();
             FollowUpdate();
         }
 
@@ -104,8 +104,8 @@ namespace Avatar
 
             wannaJump = false;
 
-            player.Move.HorizontalMoveUpdate(input.x);
-            player.Move.UpdateGroundPoint();
+            avatar.Move.HorizontalMoveUpdate(input.x);
+            avatar.Move.UpdateGroundPoint();
             TraceUpdate();
         }
 

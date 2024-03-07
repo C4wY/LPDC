@@ -20,10 +20,10 @@ namespace Avatar
 
         public float JumpTime { get; private set; } = -1;
 
-        Avatar player;
+        Avatar avatar;
 
         MoveParameters Parameters =>
-            player.SafeParameters.move;
+            avatar.SafeParameters.move;
 
         /// <summary>
         /// Returns the velocity required to reach the jump height.
@@ -35,16 +35,16 @@ namespace Avatar
 
         void Jump()
         {
-            var velocity = player.Rigidbody.velocity;
+            var velocity = avatar.Rigidbody.velocity;
             velocity.y = GetJumpVelocityY();
-            player.Rigidbody.velocity = velocity;
+            avatar.Rigidbody.velocity = velocity;
 
             JumpTime = Time.time;
         }
 
         public bool TryToJump()
         {
-            if (player.Ground.IsGrounded && Time.time > JumpTime + Parameters.jumpCooldown)
+            if (avatar.Ground.IsGrounded && Time.time > JumpTime + Parameters.jumpCooldown)
             {
                 Jump();
                 return true;
@@ -56,17 +56,17 @@ namespace Avatar
         public void HorizontalMoveUpdate(float inputX)
         {
             var x = inputX * Parameters.speed;
-            var y = player.Rigidbody.velocity.y;
-            player.Rigidbody.velocity = new(x, y, 0);
+            var y = avatar.Rigidbody.velocity.y;
+            avatar.Rigidbody.velocity = new(x, y, 0);
         }
 
         public void UpdateGroundPoint()
         {
-            if (player.Ground.HasGroundPoint)
+            if (avatar.Ground.HasGroundPoint)
             {
-                var (x, y, z) = player.Rigidbody.position;
-                z = Mathf.Lerp(z, player.Ground.GroundPoint.z, 0.33f);
-                player.Rigidbody.position = new(x, y, z);
+                var (x, y, z) = avatar.Rigidbody.position;
+                z = Mathf.Lerp(z, avatar.Ground.GroundPoint.z, 0.33f);
+                avatar.Rigidbody.position = new(x, y, z);
             }
         }
 
@@ -78,20 +78,20 @@ namespace Avatar
 
             if (cooldown == false)
             {
-                player.Ground.lockLayerIndex = -1;
+                avatar.Ground.lockLayerIndex = -1;
 
                 var wants = forceDown || Input.GetAxis("Vertical") < -0.1f;
-                if (wants && player.Ground.TryGetReachableForegroundLayerIndex(out var layerIndex))
+                if (wants && avatar.Ground.TryGetReachableForegroundLayerIndex(out var layerIndex))
                 {
                     GoForegroundTime = Time.time;
-                    player.Ground.lockLayerIndex = layerIndex; // Lock the layer to avoid going foreground.
+                    avatar.Ground.lockLayerIndex = layerIndex; // Lock the layer to avoid going foreground.
                 }
             }
         }
 
         void OnEnable()
         {
-            player = GetComponentInParent<Avatar>();
+            avatar = GetComponentInParent<Avatar>();
         }
     }
 }

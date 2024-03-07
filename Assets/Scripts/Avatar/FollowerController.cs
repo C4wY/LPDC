@@ -12,7 +12,7 @@ namespace Avatar
 
     public class FollowerController : MonoBehaviour
     {
-        Avatar player, leaderPlayer;
+        Avatar avatar, leaderAvatar;
 
         void FixedUpdate()
         {

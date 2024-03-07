@@ -66,10 +66,10 @@ namespace Avatar
         public float GroundDistance { get; private set; }
         public bool IsGrounded { get; private set; }
 
-        Avatar player;
+        Avatar avatar;
 
         public GroundParameters Parameters =>
-            player.SafeParameters.ground;
+            avatar.SafeParameters.ground;
 
         void UpdateHitInfos()
         {
@@ -166,7 +166,7 @@ namespace Avatar
 
         void OnEnable()
         {
-            player = GetComponentInParent<Avatar>();
+            avatar = GetComponentInParent<Avatar>();
         }
 
         void Update()

@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Avatar
 {
-    [CreateAssetMenu(fileName = "PlayerParameters", menuName = "LPDC/PlayerParameters", order = 1)]
+    [CreateAssetMenu(fileName = "AvatarParameters", menuName = "LPDC/AvatarParameters", order = 1)]
     public class AvatarParameters : ScriptableObject
     {
         public GroundParameters ground = new();

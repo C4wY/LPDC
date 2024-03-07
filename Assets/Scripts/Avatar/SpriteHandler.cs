@@ -13,12 +13,12 @@ namespace Avatar
 
     public class SpriteHandler : MonoBehaviour
     {
-        Avatar player;
+        Avatar avatar;
         Animator animator;
         SpriteRenderer spriteRenderer;
 
         SpriteHandlerParameters Parameters =>
-            player.SafeParameters.sprite;
+            avatar.SafeParameters.sprite;
 
         bool realIsGrounded;
         float leaveGroundTime;
@@ -31,14 +31,14 @@ namespace Avatar
 
         void OnEnable()
         {
-            player = GetComponentInParent<Avatar>();
+            avatar = GetComponentInParent<Avatar>();
             animator = GetComponent<Animator>();
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         void FixedUpdate()
         {
-            var realIsGroundedNew = player.Ground.GroundDistance < Parameters.groundDistanceMax;
+            var realIsGroundedNew = avatar.Ground.GroundDistance < Parameters.groundDistanceMax;
             if (realIsGroundedNew != realIsGrounded)
             {
                 if (realIsGroundedNew == false)
@@ -47,7 +47,7 @@ namespace Avatar
                 realIsGrounded = realIsGroundedNew;
             }
 
-            var x = player.IsLeader ? player.LeaderController.input.x : player.Rigidbody.velocity.x;
+            var x = avatar.IsLeader ? avatar.LeaderController.input.x : avatar.Rigidbody.velocity.x;
             animator.SetFloat("HSpeed", Mathf.Abs(x));
             animator.SetBool("IsGrounded", SpriteIsGrounded);
 
