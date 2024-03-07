@@ -14,7 +14,7 @@ namespace Player
         public class GroundParameters
         {
             [Range(0, 1)]
-            public float pivotOffsetY = 0.95f;
+            public float pivotDownOffset = 0.95f;
 
             [Tooltip("The maximum distance of the raycast from the offseted pivot point.")]
             public float rayMaxDistance = 3;
@@ -84,14 +84,14 @@ namespace Player
 
                     var zDelta = layerZPosition - z;
                     var zDeltaAbs = Mathf.Abs(zDelta);
-                    var wallRayOrigin = new Vector3(x, y - parameters.pivotOffsetY, z);
+                    var wallRayOrigin = new Vector3(x, y - parameters.pivotDownOffset, z);
                     var wallRayDirection = zDelta > 0 ? Vector3.forward : Vector3.back;
                     var wallRay = new Ray(wallRayOrigin, wallRayDirection);
                     var wallHit = zDeltaAbs > 0.5f && Physics.Raycast(wallRay, out wallInfo, maxDistance: zDeltaAbs, layerMask, QueryTriggerInteraction.Ignore);
 
                     var groundOrigin = new Vector3(x, y, layerZPosition);
                     var groundRay = new Ray(groundOrigin, Vector3.down);
-                    var groundHit = wallHit == false && Physics.Raycast(groundRay, out groundInfo, parameters.rayMaxDistance + parameters.pivotOffsetY, layerMask, QueryTriggerInteraction.Ignore);
+                    var groundHit = wallHit == false && Physics.Raycast(groundRay, out groundInfo, parameters.rayMaxDistance + parameters.pivotDownOffset, layerMask, QueryTriggerInteraction.Ignore);
 
                     return new GroundRaycastInfo(wallHit, wallRay, wallInfo, groundHit, groundRay, groundInfo);
                 })
@@ -169,7 +169,7 @@ namespace Player
 
             if (HasGroundPoint)
             {
-                GroundDistance = transform.position.y + parameters.pivotOffsetY - GroundPoint.y;
+                GroundDistance = transform.position.y - parameters.pivotDownOffset - GroundPoint.y;
                 IsGrounded = GroundDistance < parameters.maxDistance;
             }
             else
@@ -202,7 +202,7 @@ namespace Player
                     }
                     else
                     {
-                        Gizmos.DrawRay(groundRay.origin, groundRay.direction * (parameters.rayMaxDistance + parameters.pivotOffsetY));
+                        Gizmos.DrawRay(groundRay.origin, groundRay.direction * (parameters.rayMaxDistance + parameters.pivotDownOffset));
                     }
                 }
             }
@@ -224,10 +224,11 @@ namespace Player
                 DrawDefaultInspector();
 
                 var Target = (Ground)target;
-                GUILayout.Label($"CurrentLayerIndex: {Target.CurrentLayerIndex}");
-                GUILayout.Label($"HasGroundPoint: {Target.HasGroundPoint}");
-                GUILayout.Label($"GroundPointLayerIndex: {Target.GroundPointLayerIndex}");
-                GUILayout.Label($"GroundPoint: {Target.GroundPoint}");
+
+                GUI.enabled = false;
+                EditorGUILayout.LabelField("Current Layer Index", $"{Target.CurrentLayerIndex}");
+                EditorGUILayout.LabelField("Has Ground Point", $"{Target.HasGroundPoint} (layer: {Target.GroundPointLayerIndex})");
+                EditorGUILayout.LabelField("Ground Distance", $"{Target.GroundDistance:F2}");
             }
         }
 #endif

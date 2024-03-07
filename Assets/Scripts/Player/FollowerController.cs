@@ -6,6 +6,7 @@ namespace Player
 {
     public class FollowerController : MonoBehaviour
     {
+
     }
 }
 

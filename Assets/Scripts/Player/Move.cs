@@ -43,7 +43,7 @@ namespace Player
 
         public bool TryToJump()
         {
-            if (Time.time > JumpTime + parameters.jumpCooldown)
+            if (ground.IsGrounded && Time.time > JumpTime + parameters.jumpCooldown)
             {
                 Jump();
                 return true;
@@ -52,9 +52,9 @@ namespace Player
             return false;
         }
 
-        public void HorizontalMoveUpdate()
+        public void HorizontalMoveUpdate(float inputX)
         {
-            var x = Input.GetAxis("Horizontal") * parameters.speed;
+            var x = inputX * parameters.speed;
             var y = rigidbody.velocity.y;
             rigidbody.velocity = new(x, y, 0);
         }
