@@ -12,11 +12,33 @@ namespace Level
         public enum Toggle
         {
             Ignore,
-            Enable,
-            Disable,
+            Visible,
+            Hidden,
         }
 
-        public Toggle toggleOnPlay = Toggle.Disable;
+        public Toggle onPlay = Toggle.Hidden;
+        public bool blockAreVisible = true;
+        public bool backFaceAreVisible = true;
+
+        Material blockMaterial;
+
+        void UpdateBlocks()
+        {
+            if (blockMaterial == null)
+                blockMaterial = Resources.Load<Material>("Materials/jnc_LevelBlock");
+
+            blockMaterial.SetFloat("_HideBackFace", backFaceAreVisible ? 0 : 1);
+
+            var blocks = GetComponentsInChildren<MeshRenderer>();
+            var layer = LayerMask.NameToLayer("LevelBlock");
+            foreach (var block in blocks)
+            {
+                block.enabled = blockAreVisible;
+                block.material = blockMaterial;
+                block.receiveShadows = false;
+                block.gameObject.layer = layer;
+            }
+        }
 
         void ToggleMeshRenderers(bool? enabled = null)
         {
@@ -24,63 +46,29 @@ namespace Level
             {
                 enabled ??= !mr.enabled;
                 mr.enabled = enabled.Value;
-                mr.receiveShadows = false;
-
-                mr.gameObject.layer = LayerMask.NameToLayer("LevelBlock");
             }
-        }
-
-        bool FirstMeshRendererEnabled()
-        {
-            var mr = GetComponentInChildren<MeshRenderer>();
-
-            if (mr != null)
-                return mr.enabled;
-
-            return false;
         }
 
         void OnEnable()
         {
             if (Application.isPlaying)
             {
-                if (toggleOnPlay != Toggle.Ignore)
-                    ToggleMeshRenderers(toggleOnPlay == Toggle.Enable);
-
-                enabled = false;
+                if (onPlay != Toggle.Ignore)
+                {
+                    blockAreVisible = onPlay == Toggle.Visible;
+                    UpdateBlocks();
+                }
             }
-        }
-
-        void Update()
-        {
-
         }
 
 #if UNITY_EDITOR
-        [CustomEditor(typeof(LevelBlockHandler))]
-        public class AvatarEditor : Editor
+        void OnValidate()
         {
-            LevelBlockHandler Target =>
-                (LevelBlockHandler)target;
-
-            void ToggleVisible()
+            EditorApplication.delayCall += () =>
             {
-                EditorGUI.BeginChangeCheck();
-                var visible = EditorGUILayout.Toggle("Mesh Visible", Target.FirstMeshRendererEnabled());
-                if (EditorGUI.EndChangeCheck())
-                {
-                    var mrs = Target.GetComponentsInChildren<MeshRenderer>();
-                    Undo.RecordObjects(mrs, "Toggle Mesh Renderers");
-                    Target.ToggleMeshRenderers(visible);
-                }
-            }
-
-            public override void OnInspectorGUI()
-            {
-                base.OnInspectorGUI();
-
-                ToggleVisible();
-            }
+                if (this != null)
+                    UpdateBlocks();
+            };
         }
 #endif
     }
