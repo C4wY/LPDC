@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Ctrlmanette : MonoBehaviour
+public class Collection : MonoBehaviour
 {
-    public void CtrlManette ()
+    public void goCollection ()
     {
-        SceneManager.LoadSceneAsync(1);
+        SceneManager.LoadSceneAsync(4);
     }
 }
