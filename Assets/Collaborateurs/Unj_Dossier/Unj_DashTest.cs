@@ -40,8 +40,8 @@ public class Unj_DashTest : MonoBehaviour
         {
             if (dashCoolCounter <= 0 && dashCounter <= 0)
             {
-                activemoveSpeed = moveSpeed;
-                dashCoolCounter = dashCooldown;
+                activemoveSpeed = dashSpeed;
+                dashCoolCounter = dashLenght;
             }
         }
 
