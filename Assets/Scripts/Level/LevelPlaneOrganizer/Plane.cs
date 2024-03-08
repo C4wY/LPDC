@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 #endif
 
-namespace LevelPlaneOrganizer
+namespace Level.LevelPlaneOrganizer
 {
     [ExecuteAlways]
     public class Plane : MonoBehaviour
