@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 #endif
 
-namespace LevelPlaneOrganizer
+namespace Level.LevelPlaneOrganizer
 {
     [ExecuteAlways, Tooltip("Positions the children according to their index. The index is defined on a component automatically added to the children.")]
     public class LevelPlaneOrganizer : MonoBehaviour
