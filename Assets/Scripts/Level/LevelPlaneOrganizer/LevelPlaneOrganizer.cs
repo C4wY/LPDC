@@ -100,7 +100,7 @@ namespace Level.LevelPlaneOrganizer
                 if (GUILayout.Button("Select Sprites"))
                     Selection.objects = Target.GetComponentsInChildren<SpriteRenderer>().Select(mr => mr.gameObject).ToArray();
             }
-#endif
         }
+#endif
     }
 }
