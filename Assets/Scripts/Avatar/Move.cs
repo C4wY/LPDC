@@ -21,9 +21,11 @@ namespace Avatar
         public float JumpTime { get; private set; } = -1;
 
         Avatar avatar;
+        Avatar Avatar =>
+            avatar != null ? avatar : avatar = GetComponent<Avatar>();
 
         MoveParameters Parameters =>
-            avatar.SafeParameters.move;
+            Avatar.SafeParameters.move;
 
         /// <summary>
         /// Returns the velocity required to reach the jump height.
@@ -55,6 +57,9 @@ namespace Avatar
 
         public void HorizontalMoveUpdate(float inputX)
         {
+            if (enabled == false)
+                return;
+
             var x = inputX * Parameters.groundVelocity;
             var y = avatar.Rigidbody.velocity.y;
             avatar.Rigidbody.velocity = new(x, y, 0);
