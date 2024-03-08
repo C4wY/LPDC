@@ -36,15 +36,18 @@ namespace Level.LevelPlaneOrganizer
                     .Where(renderer => renderer != null)
                     .ToArray();
 
-                EditorGUI.BeginChangeCheck();
-                var cast = EditorGUILayout.Toggle("Sprite Casts Shadows", renderers[0].shadowCastingMode != UnityEngine.Rendering.ShadowCastingMode.Off);
-                if (EditorGUI.EndChangeCheck())
+                if (renderers.Length > 0)
                 {
-                    Undo.RecordObjects(renderers, "Toggle Sprite Cast Shadows");
-                    foreach (var r in renderers)
-                        r.shadowCastingMode = cast
-                            ? UnityEngine.Rendering.ShadowCastingMode.TwoSided
-                            : UnityEngine.Rendering.ShadowCastingMode.Off;
+                    EditorGUI.BeginChangeCheck();
+                    var cast = EditorGUILayout.Toggle("Sprite Casts Shadows", renderers[0].shadowCastingMode != UnityEngine.Rendering.ShadowCastingMode.Off);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        Undo.RecordObjects(renderers, "Toggle Sprite Cast Shadows");
+                        foreach (var r in renderers)
+                            r.shadowCastingMode = cast
+                                ? UnityEngine.Rendering.ShadowCastingMode.TwoSided
+                                : UnityEngine.Rendering.ShadowCastingMode.Off;
+                    }
                 }
 
                 // Do not work?
