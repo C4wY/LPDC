@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public static class Colors
@@ -6,6 +7,9 @@ public static class Colors
     {
         if (hex[0] == '#')
             hex = hex[1..];
+
+        if (hex.Length == 3)
+            hex = string.Concat(hex.Select(c => $"{c}{c}"));
 
         var r = byte.Parse(hex[0..2], System.Globalization.NumberStyles.HexNumber);
         var g = byte.Parse(hex[2..4], System.Globalization.NumberStyles.HexNumber);
