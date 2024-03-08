@@ -27,9 +27,11 @@ namespace Avatar
         public InputEntry input;
 
         Avatar avatar;
+        Avatar Avatar =>
+            avatar != null ? avatar : avatar = GetComponent<Avatar>();
 
         public LeaderControllerParameters Parameters =>
-            avatar.SafeParameters.leaderController;
+            Avatar.SafeParameters.leaderController;
 
         void JumpUpdate()
         {
