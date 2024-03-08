@@ -401,7 +401,7 @@ PrefabInstance:
     - target: {fileID: 7802931173180564744, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
       propertyPath: m_Name
-      value: Avatar (Leader)
+      value: Avatar (Follower)
       objectReference: {fileID: 0}
     - target: {fileID: 7802931173180564744, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
@@ -413,12 +413,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 852b0e47ebbdec3498856ec259cc68da, type: 3}
---- !u!4 &92508627 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7295979769435162380, guid: 852b0e47ebbdec3498856ec259cc68da,
-    type: 3}
-  m_PrefabInstance: {fileID: 92508626}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &160725985
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,6 +1283,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &442775286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ground:
+    pivotDownOffset: 0.95
+    rayMaxDistance: 8
+    maxDistance: 0.1
+    drawGizmos: 1
+  sprite:
+    groundDistanceMax: 0.95
+    postLeaveGroundWaiting: 0.1
+  move:
+    jumpHeight: 1.33
+    jumpCooldown: 0.33
+    groundVelocity: 5
+    goBackwardCooldown: 0.33
+  leaderController:
+    traceIntervalDistanceMax: 0.25
+    drawGizmos: 1
+  followerController:
+    distanceToLeaderMin: 1
+    distanceToLeaderMax: 5
 --- !u!1 &467406956
 GameObject:
   m_ObjectHideFlags: 0
@@ -2082,6 +2107,37 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &747142416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ground:
+    pivotDownOffset: 0.95
+    rayMaxDistance: 8
+    maxDistance: 0.1
+    drawGizmos: 1
+  sprite:
+    groundDistanceMax: 0.95
+    postLeaveGroundWaiting: 0.1
+  move:
+    jumpHeight: 1.33
+    jumpCooldown: 0.33
+    groundVelocity: 5
+    goBackwardCooldown: 0.33
+  leaderController:
+    traceIntervalDistanceMax: 0.25
+    drawGizmos: 1
+  followerController:
+    distanceToLeaderMin: 1
+    distanceToLeaderMax: 5
 --- !u!1 &819039271
 GameObject:
   m_ObjectHideFlags: 0
@@ -2309,7 +2365,7 @@ PrefabInstance:
     - target: {fileID: 7802931173180564744, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
       propertyPath: m_Name
-      value: Avatar (Follower)
+      value: Avatar (Leader)
       objectReference: {fileID: 0}
     - target: {fileID: 7802931173180564744, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
@@ -2553,7 +2609,7 @@ Transform:
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.6, y: 6.34, z: -108.32}
+  m_LocalPosition: {x: 0.653, y: 1.977, z: -108}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3203,37 +3259,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   index: 0
---- !u!114 &1277787119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ground:
-    pivotDownOffset: 0.95
-    rayMaxDistance: 8
-    maxDistance: 0.1
-    drawGizmos: 1
-  sprite:
-    groundDistanceMax: 0.95
-    postLeaveGroundWaiting: 0.1
-  move:
-    jumpHeight: 1.33
-    jumpCooldown: 0.33
-    groundVelocity: 5
-    goBackwardCooldown: 0.33
-  leaderController:
-    traceIntervalDistanceMax: 0.25
-    drawGizmos: 1
-  followerController:
-    distanceToLeaderMin: 1
-    distanceToLeaderMax: 5
 --- !u!1 &1323226451
 GameObject:
   m_ObjectHideFlags: 0
@@ -3936,7 +3961,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 114612eed8f0c41e7bdbfdfd70974e81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toggleOnPlay: 2
+  onPlay: 2
+  blockAreVisible: 1
+  backFaceAreVisible: 1
 --- !u!1 &1688485811
 GameObject:
   m_ObjectHideFlags: 0
@@ -4058,6 +4085,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1688485811}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1827287773 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7295979769435162380, guid: 852b0e47ebbdec3498856ec259cc68da,
+    type: 3}
+  m_PrefabInstance: {fileID: 823719470}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1868934320
 GameObject:
   m_ObjectHideFlags: 0
@@ -4578,7 +4611,7 @@ MonoBehaviour:
   m_StreamingVersion: 20230301
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 92508627}
+    TrackingTarget: {fileID: 1827287773}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -4610,43 +4643,12 @@ Transform:
   m_GameObject: {fileID: 2051322868}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.6, y: 6.34, z: -108.32}
+  m_LocalPosition: {x: 0.653, y: 1.977, z: -108}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2057899690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b348786d3df64ea5842e37a27968c4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ground:
-    pivotDownOffset: 0.95
-    rayMaxDistance: 8
-    maxDistance: 0.1
-    drawGizmos: 1
-  sprite:
-    groundDistanceMax: 0.95
-    postLeaveGroundWaiting: 0.1
-  move:
-    jumpHeight: 1.33
-    jumpCooldown: 0.33
-    groundVelocity: 5
-    goBackwardCooldown: 0.33
-  leaderController:
-    traceIntervalDistanceMax: 0.25
-    drawGizmos: 1
-  followerController:
-    distanceToLeaderMin: 1
-    distanceToLeaderMax: 5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
