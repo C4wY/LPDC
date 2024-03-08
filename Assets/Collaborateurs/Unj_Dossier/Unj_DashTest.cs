@@ -5,17 +5,21 @@ using UnityEngine;
 public class Unj_DashTest : MonoBehaviour
 {
     public float moveSpeed;
-    public Rigidbody2D rb2d;
-    private Vector2 moveInput;
+    Avatar.Avatar avatar;
+    public Vector2 moveInput;
 
-    private float activemoveSpeed;
+    public float activemoveSpeed;
     public float dashSpeed;
 
     public float dashLenght = .5f, dashCooldown = 1f;
 
     private float dashCounter;
-    private float dashCoolCounter;
+    public float dashCoolCounter;
 
+    void OnEnable()
+    {
+        avatar = GetComponent<Avatar.Avatar>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -29,15 +33,15 @@ public class Unj_DashTest : MonoBehaviour
         moveInput.y = Input.GetAxisRaw("Vertical");
 
         moveInput.Normalize();
-        
-        rb2d.velocity = moveInput * activemoveSpeed;
 
-        if (Input.GetKeyDown(KeyCode.E))
+        avatar.Rigidbody.velocity = moveInput * activemoveSpeed;
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            if(dashCoolCounter <=0 && dashCounter <=0)
+            if (dashCoolCounter <= 0 && dashCounter <= 0)
             {
                 activemoveSpeed = moveSpeed;
-                dashCoolCounter =  dashCooldown;
+                dashCoolCounter = dashCooldown;
             }
         }
 
