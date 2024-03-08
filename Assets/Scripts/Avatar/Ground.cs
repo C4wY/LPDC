@@ -18,6 +18,8 @@ namespace Avatar
 
         [Tooltip("The maximum distance from the ground to be considered as a being on the ground.")]
         public float maxDistance = 0.1f;
+
+        public bool drawGizmos = true;
     }
 
     [ExecuteAlways]
@@ -58,6 +60,9 @@ namespace Avatar
         public int lockLayerIndex = -1;
 
         GroundRaycastInfo[] raycastInfos = { };
+
+        public Vector3 FeetPosition =>
+            transform.TransformPoint(Vector3.down * Parameters.pivotDownOffset);
 
         public int CurrentLayerIndex { get; private set; } = -1;
         public bool HasGroundPoint { get; private set; } = false;
@@ -189,19 +194,26 @@ namespace Avatar
 
         void OnDrawGizmos()
         {
+            if (Parameters.drawGizmos == false)
+                return;
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(FeetPosition, 0.05f);
+            GizmosUtils.DrawCircle(FeetPosition, Vector3.back, 0.075f);
+
             foreach (var (wallHit, wallRay, wallInfo, groundHit, groundRay, groundInfo) in raycastInfos)
             {
                 if (wallHit)
                 {
                     Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(wallRay.origin, 0.1f);
+                    Gizmos.DrawSphere(wallRay.origin, 0.025f);
                     Gizmos.DrawSphere(wallInfo.point, 0.05f);
                     Gizmos.DrawLine(wallRay.origin, wallInfo.point);
                 }
                 else
                 {
                     Gizmos.color = Color.yellow;
-                    Gizmos.DrawSphere(groundRay.origin, 0.1f);
+                    Gizmos.DrawSphere(groundRay.origin, 0.025f);
 
                     if (groundHit)
                     {

@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
-
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -125,7 +123,6 @@ namespace Avatar
                         var node0BeforeCount = Physics.RaycastNonAlloc(new Ray(node0.position + Vector3.up * 0.5f, Vector3.back), raycastHits, 10.0f, LayerMask.GetMask("LevelBlock"));
                         var node1BeforeCount = Physics.RaycastNonAlloc(new Ray(node1.position + Vector3.up * 0.5f, Vector3.back), raycastHits, 10.0f, LayerMask.GetMask("LevelBlock"));
 
-                        var (nodeForeground, nodeBackground) = dz > 0 ? (node0, node1) : (node1, node0);
                         if (node0BeforeCount > 0 || node1BeforeCount > 0)
                             continue;
                     }
@@ -136,10 +133,68 @@ namespace Avatar
             }
         }
 
+        public bool TryFindPath(Node from, Node to, out Node[] path)
+        {
+            var openSet = new HashSet<int> { from.id };
+            var cameFrom = new Dictionary<int, int>();
+            var gScore = new Dictionary<int, float> { [from.id] = 0 };
+            var fScore = new Dictionary<int, float> { [from.id] = Vector3.Distance(from.position, to.position) };
+
+            Node[] ReconstructPath(int current)
+            {
+                var path = new List<Node> { nodes[current] };
+                while (cameFrom.TryGetValue(current, out var previous))
+                {
+                    path.Add(nodes[previous]);
+                    current = previous;
+                }
+                path.Reverse();
+                return path.ToArray();
+            }
+
+            while (openSet.Count > 0)
+            {
+                var current = openSet.OrderBy(id => fScore[id]).First();
+
+                if (current == to.id)
+                {
+                    path = ReconstructPath(current);
+                    return true;
+                }
+
+                openSet.Remove(current);
+
+                foreach (var link in nodes[current].links)
+                {
+                    var neighbor = link.n0 == current ? link.n1 : link.n0;
+                    var tentativeGScore = gScore[current] + link.cost;
+
+                    if (!gScore.TryGetValue(neighbor, out var gScoreNeighbor) || tentativeGScore < gScoreNeighbor)
+                    {
+                        cameFrom[neighbor] = current;
+                        gScore[neighbor] = tentativeGScore;
+                        fScore[neighbor] = gScore[neighbor] + Vector3.Distance(nodes[neighbor].position, to.position);
+
+                        if (!openSet.Contains(neighbor))
+                            openSet.Add(neighbor);
+                    }
+                }
+            }
+
+            path = null;
+            return false;
+        }
+
+        public bool TryFindPath(Vector3 from, Vector3 to, out Node[] path)
+        {
+            var fromNode = nodes.Values.OrderBy(n => (n.position - from).sqrMagnitude).First();
+            var toNode = nodes.Values.OrderBy(n => (n.position - to).sqrMagnitude).First();
+            return TryFindPath(fromNode, toNode, out path);
+        }
+
+
         public void DrawGizmos()
         {
-            Gizmos.color = Colors.lightgreen;
-
             foreach (var node in nodes.Values)
                 Gizmos.DrawSphere(node.position, 0.033f);
 
@@ -172,6 +227,7 @@ namespace Avatar
         TracePoint? tracePoint;
 
         readonly NavGraph navGraph = new();
+        NavGraph.Node[] path;
 
         void Follow()
         {
@@ -227,10 +283,10 @@ namespace Avatar
 
         void OnDrawGizmos()
         {
-            if (leaderAvatar == null)
+            if (enabled == false || leaderAvatar == null)
                 return;
 
-            Gizmos.color = Color.red;
+            Gizmos.color = Colors.FromHex("6FF");
             Gizmos.DrawLine(avatar.transform.position, leaderAvatar.transform.position);
             GizmosUtils.DrawCircle(transform.position, Vector3.back, Parameters.distanceToLeaderMin);
             GizmosUtils.DrawCircle(transform.position, Vector3.back, Parameters.distanceToLeaderMax);
@@ -239,6 +295,12 @@ namespace Avatar
                 Gizmos.DrawWireSphere(tracePoint.Value.position, avatar.parameters.leaderController.traceIntervalDistanceMax * 1.1f);
 
             navGraph.DrawGizmos();
+
+            if (path != null)
+            {
+                Gizmos.color = Colors.FromHex("F6F");
+                GizmosUtils.DrawPath(path.Select(n => n.position), drawIntermediateSpheres: true);
+            }
         }
 
 #if UNITY_EDITOR
@@ -257,6 +319,14 @@ namespace Avatar
                     Target.navGraph.Clear();
                     Target.navGraph.SampleWorld(-30, 30, -10, 10);
                     Target.navGraph.ConnectNodes();
+                    EditorUtility.SetDirty(Target);
+                }
+
+                if (GUILayout.Button("Find Path"))
+                {
+                    var from = Target.avatar.Ground.FeetPosition;
+                    var to = Target.leaderAvatar.Ground.FeetPosition;
+                    Target.navGraph.TryFindPath(from, to, out Target.path);
                     EditorUtility.SetDirty(Target);
                 }
             }
