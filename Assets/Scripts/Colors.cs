@@ -18,6 +18,9 @@ public static class Colors
         return new(r, g, b, alpha);
     }
 
+    public static Color32 FromHex(string hex, float alpha) =>
+        FromHex(hex, (byte)(alpha * 255));
+
     public static string ToHex(Color32 color) => $"{color.r:X2}{color.g:X2}{color.b:X2}";
 
     public static Color aliceblue = FromHex("#f0f8ff");
