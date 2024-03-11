@@ -2,6 +2,19 @@ using UnityEngine;
 
 public static class MathUtils
 {
+    public const float PI = 3.141592653589793f;
+
+    public const float PI2 = 6.283185307179586f;
+
+    public const float SQRT1_2 = 0.7071067811865476f;
+
+    public const float SQRT2 = 1.4142135623730951f;
+
+    /// <summary>
+    /// Shifts the bits of a number to the left by a specified number of bits and preserves the number of plain bits by adding a 1 at the end if the number is negative.
+    /// </summary>
+    public static int ShiftLeft(int n) => n << 1 | (n < 0 ? 1 : 0);
+
     public static float GetJumpVelocityY(float jumpHeight)
     {
         return Mathf.Sqrt(Physics.gravity.magnitude * 2f * jumpHeight);

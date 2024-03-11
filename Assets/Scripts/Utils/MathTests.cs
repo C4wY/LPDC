@@ -2,32 +2,39 @@ using UnityEngine;
 
 public class MathTests : MonoBehaviour
 {
+    Transform RequireChild(int index, string name)
+    {
+        if (transform.childCount <= index)
+        {
+            var newChild = new GameObject().transform;
+            newChild.SetParent(transform);
+        }
+
+        var child = transform.GetChild(index);
+        child.gameObject.name = name;
+        return child;
+    }
+
     void DrawLine(Vector3 origin, Vector3 direction)
     {
-        Gizmos.color = Colors.FromHex("FFF", 0.25f);
+        Gizmos.color = Colors.Hex("FFF", 0.25f);
         Gizmos.DrawLine(origin - direction * 10, origin + direction * 10);
-        Gizmos.color = Colors.FromHex("FFF");
+        Gizmos.color = Colors.Hex("FFF");
         Gizmos.DrawSphere(origin, 0.025f);
         Gizmos.DrawLine(origin, origin + direction);
     }
 
     void NearestPointOnLine()
     {
-        var child0 = transform.GetChild(0);
-        var child1 = transform.GetChild(1);
-
-        if (child0 == null || child1 == null)
-            return;
-
-        child0.gameObject.name = "NearestPointOnLine: Line";
-        child1.gameObject.name = "NearestPointOnLine: Point";
+        var child0 = RequireChild(0, "NearestPointOnLine: Line");
+        var child1 = RequireChild(1, "NearestPointOnLine: Point");
 
         var origin = child0.position;
         var direction = (Vector3)child0.localToWorldMatrix.GetColumn(2);
 
         var point = child1.position;
 
-        Gizmos.color = Colors.FromHex("FFF");
+        Gizmos.color = Colors.Hex("FFF");
         DrawLine(origin, direction);
         Gizmos.DrawSphere(point, 0.025f);
 
@@ -38,7 +45,7 @@ public class MathTests : MonoBehaviour
                 point,
                 out var t);
             var p = origin + direction * t;
-            Gizmos.color = Colors.FromHex("0FF");
+            Gizmos.color = Colors.Hex("0FF");
             Gizmos.DrawSphere(p, 0.025f);
             Gizmos.DrawLine(point, p);
         }
@@ -53,21 +60,15 @@ public class MathTests : MonoBehaviour
                 point,
                 out var t);
             var p = origin + d * t;
-            Gizmos.color = Colors.FromHex("0FF");
+            Gizmos.color = Colors.Hex("0FF");
             Gizmos.DrawWireSphere(p, 0.05f);
         }
     }
 
     void NearestPointsBetweenLines()
     {
-        var child0 = transform.GetChild(2);
-        var child1 = transform.GetChild(3);
-
-        if (child0 == null || child1 == null)
-            return;
-
-        child0.gameObject.name = "NearestPointsBetweenLines: Line 0";
-        child1.gameObject.name = "NearestPointsBetweenLines: Line 1";
+        var child0 = RequireChild(2, "NearestPointsBetweenLines: Line 0");
+        var child1 = RequireChild(3, "NearestPointsBetweenLines: Line 1");
 
         var origin0 = child0.position;
         var direction0 = (Vector3)child0.localToWorldMatrix.GetColumn(2);
@@ -88,7 +89,7 @@ public class MathTests : MonoBehaviour
                 out var t1);
             var p0 = origin0 + direction0 * t0;
             var p1 = origin1 + direction1 * t1;
-            Gizmos.color = Colors.FromHex("0FF");
+            Gizmos.color = Colors.Hex("0FF");
             Gizmos.DrawSphere(p0, 0.025f);
             Gizmos.DrawSphere(p1, 0.025f);
             Gizmos.DrawLine(p0, p1);
@@ -108,15 +109,24 @@ public class MathTests : MonoBehaviour
                 out var t1);
             var p0 = origin0 + d0 * t0;
             var p1 = origin1 + d1 * t1;
-            Gizmos.color = Colors.FromHex("0FF");
+            Gizmos.color = Colors.Hex("0FF");
             Gizmos.DrawWireSphere(p0, 0.05f);
             Gizmos.DrawWireSphere(p1, 0.05f);
         }
+    }
+
+    void Arrow()
+    {
+        var child = RequireChild(4, "Arrow");
+        var origin = child.position;
+        var direction = (Vector3)child.localToWorldMatrix.GetColumn(2);
+        GizmosUtils.DrawArrow(origin, direction);
     }
 
     void OnDrawGizmos()
     {
         NearestPointOnLine();
         NearestPointsBetweenLines();
+        Arrow();
     }
 }
