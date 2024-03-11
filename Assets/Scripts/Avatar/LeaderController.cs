@@ -6,7 +6,7 @@ namespace Avatar
     public struct InputEntry
     {
         public float time;
-        public float x;
+        public float horizontal, vertical;
         public bool foreground, background;
         public bool jump;
     }
@@ -51,7 +51,7 @@ namespace Avatar
             }
         }
 
-        void FollowUpdate()
+        void CameraFollowUpdate()
         {
             if (Time.frameCount % 10 == 0)
             {
@@ -89,8 +89,7 @@ namespace Avatar
             wannaJump |= Input.GetButtonDown("Jump");
 
             JumpUpdate();
-            avatar.Move.GoForegroundUpdate();
-            FollowUpdate();
+            CameraFollowUpdate();
         }
 
         void FixedUpdate()
@@ -99,14 +98,16 @@ namespace Avatar
             {
                 time = Time.time,
                 jump = wannaJump,
-                x = Input.GetAxis("Horizontal"),
+                horizontal = Input.GetAxis("Horizontal"),
+                vertical = Input.GetAxis("Vertical"),
                 foreground = Input.GetAxis("Vertical") < -0.1f,
                 background = Input.GetAxis("Vertical") > 0.1f,
             };
 
             wannaJump = false;
 
-            avatar.Move.UpdateHorizontal(input.x);
+            avatar.Move.UpdateHorizontal(input.horizontal);
+            avatar.Move.GoForegroundUpdate(input.vertical);
             avatar.Move.UpdateZ();
             TraceUpdate();
         }

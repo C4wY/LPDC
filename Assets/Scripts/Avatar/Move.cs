@@ -20,6 +20,9 @@ namespace Avatar
 
         public float JumpTime { get; private set; } = -1;
 
+        public bool IsJumping =>
+            Time.time < JumpTime + Parameters.jumpCooldown;
+
         Avatar avatar;
         Avatar Avatar =>
             avatar != null ? avatar : avatar = GetComponent<Avatar>();
@@ -55,12 +58,12 @@ namespace Avatar
             return false;
         }
 
-        public void UpdateHorizontal(float inputX)
+        public void UpdateHorizontal(float horizontalInput)
         {
             if (enabled == false)
                 return;
 
-            var x = inputX * Parameters.groundVelocity;
+            var x = horizontalInput * Parameters.groundVelocity;
             var y = avatar.Rigidbody.velocity.y;
             avatar.Rigidbody.velocity = new(x, y, 0);
         }
@@ -77,7 +80,7 @@ namespace Avatar
 
         public float GoForegroundTime { get; private set; } = -1;
 
-        public void GoForegroundUpdate()
+        public void GoForegroundUpdate(float verticalInput)
         {
             var cooldown = Time.time < GoForegroundTime + Parameters.goBackwardCooldown;
 
@@ -85,7 +88,7 @@ namespace Avatar
             {
                 avatar.Ground.lockLayerIndex = -1;
 
-                var wants = forceDown || Input.GetAxis("Vertical") < -0.1f;
+                var wants = forceDown || verticalInput < -0.1f;
                 if (wants && avatar.Ground.TryGetReachableForegroundLayerIndex(out var layerIndex))
                 {
                     GoForegroundTime = Time.time;

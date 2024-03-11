@@ -16,7 +16,7 @@ MonoBehaviour:
     pivotDownOffset: 0.95
     rayMaxDistance: 8
     maxDistance: 0.1
-    drawGizmos: 0
+    drawGizmos: 1
   sprite:
     groundDistanceMax: 0.95
     postLeaveGroundWaiting: 0.1

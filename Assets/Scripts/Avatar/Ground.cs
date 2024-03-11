@@ -246,6 +246,7 @@ namespace Avatar
                 var Target = (Ground)target;
 
                 GUI.enabled = false;
+                EditorGUILayout.LabelField("IsGrounded", $"{Target.IsGrounded}");
                 EditorGUILayout.LabelField("Current Layer Index", $"{Target.CurrentLayerIndex}");
                 EditorGUILayout.LabelField("Has Ground Point", $"{Target.HasGroundPoint} (layer: {Target.GroundPointLayerIndex})");
                 EditorGUILayout.LabelField("Ground Distance", $"{Target.GroundDistance:F2}");

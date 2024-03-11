@@ -38,6 +38,9 @@ namespace Avatar
 
         readonly NavGraph.Agent agent = new();
 
+        float horizontalInput = 0;
+        float verticalInput = 0;
+
         void RefreshNavGraph()
         {
             var x = Mathf.FloorToInt(avatar.Ground.FeetPosition.x);
@@ -68,11 +71,20 @@ namespace Avatar
             if (agent.CurrentSegment.requiresJump)
                 avatar.Move.TryToJump();
 
-            var inputX = agent.RemainingDistance < 1f
-                ? 0
-                : (agent.CurrentSegment.Direction.x > 0 ? 1 : -1);
+            bool HasToJumpButCant() => agent.CurrentSegment.requiresJump && avatar.Move.IsJumping == false;
 
-            avatar.Move.UpdateHorizontal(inputX);
+            var dir = agent.CurrentSegment.Direction;
+            horizontalInput = agent.RemainingDistance < 1f || HasToJumpButCant()
+                ? 0
+                : avatar.Ground.IsGrounded
+                    ? (dir.x > 0 ? 1 : -1)
+                    : horizontalInput; // Keep the last input if not grounded.
+
+            var wannaGoForeground = dir.z < 0 && dir.y < 0;
+            verticalInput = wannaGoForeground ? -1 : 0;
+
+            avatar.Move.UpdateHorizontal(horizontalInput);
+            avatar.Move.GoForegroundUpdate(verticalInput);
             avatar.Move.UpdateZ();
         }
 
@@ -164,6 +176,9 @@ namespace Avatar
             public override void OnInspectorGUI()
             {
                 base.OnInspectorGUI();
+
+                EditorGUILayout.LabelField("Horizontal Input", $"{Target.horizontalInput}");
+                EditorGUILayout.LabelField("Vertical Input", $"{Target.verticalInput}");
 
                 EditorGUILayout.LabelField("Agent", EditorStyles.boldLabel);
                 var agent = Target.agent;
