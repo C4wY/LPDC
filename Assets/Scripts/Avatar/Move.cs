@@ -55,7 +55,7 @@ namespace Avatar
             return false;
         }
 
-        public void HorizontalMoveUpdate(float inputX)
+        public void UpdateHorizontal(float inputX)
         {
             if (enabled == false)
                 return;
@@ -65,7 +65,7 @@ namespace Avatar
             avatar.Rigidbody.velocity = new(x, y, 0);
         }
 
-        public void UpdateGroundPoint()
+        public void UpdateZ()
         {
             if (avatar.Ground.HasGroundPoint)
             {
