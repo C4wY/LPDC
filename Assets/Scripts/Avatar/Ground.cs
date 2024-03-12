@@ -126,7 +126,8 @@ namespace Avatar
                         {
                             case MathUtils.CompareResult.Equal:
                                 // If the ground points are at the same height, choose the nearest one.
-                                if (Mathf.Abs(GroundPoint.z - transform.position.z) > Mathf.Abs(info.groundInfo.point.z - transform.position.z))
+                                // if (Mathf.Abs(GroundPoint.z - transform.position.z) > Mathf.Abs(info.groundInfo.point.z - transform.position.z))
+                                if (GroundPoint.z > info.groundInfo.point.z)
                                 {
                                     GroundPoint = info.groundInfo.point;
                                     GroundPointLayerIndex = index;
@@ -140,7 +141,7 @@ namespace Avatar
                         }
                     }
 
-                    if (HasGroundPoint && lockLayerIndex == GroundPointLayerIndex && lockLayerIndex == index)
+                    if (HasGroundPoint && lockLayerIndex == index)
                         break; // Don't go further (to the next layer, to the background).
                 }
             }
