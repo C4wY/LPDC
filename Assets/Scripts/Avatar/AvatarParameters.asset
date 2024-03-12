@@ -16,7 +16,7 @@ MonoBehaviour:
     pivotDownOffset: 0.95
     rayMaxDistance: 8
     maxDistance: 0.1
-    drawGizmos: 1
+    drawGizmos: 0
   sprite:
     groundDistanceMax: 0.95
     postLeaveGroundWaiting: 0.1
@@ -30,6 +30,7 @@ MonoBehaviour:
     drawGizmos: 1
   followerController:
     distanceToLeaderMin: 1
-    distanceToLeaderMax: 5
+    distanceToLeaderMax: 3
     navGraphSampleWidth: 60
     navGraphObsolenceTime: 1
+    drawGizmosMode: 0

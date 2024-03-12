@@ -8,17 +8,27 @@ using UnityEditor;
 
 namespace Avatar
 {
+    [System.Flags]
+    public enum DrawGizmosMode
+    {
+        DistanceToLeader = 1 << 0,
+        NavGraph = 1 << 1,
+        Agent = 1 << 2,
+    }
+
     [System.Serializable]
     public class FollowerControllerParameters
     {
         public float distanceToLeaderMin = 1.0f;
-        public float distanceToLeaderMax = 5.0f;
+        public float distanceToLeaderMax = 3.0f;
 
         [Tooltip("The width in world units of the nav graph samples (samples are centered on the x position of the avatar).")]
         public int navGraphSampleWidth = 60;
 
         [Tooltip("The time in seconds to wait before refreshing the navigation graph (and the path).")]
         public float navGraphObsolenceTime = 1.0f;
+
+        public DrawGizmosMode drawGizmosMode = (DrawGizmosMode)~0;
     }
 
     [ExecuteAlways]
@@ -153,17 +163,24 @@ namespace Avatar
             if (enabled == false || leaderAvatar == null)
                 return;
 
-            Gizmos.color = Colors.Hex("6FF");
-            Gizmos.DrawLine(avatar.transform.position, leaderAvatar.transform.position);
-            GizmosUtils.DrawCircle(transform.position, Vector3.back, Parameters.distanceToLeaderMin);
-            GizmosUtils.DrawCircle(transform.position, Vector3.back, Parameters.distanceToLeaderMax);
+            var mode = Parameters.drawGizmosMode;
+
+            if (mode.HasFlag(DrawGizmosMode.DistanceToLeader))
+            {
+                Gizmos.color = Colors.Hex("6FF");
+                Gizmos.DrawLine(avatar.transform.position, leaderAvatar.transform.position);
+                GizmosUtils.DrawCircle(transform.position, Vector3.back, Parameters.distanceToLeaderMin);
+                GizmosUtils.DrawCircle(transform.position, Vector3.back, Parameters.distanceToLeaderMax);
+            }
 
             if (tracePoint.HasValue)
                 Gizmos.DrawWireSphere(tracePoint.Value.position, avatar.parameters.leaderController.traceIntervalDistanceMax * 1.1f);
 
-            navGraph.DrawGizmos();
+            if (mode.HasFlag(DrawGizmosMode.NavGraph))
+                navGraph.DrawGizmos();
 
-            agent?.DrawGizmos();
+            if (mode.HasFlag(DrawGizmosMode.Agent))
+                agent?.DrawGizmos();
         }
 
 #if UNITY_EDITOR

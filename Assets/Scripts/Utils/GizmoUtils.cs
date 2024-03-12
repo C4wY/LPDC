@@ -111,12 +111,14 @@ public static class GizmosUtils
         MeshUtils.Transform(mesh, Matrix4x4.Rotate(Quaternion.Euler(90, 0, 0)));
         return mesh;
     });
+
     static readonly System.Lazy<Mesh> coneMesh = new(() =>
     {
         var mesh = MeshUtils.Cone(radius: 0.05f, height: 0.2f, segments: 16);
         MeshUtils.Transform(mesh, Matrix4x4.Rotate(Quaternion.Euler(90, 0, 0)));
         return mesh;
     });
+
     public static void DrawArrow(Vector3 origin, Vector3 scaledDirection)
     {
         const float arrowHeadLength = 0.2f;
@@ -140,12 +142,14 @@ public static class GizmosUtils
             var scale = new Vector3(1, 1, length - arrowHeadLength);
             Gizmos.DrawMesh(cylinderMesh.Value, position, rotation, scale);
         }
+
         void Cone()
         {
             var position = origin + direction * (length - arrowHeadLength);
             var rotation = Quaternion.LookRotation(scaledDirection);
             Gizmos.DrawMesh(coneMesh.Value, position, rotation, Vector3.one);
         }
+
         var cameraForward = Camera.current.transform.forward;
         if (Vector3.Dot(cameraForward, direction) > 0)
         {
