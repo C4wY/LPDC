@@ -93,8 +93,8 @@ namespace Avatar
             var wannaGoForeground = dir.z < 0 && dir.y < 0;
             verticalInput = wannaGoForeground ? -1 : 0;
 
-            avatar.Move.UpdateHorizontal(horizontalInput);
-            avatar.Move.GoForegroundUpdate(verticalInput);
+            avatar.Move.HorizontalUpdate(horizontalInput);
+            avatar.Move.VerticalUpdate(verticalInput);
         }
 
         void OnEnable()

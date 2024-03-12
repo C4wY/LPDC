@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteAlways]
 public class OneSidedPlatformAgent : MonoBehaviour
 {
-    public Collider[] colliders;
+    public bool ignoreAll = false;
+
+    readonly HashSet<Collider> collidersToIgnore = new();
+    Collider[] selfColliders;
 
     Rigidbody GetRigidbody()
     {
@@ -15,24 +19,29 @@ public class OneSidedPlatformAgent : MonoBehaviour
         return rigidbody;
     }
 
-    void OnEnable()
+    bool Ignore(OneSidedPlatform platform)
     {
-        colliders = GetRigidbody().GetComponentsInChildren<Collider>();
+        if (ignoreAll)
+            return true;
+
+        if (collidersToIgnore.Contains(platform.boxCollider))
+            return true;
+
+        return transform.position.y < platform.Top.y;
     }
 
-    void Update()
+    void OnEnable()
     {
-#if UNITY_EDITOR
-        if (Application.isPlaying == false)
-            return;
-#endif
+        selfColliders = GetRigidbody().GetComponentsInChildren<Collider>();
+    }
+
+    void FixedUpdate()
+    {
         foreach (var platform in OneSidedPlatform.instances)
         {
-            var ignore = transform.position.y < platform.Top.y;
-            foreach (var collider in colliders)
-            {
+            var ignore = Ignore(platform);
+            foreach (var collider in selfColliders)
                 Physics.IgnoreCollision(collider, platform.boxCollider, ignore);
-            }
         }
     }
 
@@ -40,8 +49,7 @@ public class OneSidedPlatformAgent : MonoBehaviour
     {
         foreach (var platform in OneSidedPlatform.instances)
         {
-            var ignore = transform.position.y < platform.Top.y;
-            Gizmos.color = ignore ? Color.red : Color.green;
+            Gizmos.color = Ignore(platform) ? Color.red : Color.green;
             Gizmos.DrawWireCube(platform.boxCollider.bounds.center, platform.boxCollider.bounds.size);
         }
     }

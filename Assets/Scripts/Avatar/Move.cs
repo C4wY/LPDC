@@ -58,7 +58,7 @@ namespace Avatar
             return false;
         }
 
-        public void UpdateHorizontal(float horizontalInput)
+        public void HorizontalUpdate(float horizontalInput)
         {
             if (enabled == false)
                 return;
@@ -72,15 +72,15 @@ namespace Avatar
         {
             if (avatar.Ground.HasGroundPoint)
             {
-                var (x, y, z) = avatar.Rigidbody.position;
-                z = Mathf.Lerp(z, avatar.Ground.GroundPoint.z, 0.33f);
+                var (x, y, _) = avatar.Rigidbody.position;
+                var z = avatar.Ground.GroundPoint.z; // No lerp here since it's a 2D game.
                 avatar.Rigidbody.position = new(x, y, z);
             }
         }
 
         public float GoForegroundTime { get; private set; } = -1;
 
-        public void GoForegroundUpdate(float verticalInput)
+        public void VerticalUpdate(float verticalInput)
         {
             var cooldown = Time.time < GoForegroundTime + Parameters.goBackwardCooldown;
 
@@ -95,6 +95,9 @@ namespace Avatar
                     avatar.Ground.lockLayerIndex = layerIndex; // Lock the layer to avoid going foreground.
                 }
             }
+
+            // Ignore all one-sided platforms when going down.
+            avatar.OneSidedPlatformAgent.ignoreAll = verticalInput < -0.1f;
         }
 
         void OnEnable()

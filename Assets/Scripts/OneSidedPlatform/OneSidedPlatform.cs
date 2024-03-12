@@ -39,6 +39,7 @@ public class OneSidedPlatform : MonoBehaviour
     {
         instances.Add(this);
         boxCollider = GetComponent<BoxCollider>();
+        gameObject.layer = LayerMask.NameToLayer("OneSidedPlatform");
     }
 
     void OnDisable()

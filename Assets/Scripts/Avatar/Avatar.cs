@@ -37,6 +37,7 @@ namespace Avatar
         public Move Move { get; private set; }
         public Ground Ground { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
+        public OneSidedPlatformAgent OneSidedPlatformAgent { get; private set; }
 
         void RoleUpdate()
         {
@@ -57,6 +58,7 @@ namespace Avatar
             Move = GetComponent<Move>();
             Ground = GetComponent<Ground>();
             Rigidbody = GetComponent<Rigidbody>();
+            OneSidedPlatformAgent = GetComponentInChildren<OneSidedPlatformAgent>();
 
             RoleUpdate();
         }

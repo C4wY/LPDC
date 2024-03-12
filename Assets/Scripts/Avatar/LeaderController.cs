@@ -112,8 +112,8 @@ namespace Avatar
 
             wannaJump = false;
 
-            avatar.Move.UpdateHorizontal(input.horizontal);
-            avatar.Move.GoForegroundUpdate(input.vertical);
+            avatar.Move.HorizontalUpdate(input.horizontal);
+            avatar.Move.VerticalUpdate(input.vertical);
             avatar.Move.UpdateZ();
             TraceUpdate();
         }

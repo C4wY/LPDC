@@ -35,7 +35,8 @@ public partial class NavGraph
 
     public void SampleWorld(int xMin, int xMax, int zMin, int zMax, float originY = 100, float distance = 200)
     {
-        var mask = LayerMask.GetMask("LevelBlock");
+        var oneSidedLayer = LayerMask.NameToLayer("OneSidedPlatform");
+        var mask = LayerMask.GetMask("LevelBlock", "OneSidedPlatform");
 
         var nodeTable = new Dictionary<Vector2, Node>();
 
@@ -50,7 +51,9 @@ public partial class NavGraph
                 for (var i = 0; i < raycastHitCount; i++)
                 {
                     var hit = raycastHits[i];
-                    var overlapCount = Physics.OverlapCapsuleNonAlloc(hit.point + Vector3.up * 0.5f, hit.point + Vector3.up * 1.5f, 0.45f, overlaps, mask);
+                    var overlapCount = hit.collider.gameObject.layer == oneSidedLayer
+                        ? 0 // Ignoring one-sided platforms overlaps.
+                        : Physics.OverlapCapsuleNonAlloc(hit.point + Vector3.up * 0.5f, hit.point + Vector3.up * 1.5f, 0.45f, overlaps, mask);
                     if (overlapCount == 0)
                     {
                         var node = new Node { position = new(x, hit.point.y, z) };
