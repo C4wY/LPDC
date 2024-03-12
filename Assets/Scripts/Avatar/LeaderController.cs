@@ -16,7 +16,13 @@ namespace Avatar
     {
         public float traceIntervalDistanceMax = 0.25f;
 
-        public bool drawGizmos = true;
+        [System.Flags]
+        public enum GizmosMode
+        {
+            Trace = 1 << 0,
+        }
+
+        public GizmosMode gizmos = (GizmosMode)~0 ^ GizmosMode.Trace;
     }
 
     [ExecuteAlways]
@@ -114,10 +120,8 @@ namespace Avatar
 
         void OnDrawGizmos()
         {
-            if (Parameters.drawGizmos)
-            {
+            if (Parameters.gizmos.HasFlag(LeaderControllerParameters.GizmosMode.Trace))
                 trace.DrawGizmos();
-            }
         }
     }
 }

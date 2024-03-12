@@ -8,14 +8,6 @@ using UnityEditor;
 
 namespace Avatar
 {
-    [System.Flags]
-    public enum DrawGizmosMode
-    {
-        DistanceToLeader = 1 << 0,
-        NavGraph = 1 << 1,
-        Agent = 1 << 2,
-    }
-
     [System.Serializable]
     public class FollowerControllerParameters
     {
@@ -28,7 +20,15 @@ namespace Avatar
         [Tooltip("The time in seconds to wait before refreshing the navigation graph (and the path).")]
         public float navGraphObsolenceTime = 1.0f;
 
-        public DrawGizmosMode drawGizmosMode = (DrawGizmosMode)~0;
+        [System.Flags]
+        public enum GizmosMode
+        {
+            DistanceToLeader = 1 << 0,
+            NavGraph = 1 << 1,
+            Agent = 1 << 2,
+        }
+
+        public GizmosMode gizmos = (GizmosMode)~0;
     }
 
     [ExecuteAlways]
@@ -95,7 +95,6 @@ namespace Avatar
 
             avatar.Move.UpdateHorizontal(horizontalInput);
             avatar.Move.GoForegroundUpdate(verticalInput);
-            avatar.Move.UpdateZ();
         }
 
         void OnEnable()
@@ -156,6 +155,7 @@ namespace Avatar
                 UpdateAgent();
                 UpdateFollow();
             }
+            avatar.Move.UpdateZ();
         }
 
         void OnDrawGizmos()
@@ -163,9 +163,9 @@ namespace Avatar
             if (enabled == false || leaderAvatar == null)
                 return;
 
-            var mode = Parameters.drawGizmosMode;
+            var mode = Parameters.gizmos;
 
-            if (mode.HasFlag(DrawGizmosMode.DistanceToLeader))
+            if (mode.HasFlag(FollowerControllerParameters.GizmosMode.DistanceToLeader))
             {
                 Gizmos.color = Colors.Hex("6FF");
                 Gizmos.DrawLine(avatar.transform.position, leaderAvatar.transform.position);
@@ -176,10 +176,10 @@ namespace Avatar
             if (tracePoint.HasValue)
                 Gizmos.DrawWireSphere(tracePoint.Value.position, avatar.parameters.leaderController.traceIntervalDistanceMax * 1.1f);
 
-            if (mode.HasFlag(DrawGizmosMode.NavGraph))
+            if (mode.HasFlag(FollowerControllerParameters.GizmosMode.NavGraph))
                 navGraph.DrawGizmos();
 
-            if (mode.HasFlag(DrawGizmosMode.Agent))
+            if (mode.HasFlag(FollowerControllerParameters.GizmosMode.Agent))
                 agent?.DrawGizmos();
         }
 

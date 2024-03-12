@@ -19,7 +19,13 @@ namespace Avatar
         [Tooltip("The maximum distance from the ground to be considered as a being on the ground.")]
         public float maxDistance = 0.1f;
 
-        public bool drawGizmos = true;
+        [System.Flags]
+        public enum GizmosMode
+        {
+            Raycasts = 1 << 0,
+            GroundPoint = 1 << 1,
+        }
+        public GizmosMode gizmos = (GizmosMode)~0;
     }
 
     [ExecuteAlways]
@@ -195,44 +201,47 @@ namespace Avatar
 
         void OnDrawGizmos()
         {
-            if (Parameters.drawGizmos == false)
-                return;
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(FeetPosition, 0.05f);
-            GizmosUtils.DrawCircle(FeetPosition, Vector3.back, 0.075f);
-
-            foreach (var (wallHit, wallRay, wallInfo, groundHit, groundRay, groundInfo) in raycastInfos)
+            if (Parameters.gizmos.HasFlag(GroundParameters.GizmosMode.Raycasts))
             {
-                if (wallHit)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(wallRay.origin, 0.025f);
-                    Gizmos.DrawSphere(wallInfo.point, 0.05f);
-                    Gizmos.DrawLine(wallRay.origin, wallInfo.point);
-                }
-                else
-                {
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawSphere(groundRay.origin, 0.025f);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(FeetPosition, 0.05f);
+                GizmosUtils.DrawCircle(FeetPosition, Vector3.back, 0.075f);
 
-                    if (groundHit)
+                foreach (var (wallHit, wallRay, wallInfo, groundHit, groundRay, groundInfo) in raycastInfos)
+                {
+                    if (wallHit)
                     {
-                        Gizmos.DrawLine(groundRay.origin, groundInfo.point);
-                        Gizmos.DrawSphere(groundInfo.point, 0.05f);
+                        Gizmos.color = Color.red;
+                        Gizmos.DrawSphere(wallRay.origin, 0.0125f);
+                        Gizmos.DrawSphere(wallInfo.point, 0.025f);
+                        Gizmos.DrawLine(wallRay.origin, wallInfo.point);
                     }
                     else
                     {
-                        Gizmos.DrawRay(groundRay.origin, groundRay.direction * (Parameters.rayMaxDistance + Parameters.pivotDownOffset));
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawSphere(groundRay.origin, 0.0125f);
+
+                        if (groundHit)
+                        {
+                            Gizmos.DrawLine(groundRay.origin, groundInfo.point);
+                            Gizmos.DrawSphere(groundInfo.point, 0.025f);
+                        }
+                        else
+                        {
+                            Gizmos.DrawRay(groundRay.origin, groundRay.direction * (Parameters.rayMaxDistance + Parameters.pivotDownOffset));
+                        }
                     }
                 }
             }
 
-            if (HasGroundPoint)
+            if (Parameters.gizmos.HasFlag(GroundParameters.GizmosMode.GroundPoint))
             {
-                Gizmos.color = Color.yellow;
-                GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.2f);
-                GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.3f);
+                if (HasGroundPoint)
+                {
+                    Gizmos.color = Color.yellow;
+                    GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.2f);
+                    GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.3f);
+                }
             }
         }
 
