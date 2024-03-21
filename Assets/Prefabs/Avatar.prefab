@@ -166,9 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e83c767d5b47f4470b357c9b033ebb63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliders:
-  - {fileID: 5412993629879299414}
-  - {fileID: 4616890706922536240}
+  ignoreAll: 0
 --- !u!1 &7802931173180564744
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,6 +383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceDown: 0
+  dashTime: 123456
 --- !u!114 &719985179100331000
 MonoBehaviour:
   m_ObjectHideFlags: 0
