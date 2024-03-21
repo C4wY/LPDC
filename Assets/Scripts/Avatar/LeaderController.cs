@@ -9,6 +9,7 @@ namespace Avatar
         public float horizontal, vertical;
         public bool foreground, background;
         public bool jump;
+        public bool competenceFront, competenceBack;
     }
 
     [System.Serializable]
@@ -108,6 +109,7 @@ namespace Avatar
                 vertical = Input.GetAxis("Vertical"),
                 foreground = Input.GetAxis("Vertical") < -0.1f,
                 background = Input.GetAxis("Vertical") > 0.1f,
+                competenceFront = InputManager.Instance.CompetenceFront(),
             };
 
             wannaJump = false;
