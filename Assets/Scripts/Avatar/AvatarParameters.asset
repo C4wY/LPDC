@@ -23,7 +23,10 @@ MonoBehaviour:
   move:
     jumpHeight: 1.33
     jumpCooldown: 0.33
-    groundVelocity: 5
+    walkVelocity: 2.5
+    runVelocity: 5
+    dashCooldown: 0.2
+    dashVelocity: 30
     goBackwardCooldown: 0.33
   leaderController:
     traceIntervalDistanceMax: 0.25

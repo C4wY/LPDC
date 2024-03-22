@@ -7,7 +7,14 @@ namespace Avatar
     {
         public float jumpHeight = 1.33f;
         public float jumpCooldown = 0.33f;
-        public float groundVelocity = 5;
+
+        public float walkVelocity = 2.5f;
+        public float runVelocity = 5;
+
+        [Tooltip("The time in seconds to wait before being able to dash again.")]
+        public float dashDuration = 0.15f;
+        public float dashCooldown = 0.6f;
+        public float dashVelocity = 30;
 
         [Tooltip("The time in seconds to wait before being able to go backward again (backward in Unity, is going foreground in a theater).")]
         public float goBackwardCooldown = 0.33f;
@@ -19,9 +26,12 @@ namespace Avatar
         public bool forceDown;
 
         public float JumpTime { get; private set; } = -1;
-
         public bool IsJumping =>
             Time.time < JumpTime + Parameters.jumpCooldown;
+
+        public float DashTime { get; private set; } = -1;
+        public bool IsDashing =>
+            Time.time < DashTime + Parameters.dashDuration;
 
         Avatar avatar;
         Avatar Avatar =>
@@ -58,12 +68,31 @@ namespace Avatar
             return false;
         }
 
+        void Dash()
+        {
+            DashTime = Time.time;
+        }
+
+        public bool TryToDash()
+        {
+            var cooldownOk = Time.time > DashTime + Parameters.dashCooldown;
+            if (cooldownOk)
+            {
+                Dash();
+                return true;
+            }
+
+            return false;
+        }
+
         public void HorizontalUpdate(float horizontalInput)
         {
             if (enabled == false)
                 return;
 
-            var x = horizontalInput * Parameters.groundVelocity;
+            var x = IsDashing
+                ? horizontalInput * Parameters.dashVelocity
+                : horizontalInput * Parameters.runVelocity;
             var y = avatar.Rigidbody.velocity.y;
             avatar.Rigidbody.velocity = new(x, y, 0);
         }
