@@ -10,6 +10,9 @@ public class MIC_Prox_Apparition_Platformes : MonoBehaviour
     public float interactionDistance = 3f;
     public GameObject leverText;
     public GameObject[] platformsToActivate;
+    public AudioClip leverSound;
+    public AudioSource audioSource;
+    
 
     private bool isPlayerInRange = false;
     private bool leverActivated = false;
@@ -50,6 +53,13 @@ public class MIC_Prox_Apparition_Platformes : MonoBehaviour
             }
             leverActivated = true;
             Debug.Log("Le levier a été activé !");
+            
+                        if (audioSource && leverSound)
+            {
+                audioSource.PlayOneShot(leverSound);
+            }
+
+            
         }
     }
 }
