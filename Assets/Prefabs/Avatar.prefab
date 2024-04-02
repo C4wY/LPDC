@@ -185,10 +185,11 @@ GameObject:
   - component: {fileID: 5584841039608773241}
   - component: {fileID: 5521968873106261111}
   - component: {fileID: 6426018546672864112}
+  - component: {fileID: 5883021434040560440}
   - component: {fileID: 719985179100331000}
   m_Layer: 6
   m_Name: Avatar
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -383,7 +384,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceDown: 0
-  dashTime: 123456
+--- !u!114 &5883021434040560440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7802931173180564744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4f744bfd027d9f45822b78bce94774f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PV: 3
 --- !u!114 &719985179100331000
 MonoBehaviour:
   m_ObjectHideFlags: 0
