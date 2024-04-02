@@ -18,6 +18,14 @@ namespace Avatar
 
         [Tooltip("The maximum distance from the ground to be considered as a being on the ground.")]
         public float maxDistance = 0.1f;
+
+        [System.Flags]
+        public enum GizmosMode
+        {
+            Raycasts = 1 << 0,
+            GroundPoint = 1 << 1,
+        }
+        public GizmosMode gizmos = (GizmosMode)~0;
     }
 
     [ExecuteAlways]
@@ -58,6 +66,9 @@ namespace Avatar
         public int lockLayerIndex = -1;
 
         GroundRaycastInfo[] raycastInfos = { };
+
+        public Vector3 FeetPosition =>
+            transform.TransformPoint(Vector3.down * Parameters.pivotDownOffset);
 
         public int CurrentLayerIndex { get; private set; } = -1;
         public bool HasGroundPoint { get; private set; } = false;
@@ -121,7 +132,8 @@ namespace Avatar
                         {
                             case MathUtils.CompareResult.Equal:
                                 // If the ground points are at the same height, choose the nearest one.
-                                if (Mathf.Abs(GroundPoint.z - transform.position.z) > Mathf.Abs(info.groundInfo.point.z - transform.position.z))
+                                // if (Mathf.Abs(GroundPoint.z - transform.position.z) > Mathf.Abs(info.groundInfo.point.z - transform.position.z))
+                                if (GroundPoint.z > info.groundInfo.point.z)
                                 {
                                     GroundPoint = info.groundInfo.point;
                                     GroundPointLayerIndex = index;
@@ -135,7 +147,7 @@ namespace Avatar
                         }
                     }
 
-                    if (HasGroundPoint && lockLayerIndex == GroundPointLayerIndex && lockLayerIndex == index)
+                    if (HasGroundPoint && lockLayerIndex == index)
                         break; // Don't go further (to the next layer, to the background).
                 }
             }
@@ -189,37 +201,47 @@ namespace Avatar
 
         void OnDrawGizmos()
         {
-            foreach (var (wallHit, wallRay, wallInfo, groundHit, groundRay, groundInfo) in raycastInfos)
+            if (Parameters.gizmos.HasFlag(GroundParameters.GizmosMode.Raycasts))
             {
-                if (wallHit)
-                {
-                    Gizmos.color = Color.red;
-                    Gizmos.DrawSphere(wallRay.origin, 0.1f);
-                    Gizmos.DrawSphere(wallInfo.point, 0.05f);
-                    Gizmos.DrawLine(wallRay.origin, wallInfo.point);
-                }
-                else
-                {
-                    Gizmos.color = Color.yellow;
-                    Gizmos.DrawSphere(groundRay.origin, 0.1f);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(FeetPosition, 0.05f);
+                GizmosUtils.DrawCircle(FeetPosition, Vector3.back, 0.075f);
 
-                    if (groundHit)
+                foreach (var (wallHit, wallRay, wallInfo, groundHit, groundRay, groundInfo) in raycastInfos)
+                {
+                    if (wallHit)
                     {
-                        Gizmos.DrawLine(groundRay.origin, groundInfo.point);
-                        Gizmos.DrawSphere(groundInfo.point, 0.05f);
+                        Gizmos.color = Color.red;
+                        Gizmos.DrawSphere(wallRay.origin, 0.0125f);
+                        Gizmos.DrawSphere(wallInfo.point, 0.025f);
+                        Gizmos.DrawLine(wallRay.origin, wallInfo.point);
                     }
                     else
                     {
-                        Gizmos.DrawRay(groundRay.origin, groundRay.direction * (Parameters.rayMaxDistance + Parameters.pivotDownOffset));
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawSphere(groundRay.origin, 0.0125f);
+
+                        if (groundHit)
+                        {
+                            Gizmos.DrawLine(groundRay.origin, groundInfo.point);
+                            Gizmos.DrawSphere(groundInfo.point, 0.025f);
+                        }
+                        else
+                        {
+                            Gizmos.DrawRay(groundRay.origin, groundRay.direction * (Parameters.rayMaxDistance + Parameters.pivotDownOffset));
+                        }
                     }
                 }
             }
 
-            if (HasGroundPoint)
+            if (Parameters.gizmos.HasFlag(GroundParameters.GizmosMode.GroundPoint))
             {
-                Gizmos.color = Color.yellow;
-                GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.2f);
-                GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.3f);
+                if (HasGroundPoint)
+                {
+                    Gizmos.color = Color.yellow;
+                    GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.2f);
+                    GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.3f);
+                }
             }
         }
 
@@ -234,6 +256,7 @@ namespace Avatar
                 var Target = (Ground)target;
 
                 GUI.enabled = false;
+                EditorGUILayout.LabelField("IsGrounded", $"{Target.IsGrounded}");
                 EditorGUILayout.LabelField("Current Layer Index", $"{Target.CurrentLayerIndex}");
                 EditorGUILayout.LabelField("Has Ground Point", $"{Target.HasGroundPoint} (layer: {Target.GroundPointLayerIndex})");
                 EditorGUILayout.LabelField("Ground Distance", $"{Target.GroundDistance:F2}");

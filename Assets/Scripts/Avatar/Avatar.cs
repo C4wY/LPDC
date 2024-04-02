@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -36,6 +37,7 @@ namespace Avatar
         public Move Move { get; private set; }
         public Ground Ground { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
+        public OneSidedPlatformAgent OneSidedPlatformAgent { get; private set; }
 
         void RoleUpdate()
         {
@@ -56,6 +58,7 @@ namespace Avatar
             Move = GetComponent<Move>();
             Ground = GetComponent<Ground>();
             Rigidbody = GetComponent<Rigidbody>();
+            OneSidedPlatformAgent = GetComponentInChildren<OneSidedPlatformAgent>();
 
             RoleUpdate();
         }
@@ -66,16 +69,21 @@ namespace Avatar
         }
 
 #if UNITY_EDITOR
+        static Avatar[] GetAllAvatars() =>
+            FindObjectsByType<Avatar>(FindObjectsSortMode.None);
+
         void UpdateAllAvatar()
         {
-            foreach (var player in FindObjectsByType<Avatar>(FindObjectsSortMode.None))
+            foreach (var avatar in GetAllAvatars())
             {
-                if (player != this)
-                    player.role = role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
+                if (avatar != this)
+                    avatar.role = role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
 
-                player.RoleUpdate();
+                avatar.RoleUpdate();
+                EditorUtility.SetDirty(avatar);
             }
         }
+
         void OnValidate()
         {
             EditorApplication.delayCall += () =>
@@ -83,6 +91,31 @@ namespace Avatar
                 // Debug.Log($"leader: {leader}, follower: {follower}");
                 if (LeaderController != null)
                     UpdateAllAvatar();
+            };
+        }
+
+        public static string AvatarPositionPath =>
+            System.IO.Path.Join(Application.persistentDataPath, "tmp", "avatar-positions.json");
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void Init()
+        {
+            // Load avatars positions when entering edit mode.
+            EditorApplication.playModeStateChanged += state =>
+            {
+                if (state == PlayModeStateChange.EnteredEditMode)
+                {
+                    var positions = SerializableDictionary<int, Vector3>.FromJsonFile(AvatarPositionPath);
+
+                    foreach (var avatar in GetAllAvatars())
+                    {
+                        var id = avatar.gameObject.GetInstanceID();
+                        if (positions.TryGetValue(id, out var position))
+                            avatar.transform.position = position;
+                    }
+
+                    System.IO.File.Delete(AvatarPositionPath);
+                }
             };
         }
 
@@ -99,19 +132,31 @@ namespace Avatar
                 var otherRole = Target.role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
                 if (GUILayout.Button($"Switch to {otherRole}"))
                 {
+                    Undo.RecordObjects(GetAllAvatars(), "Switch role");
                     Target.role = otherRole;
                     Target.UpdateAllAvatar();
                 }
 
                 if (GUILayout.Button("Regroup all Avatar"))
                 {
-                    foreach (var player in FindObjectsByType<Avatar>(FindObjectsSortMode.None))
+                    foreach (var avatar in GetAllAvatars())
                     {
-                        if (player == Target)
+                        if (avatar == Target)
                             continue;
 
-                        player.transform.position = Target.transform.position + Vector3.right * 0.2f;
+                        avatar.transform.position = Target.transform.position + Vector3.right * 0.2f;
                     }
+                }
+
+                GUI.enabled = Application.isPlaying;
+                if (GUILayout.Button("Save Avatars Positions"))
+                {
+                    System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(AvatarPositionPath));
+
+                    var avatars = GetAllAvatars();
+                    SerializableDictionary
+                        .Create(avatars.Select(a => (a.gameObject.GetInstanceID(), a.transform.position)))
+                        .ToJsonFile(AvatarPositionPath, prettyPrint: true);
                 }
             }
         }

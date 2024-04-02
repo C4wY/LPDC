@@ -47,7 +47,7 @@ namespace Avatar
                 realIsGrounded = realIsGroundedNew;
             }
 
-            var x = avatar.IsLeader ? avatar.LeaderController.input.x : avatar.Rigidbody.velocity.x;
+            var x = avatar.IsLeader ? avatar.LeaderController.input.horizontal : avatar.Rigidbody.velocity.x;
             animator.SetFloat("HSpeed", Mathf.Abs(x));
             animator.SetBool("IsGrounded", SpriteIsGrounded);
 

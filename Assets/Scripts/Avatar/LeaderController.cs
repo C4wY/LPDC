@@ -3,118 +3,136 @@ using UnityEngine;
 
 namespace Avatar
 {
-    public struct InputEntry
-    {
-        public float time;
-        public float x;
-        public bool foreground, background;
-        public bool jump;
-    }
+	public struct InputEntry
+	{
+		public float time;
+		public float horizontal, vertical;
+		public bool foreground, background;
+		public bool jump;
+		public bool competenceFront, competenceBack;
+	}
 
-    [System.Serializable]
-    public class LeaderControllerParameters
-    {
-        public float traceIntervalDistanceMax = 0.25f;
+	[System.Serializable]
+	public class LeaderControllerParameters
+	{
+		public float traceIntervalDistanceMax = 0.25f;
 
-        public bool drawGizmos = true;
-    }
+		[System.Flags]
+		public enum GizmosMode
+		{
+			Trace = 1 << 0,
+		}
 
-    [ExecuteAlways]
-    public class LeaderController : MonoBehaviour
-    {
-        public readonly Trace trace = new();
+		public GizmosMode gizmos = (GizmosMode)~0 ^ GizmosMode.Trace;
+	}
 
-        public InputEntry input;
+	[ExecuteAlways]
+	public class LeaderController : MonoBehaviour
+	{
+		public readonly Trace trace = new();
 
-        Avatar avatar;
+		public InputEntry input;
 
-        public LeaderControllerParameters Parameters =>
-            avatar.SafeParameters.leaderController;
+		Avatar avatar;
+		Avatar Avatar =>
+			avatar != null ? avatar : avatar = GetComponent<Avatar>();
 
-        void JumpUpdate()
-        {
-            if (input.jump)
-            {
-                if (avatar.Move.TryToJump())
-                {
-                    var movePoint = new TracePoint
-                    {
-                        position = transform.position,
-                        time = Time.time,
-                        input = input,
-                        actions = TracePoint.Action.Jump,
-                    };
-                    trace.Add(movePoint);
-                }
-            }
-        }
+		public LeaderControllerParameters Parameters =>
+			Avatar.SafeParameters.leaderController;
 
-        void FollowUpdate()
-        {
-            if (Time.frameCount % 10 == 0)
-            {
-                var camera = FindAnyObjectByType<CinemachineCamera>();
-                if (camera != null)
-                    camera.Follow = transform;
-            }
-        }
+		void JumpUpdate()
+		{
+			if (input.jump)
+			{
+				if (avatar.Move.TryToJump())
+				{
+					var movePoint = new TracePoint
+					{
+						position = transform.position,
+						time = Time.time,
+						input = input,
+						actions = TracePoint.Action.Jump,
+					};
+					trace.Add(movePoint);
+				}
+			}
+		}
 
-        void TraceUpdate()
-        {
-            var delta = transform.position - trace.Current.position;
-            if (delta.sqrMagnitude > Parameters.traceIntervalDistanceMax * Parameters.traceIntervalDistanceMax)
-            {
-                var movePoint = new TracePoint
-                {
-                    position = transform.position,
-                    time = Time.time,
-                    input = input,
-                    actions = TracePoint.Action.None,
-                };
-                trace.Add(movePoint);
-            }
-        }
+		void DashUpdate()
+		{
+			if (input.competenceFront)
+			{
+				avatar.Move.TryToDash();
+			}
+		}
 
-        void OnEnable()
-        {
-            avatar = GetComponent<Avatar>();
-        }
+		void CameraFollowUpdate()
+		{
+			if (Time.frameCount % 10 == 0)
+			{
+				var camera = FindAnyObjectByType<CinemachineCamera>();
+				if (camera != null)
+					camera.Follow = transform;
+			}
+		}
 
-        bool wannaJump;
+		void TraceUpdate()
+		{
+			var delta = transform.position - trace.Current.position;
+			if (delta.sqrMagnitude > Parameters.traceIntervalDistanceMax * Parameters.traceIntervalDistanceMax)
+			{
+				var movePoint = new TracePoint
+				{
+					position = transform.position,
+					time = Time.time,
+					input = input,
+					actions = TracePoint.Action.None,
+				};
+				trace.Add(movePoint);
+			}
+		}
 
-        void Update()
-        {
-            wannaJump |= Input.GetButtonDown("Jump");
+		void OnEnable()
+		{
+			avatar = GetComponent<Avatar>();
+		}
 
-            JumpUpdate();
-            avatar.Move.GoForegroundUpdate();
-            FollowUpdate();
-        }
+		bool wannaJump;
 
-        void FixedUpdate()
-        {
-            input = new InputEntry
-            {
-                time = Time.time,
-                jump = wannaJump,
-                x = Input.GetAxis("Horizontal"),
-                foreground = Input.GetAxis("Vertical") < -0.1f,
-                background = Input.GetAxis("Vertical") > 0.1f,
-            };
+		void Update()
+		{
+			wannaJump |= Input.GetButtonDown("Jump");
 
-            wannaJump = false;
+			JumpUpdate();
+			DashUpdate();
+			CameraFollowUpdate();
+		}
 
-            avatar.Move.HorizontalMoveUpdate(input.x);
-            avatar.Move.UpdateGroundPoint();
-            TraceUpdate();
-        }
+		void FixedUpdate()
+		{
+			input = new InputEntry
+			{
+				time = Time.time,
+				jump = wannaJump,
+				horizontal = Input.GetAxis("Horizontal"),
+				vertical = Input.GetAxis("Vertical"),
+				foreground = Input.GetAxis("Vertical") < -0.1f,
+				background = Input.GetAxis("Vertical") > 0.1f,
+				competenceFront = InputManager.Instance.CompetenceFront(),
+			};
 
-        void OnDrawGizmos()
-        {
-            if (Parameters.drawGizmos)
-            {
-                trace.DrawGizmos();
-            }
-        }
-    }
+			wannaJump = false;
+
+			avatar.Move.HorizontalUpdate(input.horizontal);
+			avatar.Move.VerticalUpdate(input.vertical);
+			avatar.Move.UpdateZ();
+			TraceUpdate();
+		}
+
+		void OnDrawGizmos()
+		{
+			if (Parameters.gizmos.HasFlag(LeaderControllerParameters.GizmosMode.Trace))
+				trace.DrawGizmos();
+		}
+	}
 }
