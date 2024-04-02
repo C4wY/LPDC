@@ -53,6 +53,9 @@ namespace Level.LevelPlaneOrganizer
 
         void OnEnable()
         {
+            gameObject.name = "Level Sprites";
+            transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+
             if (Application.isPlaying)
             {
                 ToggleSpriteRenderers(true);
