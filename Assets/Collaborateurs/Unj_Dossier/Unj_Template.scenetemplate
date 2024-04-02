@@ -15,7 +15,7 @@ MonoBehaviour:
   templateScene: {fileID: 102900000, guid: 2bd1ee7adeb67e54e8deea5486f446a1, type: 3}
   templateName: 
   description: 
-  preview: {fileID: 0}
+  preview: {fileID: 2800000, guid: 5d9118663c4ee4f0091295fff0f92e73, type: 3}
   dependencies:
   - dependency: {fileID: 9100000, guid: 0742b73dddaa140669c2161628816f2f, type: 2}
     instantiationMode: 0
@@ -42,6 +42,8 @@ MonoBehaviour:
   - dependency: {fileID: 8868536978937753285, guid: 53324580c3f934f03ad36f66b22d79d1,
       type: 3}
     instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 26663a5ec9987421996161615506b6c5, type: 3}
+    instantiationMode: 1
   - dependency: {fileID: 7400000, guid: f2d2c2ed64a966246968d6721e89870b, type: 2}
     instantiationMode: 0
   - dependency: {fileID: 7400000, guid: 96bc50bf032015d45b71cec5358a7cb6, type: 2}
@@ -63,6 +65,8 @@ MonoBehaviour:
     instantiationMode: 0
   - dependency: {fileID: 13400000, guid: 034f46916591245f5a2f9748d0b8a6a7, type: 2}
     instantiationMode: 0
+  - dependency: {fileID: 2800000, guid: 57da91ef0c2a5489891995dc81537253, type: 3}
+    instantiationMode: 1
   templatePipeline: {fileID: 0}
-  badge: {fileID: 0}
+  badge: {fileID: 2800000, guid: 5d9118663c4ee4f0091295fff0f92e73, type: 3}
   addToDefaults: 0
