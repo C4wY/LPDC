@@ -449,7 +449,11 @@ MonoBehaviour:
   move:
     jumpHeight: 1.33
     jumpCooldown: 0.33
-    groundVelocity: 5
+    walkVelocity: 2.5
+    runVelocity: 5
+    dashDuration: 0.15
+    dashCooldown: 0.6
+    dashVelocity: 30
     goBackwardCooldown: 0.33
   leaderController:
     traceIntervalDistanceMax: 0.25
@@ -809,7 +813,11 @@ MonoBehaviour:
   move:
     jumpHeight: 1.33
     jumpCooldown: 0.33
-    groundVelocity: 5
+    walkVelocity: 2.5
+    runVelocity: 5
+    dashDuration: 0.15
+    dashCooldown: 0.6
+    dashVelocity: 30
     goBackwardCooldown: 0.33
   leaderController:
     traceIntervalDistanceMax: 0.25
@@ -1730,13 +1738,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48631fc1aed926548b67d9ec1fea5f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  moveInput: {x: 0, y: 0}
-  activemoveSpeed: 0
-  dashSpeed: 20
-  dashLenght: 20
-  dashCooldown: 3
-  dashCoolCounter: 0
 --- !u!43 &702376175
 Mesh:
   m_ObjectHideFlags: 0
@@ -3145,13 +3146,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48631fc1aed926548b67d9ec1fea5f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0
-  moveInput: {x: 0, y: 0}
-  activemoveSpeed: 0
-  dashSpeed: 20
-  dashLenght: 20
-  dashCooldown: 1
-  dashCoolCounter: 0
 --- !u!114 &1252237767
 MonoBehaviour:
   m_ObjectHideFlags: 0
