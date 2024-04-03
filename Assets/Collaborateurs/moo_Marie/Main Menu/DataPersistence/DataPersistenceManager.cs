@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class DataPersistenceManager : MonoBehaviour
 {
+    [Header("File Storage Config")]
+    [SerializeField] private string fileName;
     private GameData gameData;
+
+    private FileDataHandler dataHandler;
     public static DataPersistenceManager instance { get; private set; }
 
     private void Awake()
@@ -18,6 +22,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Start()
     {
+        this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         LoadGame();
     }
 
@@ -28,6 +33,9 @@ public class DataPersistenceManager : MonoBehaviour
 
     public void LoadGame()
     {
+
+        this.gameData = dataHandler.Load();
+
         if(this.gameData == null)
         {
             Debug.Log("Aucune donnée n'a été trouvée. Initialisation des données par défaut.");
@@ -37,7 +45,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     public void SaveGame()
     {
-
+        dataHandler.Save(gameData);
     }
 
     private void OnApplicationQuit()
