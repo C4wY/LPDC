@@ -38,6 +38,7 @@ namespace Avatar
         public Ground Ground { get; private set; }
         public Rigidbody Rigidbody { get; private set; }
         public OneSidedPlatformAgent OneSidedPlatformAgent { get; private set; }
+        public Santé Santé { get; private set; }
 
         void RoleUpdate()
         {
@@ -59,6 +60,7 @@ namespace Avatar
             Ground = GetComponent<Ground>();
             Rigidbody = GetComponent<Rigidbody>();
             OneSidedPlatformAgent = GetComponentInChildren<OneSidedPlatformAgent>();
+            Santé = GetComponent<Santé>();
 
             RoleUpdate();
         }

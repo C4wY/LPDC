@@ -6,11 +6,11 @@ using UnityEngine;
 public class Unj_Cassable : MonoBehaviour
 {
     public GameObject cassé;
-    public float breakForce;
+    public float explosionForce;
 
     void Update()
     {
-        if (Input.GetKeyDown("f"))
+        if (Input.GetKeyDown("e"))
             BreakTheThing();
 
     }
@@ -21,7 +21,7 @@ public class Unj_Cassable : MonoBehaviour
 
         foreach (Rigidbody rb in frac.GetComponentsInChildren<Rigidbody>())
         {
-            Vector3 force = (rb.transform.position - transform.position).normalized * breakForce;
+            Vector3 force = (rb.transform.position - transform.position).normalized * explosionForce;
             rb.AddForce(force);
         }
 

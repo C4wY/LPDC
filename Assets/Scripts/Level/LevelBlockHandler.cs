@@ -51,6 +51,9 @@ namespace Level
 
         void OnEnable()
         {
+            gameObject.name = "Level Blocks";
+            transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+
             if (Application.isPlaying)
             {
                 if (onPlay != Toggle.Ignore)

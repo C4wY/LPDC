@@ -5,15 +5,15 @@ namespace Avatar
     [System.Serializable]
     public class MoveParameters
     {
-        public float jumpHeight = 1.33f;
+        public float jumpHeight = 2.33f;
         public float jumpCooldown = 0.33f;
-
-        public float walkVelocity = 2.5f;
-        public float runVelocity = 5;
+        public float jumpHeightRatioWhileDashing = 2;
+        public float walkVelocity = 3.5f;
+        public float runVelocity = 7;
 
         [Tooltip("The time in seconds to wait before being able to dash again.")]
         public float dashDuration = 0.15f;
-        public float dashCooldown = 0.6f;
+        public float dashCooldown = 0.58f;
         public float dashVelocity = 30;
 
         [Tooltip("The time in seconds to wait before being able to go backward again (backward in Unity, is going foreground in a theater).")]
@@ -45,7 +45,14 @@ namespace Avatar
         /// </summary>
         public float GetJumpVelocityY()
         {
-            return Mathf.Sqrt(Physics.gravity.magnitude * 2f * Parameters.jumpHeight);
+            var h = Parameters.jumpHeight;
+            var g = Physics.gravity.magnitude;
+            // https://calculis.net/chute-libre#:~:text=La%20formule%20pour%20calculer%20la,%2Fs%20ou%20m.s%2D1.&text=v%20est%20la%20vitesse%20th%C3%A9orique,seconde%20(m%2Fs).
+
+            if (IsDashing)
+                h *= Parameters.jumpHeightRatioWhileDashing;
+
+            return Mathf.Sqrt(g * 2f * h);
         }
 
         void Jump()

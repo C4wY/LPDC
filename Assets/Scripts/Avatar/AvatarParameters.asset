@@ -21,16 +21,18 @@ MonoBehaviour:
     groundDistanceMax: 0.95
     postLeaveGroundWaiting: 0.1
   move:
-    jumpHeight: 1.33
+    jumpHeight: 2.33
     jumpCooldown: 0.33
-    walkVelocity: 2.5
-    runVelocity: 5
-    dashCooldown: 0.2
+    jumpHeightRatioWhileDashing: 2
+    walkVelocity: 3.5
+    runVelocity: 7
+    dashDuration: 0.15
+    dashCooldown: 0.58
     dashVelocity: 30
     goBackwardCooldown: 0.33
   leaderController:
     traceIntervalDistanceMax: 0.25
-    gizmos: 0
+    gizmos: -2
   followerController:
     distanceToLeaderMin: 1
     distanceToLeaderMax: 3
