@@ -1,3 +1,6 @@
+using Mono.Cecil.Cil;
+using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Avatar
@@ -78,6 +81,9 @@ namespace Avatar
         void Dash()
         {
             DashTime = Time.time;
+
+            Avatar.Santé.compteurInvincibilité = 0.15f;
+
         }
 
         public bool TryToDash()
