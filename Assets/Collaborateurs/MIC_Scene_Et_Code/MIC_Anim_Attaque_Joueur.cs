@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MIC_Attaque_Joueur : MonoBehaviour
+public class MIC_Anim_Attaque_Joueur : MonoBehaviour
 {
     public int dégâts = 1; // Points de dégâts
     public float distanceMaximale = 3f; // Distance maximale à partir de laquelle le joueur peut infliger des dégâts
@@ -17,9 +17,7 @@ public class MIC_Attaque_Joueur : MonoBehaviour
     void Start()
     {
        
-        spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();   
-
-                // Récupérer le SpriteRenderer du joueur
+        // Récupérer le SpriteRenderer de l'enfant spécifique (remplacez "Avatar (Leader)" par le nom de l'enfant contenant le SpriteRenderer)
         playerSpriteRenderer = transform.Find("Avatar (Leader)/Sprite").GetComponent<SpriteRenderer>();
 
         // Sauvegarder le sprite d'origine du joueur
@@ -29,13 +27,18 @@ public class MIC_Attaque_Joueur : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+
+            // Lancer la coroutine pour gérer l'attaque
+            StartCoroutine(PerformAttack());
         // Rechercher tous les ennemis dans la scène avec le tag "Enemy"
         GameObject[] ennemis = GameObject.FindGameObjectsWithTag("Enemy");
 
         // Vérifier si chaque ennemi est à portée et appuie sur la touche "A" pour infliger des dégâts
         foreach (GameObject ennemi in ennemis)
         {
-            if (Vector3.Distance(transform.position, ennemi.transform.position) < distanceMaximale && Input.GetKeyDown(KeyCode.A))
+            if (Vector3.Distance(transform.position, ennemi.transform.position) < distanceMaximale)
             {
                 // Vérifier si le joueur est du côté droit de l'ennemi et si le Sprite Renderer n'est pas inversé horizontalement
                 if (IsPlayerOnRightSide(ennemi) && spriteRenderer.flipX)
@@ -55,6 +58,8 @@ public class MIC_Attaque_Joueur : MonoBehaviour
                 }
             }
         }
+            
+        }
     }
 
     // Méthode pour infliger des dégâts à un ennemi
@@ -72,5 +77,17 @@ public class MIC_Attaque_Joueur : MonoBehaviour
     private bool IsPlayerOnRightSide(GameObject ennemi)
     {
         return transform.position.x > ennemi.transform.position.x;
+    }
+
+    IEnumerator PerformAttack()
+    {
+        // Changer le sprite du joueur pendant la durée de l'attaque
+        playerSpriteRenderer.sprite = attackSprite;
+
+        // Attendre pendant la durée de l'attaque
+        yield return new WaitForSeconds(attackDuration);
+
+        // Revenir au sprite d'origine du joueur
+        playerSpriteRenderer.sprite = originalSprite;
     }
 }

@@ -38,7 +38,7 @@ public class MIC_EnemyHealth : MonoBehaviour
     }
 
     // Méthode pour infliger des dégâts à l'ennemi
-    public void TakeDamage(int damage)
+    public void FaireDégât(int damage)
     {
         PV -= damage; // Réduire les points de vie de l'ennemi
 
@@ -52,7 +52,7 @@ public class MIC_EnemyHealth : MonoBehaviour
         {
             Debug.Log("L'ennemi subit des dégâts. PV restants : " + PV);
             ChangeMaterial(); //Changer le matériau de l'ennemi
-            ChnageMesh();
+            ChangeMesh();
             ChangeSprite(); // Changer le sprite de l'ennemi
         }
     }
@@ -61,7 +61,7 @@ public class MIC_EnemyHealth : MonoBehaviour
         currentMaterialIndex = (currentMaterialIndex + 1) % materials.Length; // Choisir le prochain matériau dans le tableau circulairement
         rend.material = materials[currentMaterialIndex]; // Appliquer le nouveau matériau à l'ennemi
     }
-    private void ChnageMesh()
+    private void ChangeMesh()
     {
         currentMeshIndex = (currentMeshIndex + 1) % meshes.Length; //Choisir le prochain maillage dans le tableau circulairement
         meshFilter.mesh = meshes[currentMeshIndex]; // Appliquer le nouveau maillage à l'ennemi
