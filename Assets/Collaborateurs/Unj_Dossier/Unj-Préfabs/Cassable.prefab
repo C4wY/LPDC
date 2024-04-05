@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: 14.1, y: 1.04, z: 1.21}
-  m_LocalScale: {x: 100, y: 99.999985, z: 99.999985}
+  m_LocalScale: {x: 200, y: 199.99997, z: 199.99997}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -102,6 +102,7 @@ MonoBehaviour:
   "pr\xE9fabCass\xE9": {fileID: 7705642464050469030, guid: c067d8f9473bec44e8aff2045d156a1c,
     type: 3}
   explosionForce: 0
+  "d\xE9calage": 1.5
 --- !u!65 &3306222750070717648
 BoxCollider:
   m_ObjectHideFlags: 0
