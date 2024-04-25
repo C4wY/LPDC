@@ -4,28 +4,20 @@ using UnityEngine;
 
 public class MIC_Pics3 : MonoBehaviour
 {
-   public GameObject spriteToShow; // Sprite à faire apparaître
-    public float moveDistance = 1f; // Distance à laquelle le sprite doit se déplacer vers le haut
+    public GameObject spriteToShow; // Sprite à faire apparaître
+    public GameObject teleportTarget; // Objet de référence pour la téléportation
     public float moveSpeed = 1f; // Vitesse de déplacement du sprite
     public AudioClip activationSound; // Son de l'activation de la plaque
-        public GameObject Pics;
 
     private bool isPlayerOnPlate = false;
     private bool plateActivated = false;
+    private bool isTeleporting = false;
 
     private AudioSource audioSource;
-
-    private Vector3 initialSpritePosition;
-    private Vector3 targetSpritePosition;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-
-        // Stocker la position initiale du sprite
-        initialSpritePosition = spriteToShow.transform.position;
-        // Calculer la position cible du sprite (déplacement vers le haut)
-        targetSpritePosition = initialSpritePosition + Vector3.up * moveDistance;
     }
 
     void Update()
@@ -35,31 +27,27 @@ public class MIC_Pics3 : MonoBehaviour
             ActivatePlate();
         }
 
-        // Déplacer progressivement le sprite vers le haut lorsque la plaque est activée
-        if (plateActivated && spriteToShow != null && spriteToShow.transform.position != targetSpritePosition)
+        if (plateActivated && spriteToShow != null && !isTeleporting)
         {
-            spriteToShow.transform.position = Vector3.MoveTowards(spriteToShow.transform.position, targetSpritePosition, moveSpeed * Time.deltaTime);
-        }
+            // Déplacer progressivement le sprite vers la position cible
+            Vector3 targetPosition = teleportTarget.transform.position;
+            spriteToShow.transform.position = Vector3.MoveTowards(spriteToShow.transform.position, targetPosition, moveSpeed * Time.deltaTime);
 
-
-
-        // Si le joueur est parti et que la plaque est activée, réinitialiser la position du sprite
-        if (!isPlayerOnPlate && plateActivated && spriteToShow != null && spriteToShow.transform.position != initialSpritePosition)
-        {
-            spriteToShow.transform.position = Vector3.MoveTowards(spriteToShow.transform.position, initialSpritePosition, moveSpeed * Time.deltaTime);
-            if (spriteToShow.transform.position == initialSpritePosition)
+            // Vérifier si le sprite a atteint la position cible pour terminer la téléportation
+            if (spriteToShow.transform.position == targetPosition)
             {
-                plateActivated = false;
+                isTeleporting = true;
+                plateActivated = false; // On désactive la plaque après la téléportation
+                // Désactiver le mouvement du sprite une fois qu'il a atteint sa destination
+                isTeleporting = false;
             }
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Pics.SetActive(true);
             isPlayerOnPlate = true;
         }
     }
@@ -83,6 +71,4 @@ public class MIC_Pics3 : MonoBehaviour
             audioSource.PlayOneShot(activationSound);
         }
     }
-
-
 }

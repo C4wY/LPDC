@@ -88,7 +88,7 @@ namespace Avatar
             var y = transform.position.y;
             var z = transform.position.z;
 
-            var layerMask = ~LayerMask.GetMask("MC");
+            var layerMask = ~LayerMask.GetMask("Joueur");
 
             raycastInfos = layerZPositions
                 .Select(layerZPosition =>
