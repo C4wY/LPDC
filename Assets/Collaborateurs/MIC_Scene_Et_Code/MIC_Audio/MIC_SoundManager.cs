@@ -24,7 +24,7 @@ public class MIC_SoundManager : MonoBehaviour
 
     void Start()
     {
-        allAudioSources = FindObjectsOfType<AudioSource>();
+        allAudioSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
     }
 
     public void StopAllSounds()
