@@ -150,11 +150,16 @@ namespace Avatar
                 agent.ClearPath();
             }
 
-            if (distanceToLeader > Parameters.distanceToLeaderMax)
+            if (avatar.Move.mode == MoveMode.Switching)
+            {
+                avatar.Move.HorizontalUpdate(0);
+            }
+            else if (distanceToLeader > Parameters.distanceToLeaderMax)
             {
                 UpdateAgent();
                 UpdateFollow();
             }
+
             avatar.Move.UpdateZ();
         }
 
