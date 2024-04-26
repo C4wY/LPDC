@@ -42,12 +42,13 @@ public partial class NavGraph
                 {
                     if (b.position.y > a.position.y)
                     {
+                        // Check if the angle is too steep.
                         const float MAX_ANGLE = 30;
                         var angle = Mathf.Atan2(AB.y, Mathf.Abs(AB.x)) * Mathf.Rad2Deg; // Z is ignored
-
                         if (angle > MAX_ANGLE)
                             return true;
 
+                        // Check if there is an obstacle.
                         var ray = new Ray(a.position + Vector3.up * 0.2f, Direction);
                         if (Physics.Raycast(ray, length, LayerMask.GetMask("LevelBlock")))
                             return true;
@@ -102,6 +103,7 @@ public partial class NavGraph
             graph = null;
             points = new PathPoint[] { };
             segments = new PathSegment[] { };
+            segmentIndex = 0;
             TotalLength = 0;
         }
 
@@ -133,6 +135,13 @@ public partial class NavGraph
                 points = points
                     .Skip(1)
                     .ToList();
+
+            // If the path is too short, don't bother.
+            if (points.Count == 1)
+            {
+                found = false;
+                return;
+            }
 
             MathUtils.NearestPointOnLine(
                 points[^2].position,

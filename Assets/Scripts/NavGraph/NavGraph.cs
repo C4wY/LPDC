@@ -163,6 +163,9 @@ public partial class NavGraph
             .First();
     }
 
+    /// <summary>
+    /// A* pathfinding algorithm. 
+    /// </summary>
     public bool TryFindPath(Node from, Node to, out Node[] path)
     {
         var openSet = new HashSet<int> { from.id };

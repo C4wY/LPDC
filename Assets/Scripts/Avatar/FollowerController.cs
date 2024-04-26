@@ -78,6 +78,9 @@ namespace Avatar
 
         void UpdateFollow()
         {
+            if (agent.HasPath == false)
+                return;
+
             if (agent.CurrentSegment.requiresJump)
                 avatar.Move.TryToJump();
 
