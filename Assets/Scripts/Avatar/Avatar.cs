@@ -70,22 +70,29 @@ namespace Avatar
             RoleUpdate();
         }
 
-#if UNITY_EDITOR
-        static Avatar[] GetAllAvatars() =>
-            FindObjectsByType<Avatar>(FindObjectsSortMode.None);
+        public static Avatar[] GetAllAvatars()
+        {
+            return FindObjectsByType<Avatar>(FindObjectsSortMode.None);
+        }
 
-        void UpdateAllAvatar()
+        public static (Avatar leader, Avatar follower) GetLeaderFollower()
+        {
+            var avatars = GetAllAvatars();
+            return (
+                avatars.FirstOrDefault(a => a.IsLeader),
+                avatars.FirstOrDefault(a => a.IsFollower));
+        }
+
+        public static void UpdateAllAvatar()
         {
             foreach (var avatar in GetAllAvatars())
             {
-                if (avatar != this)
-                    avatar.role = role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
-
                 avatar.RoleUpdate();
                 EditorUtility.SetDirty(avatar);
             }
         }
 
+#if UNITY_EDITOR
         void OnValidate()
         {
             EditorApplication.delayCall += () =>
@@ -136,7 +143,7 @@ namespace Avatar
                 {
                     Undo.RecordObjects(GetAllAvatars(), "Switch role");
                     Target.role = otherRole;
-                    Target.UpdateAllAvatar();
+                    UpdateAllAvatar();
                 }
 
                 if (GUILayout.Button("Regroup all Avatar"))

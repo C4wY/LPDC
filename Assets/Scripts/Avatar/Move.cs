@@ -1,3 +1,4 @@
+using System;
 using Mono.Cecil.Cil;
 using Unity.VisualScripting;
 using UnityEditorInternal;
@@ -19,8 +20,16 @@ namespace Avatar
         public float dashCooldown = 0.58f;
         public float dashVelocity = 30;
 
+        public float switchVelocity = 15;
+
         [Tooltip("The time in seconds to wait before being able to go backward again (backward in Unity, is going foreground in a theater).")]
         public float goBackwardCooldown = 0.33f;
+    }
+
+    public enum MoveMode
+    {
+        Normal,
+        Switching,
     }
 
     [ExecuteAlways]
@@ -35,6 +44,11 @@ namespace Avatar
         public float DashTime { get; private set; } = -1;
         public bool IsDashing =>
             Time.time < DashTime + Parameters.dashDuration;
+
+        public MoveMode mode = MoveMode.Normal;
+
+        public Vector3 switchSourcePosition;
+        public Vector3 switchTargetPosition;
 
         Avatar avatar;
         Avatar Avatar =>
@@ -103,11 +117,38 @@ namespace Avatar
             if (enabled == false)
                 return;
 
-            var x = IsDashing
-                ? horizontalInput * Parameters.dashVelocity
-                : horizontalInput * Parameters.runVelocity;
-            var y = avatar.Rigidbody.velocity.y;
-            avatar.Rigidbody.velocity = new(x, y, 0);
+            if (mode == MoveMode.Switching)
+            {
+                // Switching mode.
+                var dx = switchTargetPosition.x - switchSourcePosition.x;
+                var x = Mathf.Sign(dx) * Parameters.switchVelocity;
+
+                var isTooFarOnRight = dx > 0 && transform.position.x > switchTargetPosition.x;
+                var isTooFarOnLeft = dx < 0 && transform.position.x < switchTargetPosition.x;
+                if (isTooFarOnRight || isTooFarOnLeft)
+                {
+                    // Arrived at the target position.
+                    avatar.Rigidbody.position = switchTargetPosition;
+                    avatar.Rigidbody.velocity = Vector3.zero;
+                    mode = MoveMode.Normal;
+                }
+                else
+                {
+                    // Dashing to the target position.
+                    var y = avatar.Rigidbody.velocity.y;
+                    avatar.Rigidbody.velocity = new(x, y, 0);
+                }
+            }
+            else
+            {
+                // Normal mode.
+                var x = IsDashing
+                    ? horizontalInput * Parameters.dashVelocity
+                    : horizontalInput * Parameters.runVelocity;
+
+                var y = avatar.Rigidbody.velocity.y;
+                avatar.Rigidbody.velocity = new(x, y, 0);
+            }
         }
 
         public void UpdateZ()

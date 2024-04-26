@@ -14,7 +14,12 @@ public class InputManager : MonoBehaviour
 
     public bool CompetenceFront()
     {
-        return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.E);
+        return Input.GetKey(KeyCode.E);
+    }
+
+    public bool TheSwitch()
+    {
+        return Input.GetKey(KeyCode.LeftShift);
     }
 
     internal static object GetInstance()
