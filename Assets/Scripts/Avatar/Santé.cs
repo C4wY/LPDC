@@ -48,9 +48,10 @@ namespace Avatar
                     animationDégâts.JoueurPrisDégâts(dégâts);
                 }
 
-                if (PV == 0)
+                if (PV <= 0)
                 {
                     // Afficher l'écran de fin de jeu avec le texte "Vous êtes mort"
+                Debug.Break();
                 gameOverScreen.SetActive(true);
                 // Désactiver la barre de vie
                 BarredeVie.SetActive(false);
