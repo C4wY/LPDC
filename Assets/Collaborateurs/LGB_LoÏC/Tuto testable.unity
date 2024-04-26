@@ -3021,8 +3021,14 @@ PrefabInstance:
     - target: {fileID: 8230272783955261877, guid: e23b739ffde859b48b978917f1a06977,
         type: 3}
       propertyPath: explosionForce
-      value: 2000
+      value: 1200
       objectReference: {fileID: 0}
+    - target: {fileID: 8230272783955261877, guid: e23b739ffde859b48b978917f1a06977,
+        type: 3}
+      propertyPath: "pr\xE9fabSuperCass\xE9"
+      value: 
+      objectReference: {fileID: 6442847510457087545, guid: edbf5c8d1ac3f44409c396583a4dc165,
+        type: 3}
     - target: {fileID: 9066163775439791667, guid: e23b739ffde859b48b978917f1a06977,
         type: 3}
       propertyPath: m_Name

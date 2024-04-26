@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Unj_Cassable : MonoBehaviour
 {
-    public GameObject préfabCassé;
+    public GameObject préfabSuperCassé;
     public float explosionForce = 2000;
     public float décalage = 1.5f;
 
@@ -26,7 +26,7 @@ public class Unj_Cassable : MonoBehaviour
 
     public void Explose(Vector3 centreExplosion)
     {
-        GameObject instanceBlocCassé = Instantiate(préfabCassé, transform.position, transform.rotation);
+        GameObject instanceBlocCassé = Instantiate(préfabSuperCassé, transform.position, transform.rotation);
 
         foreach (Rigidbody rb in instanceBlocCassé.GetComponentsInChildren<Rigidbody>())
         {
