@@ -6,56 +6,56 @@ public class MIC_Enemy : MonoBehaviour
 {
     public int dégâts = 1;
 
-    private bool isPlayerInRange = false;
+    // private bool isPlayerInRange = false; // No use of this variable
 
-        public int PV = 3;
-        public KeyCode activationKey = KeyCode.A;
+    public int PV = 3;
+    public KeyCode activationKey = KeyCode.A;
 
-        public void FaireDégâts(int dégâts = 1)
+    public void FaireDégâts(int dégâts = 1)
+    {
+        PV += -dégâts;
+
+        if (PV == 0)
         {
-            PV += -dégâts;
-
-            if (PV == 0)
-            {
-                Debug.Log("cassé");
-                Debug.Break();
-            }
+            Debug.Log("cassé");
+            Debug.Break();
         }
-     void OnTriggerEnter(Collider other)
+    }
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             Debug.Log("Joueur");
-            isPlayerInRange = true;
-           if (Input.GetKeyDown(activationKey))
-        {
-            FaireDégâts(dégâts);
-            Debug.Log("aaaaaaa");
-        }
+            // isPlayerInRange = true; // No use of this variable
+            if (Input.GetKeyDown(activationKey))
+            {
+                FaireDégâts(dégâts);
+                Debug.Log("aaaaaaa");
+            }
         }
 
-           
+
     }
-     private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            isPlayerInRange = false;
+            // isPlayerInRange = false; // No use of this variable
         }
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
 
-    
+
 }
 
