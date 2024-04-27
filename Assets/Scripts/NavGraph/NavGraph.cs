@@ -147,6 +147,13 @@ public partial class NavGraph
 
                 if (distance < distanceMax)
                 {
+                    // Ignore if there is an obstacle between the nodes.
+                    var p0 = node0.position + Vector3.up * 0.25f;
+                    var p1 = node1.position + Vector3.up * 0.25f;
+                    var hitCount = Physics.RaycastNonAlloc(new Ray(p0, (p1 - p0).normalized), raycastHits, 10.0f, LayerMask.GetMask("LevelBlock"));
+                    if (hitCount > 0)
+                        continue;
+
                     if (TryFindPath(node0, node1, out var _, Segment.Type.Ground) == false)
                     {
                         // Create a jump segment only if there is no direct path between the nodes.
