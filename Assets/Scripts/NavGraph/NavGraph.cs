@@ -84,7 +84,7 @@ public partial class NavGraph
         return segments.TryGetValue((n0, n1), out link);
     }
 
-    void CreateSegment(Node node0, Node node1, float distance, Vector3 direction)
+    Segment CreateSegment(Node node0, Node node1, float distance, Vector3 direction, Segment.Type type = Segment.Type.Ground)
     {
         var n0 = node0.id;
         var n1 = node1.id;
@@ -92,15 +92,17 @@ public partial class NavGraph
         if (n0 > n1)
             (n0, n1) = (n1, n0);
 
-        var link = new Segment(this, n0, n1, distance, direction);
+        var segment = new Segment(this, n0, n1, distance, direction, type);
 
-        node0.segments.Add(link);
-        node1.segments.Add(link);
+        node0.segments.Add(segment);
+        node1.segments.Add(segment);
 
-        segments.Add((n0, n1), link);
+        segments.Add((n0, n1), segment);
+
+        return segment;
     }
 
-    public void ConnectNodes(float maxDistance = 1.5f)
+    public void CreateGroundSegments(float maxDistance = 1.5f)
     {
         var nodeArray = nodes.Values.ToArray();
         var count = nodeArray.Length;
@@ -125,6 +127,32 @@ public partial class NavGraph
 
                 if (distance < maxDistance)
                     CreateSegment(node0, node1, distance, delta / distance);
+            }
+        }
+    }
+
+    public void CreateAirSegments(float distanceMax = 5)
+    {
+        var nodeArray = nodes.Values.ToArray();
+        var count = nodeArray.Length;
+        for (int i = 0; i < count; i++)
+        {
+            var node0 = nodeArray[i];
+            for (int j = i + 1; j < count; j++)
+            {
+                var node1 = nodeArray[j];
+                var delta = node1.position - node0.position;
+                var (dx, dy, _) = delta;
+                var distance = Mathf.Sqrt(dx * dx + dy * dy); // Ignoring Z axis for distance calculation.
+
+                if (distance < distanceMax)
+                {
+                    if (TryFindPath(node0, node1, out var _, Segment.Type.Ground) == false)
+                    {
+                        // Create a jump segment only if there is no direct path between the nodes.
+                        CreateSegment(node0, node1, distance, delta / distance, Segment.Type.Air);
+                    }
+                }
             }
         }
     }
@@ -166,7 +194,7 @@ public partial class NavGraph
     /// <summary>
     /// A* pathfinding algorithm. 
     /// </summary>
-    public bool TryFindPath(Node from, Node to, out Node[] path)
+    public bool TryFindPath(Node from, Node to, out Node[] path, Segment.Type segmentTypeMask = (Segment.Type)~0)
     {
         var openSet = new HashSet<int> { from.id };
         var cameFrom = new Dictionary<int, int>();
@@ -197,17 +225,20 @@ public partial class NavGraph
 
             openSet.Remove(current);
 
-            foreach (var link in nodes[current].segments)
+            foreach (var segment in nodes[current].segments)
             {
-                var neighbor = link.n0 == current ? link.n1 : link.n0;
-                var tentativeGScore = gScore[current] + link.length;
+                if (segmentTypeMask.HasFlag(segment.type) == false)
+                    continue;
+
+                var neighbor = segment.n0 == current ? segment.n1 : segment.n0;
+                var tentativeGScore = gScore[current] + segment.length;
 
                 if (!gScore.TryGetValue(neighbor, out var gScoreNeighbor) || tentativeGScore < gScoreNeighbor)
                 {
                     cameFrom[neighbor] = current;
                     gScore[neighbor] = tentativeGScore;
                     // fScore[neighbor] = gScore[neighbor] + Vector3.Distance(nodes[neighbor].position, to.position);
-                    fScore[neighbor] = gScore[neighbor] + link.length;
+                    fScore[neighbor] = gScore[neighbor] + segment.length;
 
                     if (!openSet.Contains(neighbor))
                         openSet.Add(neighbor);
@@ -228,6 +259,8 @@ public partial class NavGraph
 
     public void DrawGizmos()
     {
+        Gizmos.color = new Color(0, 0.5f, 1);
+
         foreach (var node in nodes.Values)
             Gizmos.DrawSphere(node.position, 0.033f);
 
@@ -235,7 +268,15 @@ public partial class NavGraph
         {
             var n0 = nodes[link.n0];
             var n1 = nodes[link.n1];
-            Gizmos.DrawLine(n0.position, n1.position);
+
+            if (link.type == Segment.Type.Ground)
+            {
+                Gizmos.DrawLine(n0.position, n1.position);
+            }
+            else
+            {
+                GizmosUtils.DrawParabola(n0.position, n1.position, (n0.position - n1.position).magnitude * 0.5f);
+            }
         }
     }
 }

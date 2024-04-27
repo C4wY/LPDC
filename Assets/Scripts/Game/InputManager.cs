@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class InputManager : MonoBehaviour
 {
     public static InputManager Instance;
@@ -22,8 +23,8 @@ public class InputManager : MonoBehaviour
         return Input.GetKey(KeyCode.LeftShift);
     }
 
-    internal static object GetInstance()
+    public bool DebugRespawn()
     {
-        throw new NotImplementedException();
+        return Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift);
     }
 }

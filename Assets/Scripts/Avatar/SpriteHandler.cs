@@ -53,8 +53,7 @@ namespace Avatar
             animator.SetFloat("HSpeed", Mathf.Abs(x));
             animator.SetBool("IsGrounded", SpriteIsGrounded);
 
-            if (Mathf.Abs(x) > 0.1f)
-                spriteRenderer.flipX = x < 0;
+            spriteRenderer.flipX = !avatar.Move.IsFacingRight;
         }
     }
 }

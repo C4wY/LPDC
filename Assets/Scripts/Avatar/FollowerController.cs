@@ -14,6 +14,9 @@ namespace Avatar
         public float distanceToLeaderMin = 1.0f;
         public float distanceToLeaderMax = 3.0f;
 
+        [Tooltip("If the \"y\" distance to the leader is greater than this value, the follower will be teleported to the leader (debug solution).")]
+        public float yDistanceToLeaderMaxBeforeTeleporting = 30.0f;
+
         [Tooltip("The width in world units of the nav graph samples (samples are centered on the x position of the avatar).")]
         public int navGraphSampleWidth = 60;
 
@@ -57,7 +60,8 @@ namespace Avatar
             var width = Parameters.navGraphSampleWidth;
             navGraph.Clear();
             navGraph.SampleWorld(x - width / 2, x + width / 2, 0, 5);
-            navGraph.ConnectNodes();
+            navGraph.CreateGroundSegments();
+            navGraph.CreateAirSegments();
 
             navGraphTime = Time.time;
         }
@@ -81,17 +85,21 @@ namespace Avatar
             if (agent.HasPath == false)
                 return;
 
-            if (agent.CurrentSegment.requiresJump)
+            var segmentIsAir = agent.CurrentSegment.graphSegment?.type.HasFlag(NavGraph.Segment.Type.Air) ?? false;
+            if (agent.CurrentSegment.requiresJump || segmentIsAir)
                 avatar.Move.TryToJump();
 
             bool HasToJumpButCant() => agent.CurrentSegment.requiresJump && avatar.Move.IsJumping == false;
 
             var dir = agent.CurrentSegment.Direction;
-            horizontalInput = agent.RemainingDistance < 1f || HasToJumpButCant()
-                ? 0
-                : avatar.Ground.IsGrounded
-                    ? (dir.x > 0 ? 1 : -1)
-                    : horizontalInput; // Keep the last input if not grounded.
+            horizontalInput =
+                segmentIsAir
+                    ? avatar.Move.JumpVelocityAtJumpTime.x > 0 ? 1 : -1
+                    : (agent.RemainingDistance < 1f || HasToJumpButCant())
+                        ? 0
+                        : avatar.Ground.IsGrounded
+                            ? (dir.x > 0 ? 1 : -1)
+                            : horizontalInput; // Keep the last input if not grounded.
 
             var wannaGoForeground = dir.z < 0 && dir.y < 0;
             verticalInput = wannaGoForeground ? -1 : 0;
@@ -147,20 +155,44 @@ namespace Avatar
             deltaToLeader = leaderAvatar.transform.position - avatar.transform.position;
             distanceToLeader = deltaToLeader.magnitude;
 
+            if (Mathf.Abs(deltaToLeader.y) > Parameters.yDistanceToLeaderMaxBeforeTeleporting)
+            {
+                // Teleport the follower to the leader (debug solution).
+                var dx = (leaderAvatar.Move.IsFacingRight ? -1 : 1) * 0.25f;
+                var dy = 0.5f;
+                var position = leaderAvatar.transform.position + new Vector3(dx, dy, 0);
+                avatar.Move.TeleportTo(position);
+            }
+
             if (Time.time > navGraphTime + Parameters.navGraphObsolenceTime)
             {
-                RefreshNavGraph();
-                agent.ClearPath();
+                // Only if the avatar is grounded, refresh the nav graph.
+                if (avatar.Ground.IsGrounded)
+                {
+                    RefreshNavGraph();
+                    agent.ClearPath();
+                }
             }
 
             if (avatar.Move.mode == MoveMode.Switching)
             {
                 avatar.Move.HorizontalUpdate(0);
             }
-            else if (distanceToLeader > Parameters.distanceToLeaderMax)
+            else
             {
-                UpdateAgent();
-                UpdateFollow();
+                var shouldFollow =
+                    // If the follower is too far from the leader, it should follow the leader.
+                    distanceToLeader > Parameters.distanceToLeaderMax
+                    // If the follower is in the air, it should follow the leader.
+                    || avatar.Ground.IsGrounded == false
+                    // If the follower is on ground but on a "air" segment, it should follow the leader.
+                    || (agent.HasCurrentSegment && (agent.CurrentSegment.graphSegment?.IsAir ?? false));
+
+                if (shouldFollow)
+                {
+                    UpdateAgent();
+                    UpdateFollow();
+                }
             }
 
             avatar.Move.UpdateZ();

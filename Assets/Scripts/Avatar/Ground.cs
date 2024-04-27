@@ -1,5 +1,7 @@
 using System.Linq;
 using UnityEngine;
+using Ink.Runtime;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -73,9 +75,26 @@ namespace Avatar
         public int CurrentLayerIndex { get; private set; } = -1;
         public bool HasGroundPoint { get; private set; } = false;
         public int GroundPointLayerIndex { get; private set; } = -1;
+
+        /// <summary>
+        /// The nearest ground point under the avatar (but the avatar may not be on the ground yet, see <see cref="IsGrounded"/>)
+        /// </summary>
         public Vector3 GroundPoint { get; private set; }
+
         public float GroundDistance { get; private set; }
         public bool IsGrounded { get; private set; }
+        public float GroundEnterTime { get; private set; }
+        public float GroundLeaveTime { get; private set; }
+
+        /// <summary>
+        /// Last ground position when the avatar was on the ground. 
+        /// </summary>
+        public Vector3 LastGroundPosition { get; private set; }
+
+        public float GroundDuration => Time.time - GroundEnterTime;
+
+        public bool IsOnGroundFor(float duration) =>
+            IsGrounded && GroundDuration >= duration;
 
         Avatar avatar;
 
@@ -187,15 +206,31 @@ namespace Avatar
             UpdateHitInfos();
             UpdateNearestGroundPoint();
 
+            void SetIsGrounded(bool value)
+            {
+                if (IsGrounded != value)
+                {
+                    IsGrounded = value;
+
+                    if (value)
+                        GroundEnterTime = Time.time;
+                    else
+                        GroundLeaveTime = Time.time;
+                }
+
+                if (IsGrounded)
+                    LastGroundPosition = transform.position;
+            }
+
             if (HasGroundPoint)
             {
                 GroundDistance = transform.position.y - Parameters.pivotDownOffset - GroundPoint.y;
-                IsGrounded = GroundDistance < Parameters.maxDistance;
+                SetIsGrounded(GroundDistance < Parameters.maxDistance);
             }
             else
             {
                 GroundDistance = float.PositiveInfinity;
-                IsGrounded = false;
+                SetIsGrounded(false);
             }
         }
 

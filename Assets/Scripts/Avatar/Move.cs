@@ -32,18 +32,28 @@ namespace Avatar
         Switching,
     }
 
+    public enum MoveFacing
+    {
+        Left,
+        Right,
+    }
+
     [ExecuteAlways]
     public class Move : MonoBehaviour
     {
         public bool forceDown;
 
         public float JumpTime { get; private set; } = -1;
+        public Vector3 JumpVelocityAtJumpTime { get; private set; }
         public bool IsJumping =>
             Time.time < JumpTime + Parameters.jumpCooldown;
 
         public float DashTime { get; private set; } = -1;
         public bool IsDashing =>
             Time.time < DashTime + Parameters.dashDuration;
+
+        public MoveFacing facing = MoveFacing.Right;
+        public bool IsFacingRight => facing == MoveFacing.Right;
 
         public MoveMode mode = MoveMode.Normal;
 
@@ -72,11 +82,24 @@ namespace Avatar
             return Mathf.Sqrt(g * 2f * h);
         }
 
-        void Jump()
+        public void TeleportTo(Vector3 position)
+        {
+            avatar.Rigidbody.position = position;
+            avatar.Rigidbody.velocity = Vector3.zero;
+        }
+
+        /// <summary>
+        /// Warning: this method does not check if the avatar is grounded and will
+        /// perform a jump even if the avatar is in the air.
+        /// <br/><br/>
+        /// For a grounded jump, use TryToJump() instead. 
+        /// </summary>
+        public void Jump()
         {
             var velocity = avatar.Rigidbody.velocity;
             velocity.y = GetJumpVelocityY();
             avatar.Rigidbody.velocity = velocity;
+            JumpVelocityAtJumpTime = velocity;
 
             JumpTime = Time.time;
         }
@@ -97,7 +120,6 @@ namespace Avatar
             DashTime = Time.time;
 
             Avatar.Santé.compteurInvincibilité = 0.15f;
-
         }
 
         public bool TryToDash()
@@ -148,6 +170,11 @@ namespace Avatar
 
                 var y = avatar.Rigidbody.velocity.y;
                 avatar.Rigidbody.velocity = new(x, y, 0);
+
+                if (horizontalInput > 0.1f)
+                    facing = MoveFacing.Right;
+                else if (horizontalInput < -0.1f)
+                    facing = MoveFacing.Left;
             }
         }
 

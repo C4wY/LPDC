@@ -5,10 +5,16 @@ public partial class NavGraph
 {
     public class Agent
     {
+        /// <summary>
+        /// Path point differs from a graph node in that it can be a point in space
+        /// (e.g. start and end points).
+        /// </summary>
         public class PathPoint
         {
             public readonly Vector3 position;
             public readonly Node node;
+
+            public bool IsNodeGraph => node != null;
 
             public PathPoint(Vector3 position, Node node)
             {
@@ -17,9 +23,15 @@ public partial class NavGraph
             }
         }
 
+        /// <summary>
+        /// Path segment differs from a graph segment in that it can be a straight 
+        /// line between two points that are not necessarily graph nodes (e.g. start 
+        /// and end points). 
+        /// </summary>
         public class PathSegment
         {
             public readonly PathPoint a, b;
+            public readonly Segment graphSegment;
             public readonly float length;
             public readonly float previouslyAccumulatedLength;
 
@@ -29,12 +41,13 @@ public partial class NavGraph
             public Vector3 Direction => AB / length;
             public Vector3 MidPoint => a.position + AB / 2;
 
-            public bool IsNodeToNode => a.node != null && b.node != null;
+            public bool IsGraphSegment => graphSegment != null;
 
-            public PathSegment(PathPoint a, PathPoint b, float length, float previouslyAccumulatedLength)
+            public PathSegment(PathPoint a, PathPoint b, Segment graphSegment, float length, float previouslyAccumulatedLength)
             {
                 this.a = a;
                 this.b = b;
+                this.graphSegment = graphSegment;
                 this.length = length;
                 this.previouslyAccumulatedLength = previouslyAccumulatedLength;
 
@@ -79,6 +92,9 @@ public partial class NavGraph
 
         public bool HasPath =>
             segments.Length > 0;
+
+        public bool HasCurrentSegment =>
+            segments.Length > 0 && segmentIndex < segments.Length;
 
         public PathSegment CurrentSegment =>
             segments[segmentIndex];
@@ -126,6 +142,12 @@ public partial class NavGraph
                 .Select(node => new PathPoint(node.position, node))
                 .ToList();
 
+            if (points.Count < 2)
+            {
+                found = false;
+                return;
+            }
+
             MathUtils.NearestPointOnLine(
                 points[0].position,
                 points[1].position - points[0].position,
@@ -167,7 +189,8 @@ public partial class NavGraph
                 {
                     var (a, b) = pair;
                     var length = Vector3.Distance(a.position, b.position);
-                    var segment = new PathSegment(a, b, length, TotalLength);
+                    var graphSegment = a.IsNodeGraph && b.IsNodeGraph ? graph.GetSegment(a.node.id, b.node.id) : null;
+                    var segment = new PathSegment(a, b, graphSegment, length, TotalLength);
                     TotalLength += length;
                     return segment;
                 })
@@ -223,7 +246,7 @@ public partial class NavGraph
             Gizmos.matrix = Matrix4x4.identity;
             foreach (var segment in segments)
             {
-                Gizmos.color = segment.IsNodeToNode
+                Gizmos.color = segment.IsGraphSegment
                     ? Colors.Hex("FF0")
                     : Colors.Hex("F60");
 
