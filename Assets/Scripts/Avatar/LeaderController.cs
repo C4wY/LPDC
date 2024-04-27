@@ -101,12 +101,10 @@ namespace Avatar
 
         void Update()
         {
-            wannaJump |= Input.GetButtonDown("Jump");
-
-            if (InputManager.Instance.DebugRespawn())
-            {
+            if (InputManager.Instance.DebugBothRespawn())
                 avatar.Move.TeleportTo(avatar.Ground.LastGroundPosition);
-            }
+
+            wannaJump |= Input.GetButtonDown("Jump");
 
             JumpUpdate();
             DashUpdate();

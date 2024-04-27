@@ -54,6 +54,14 @@ namespace Avatar
         float horizontalInput = 0;
         float verticalInput = 0;
 
+        public void TeleportBehindLeader()
+        {
+            var dx = (leaderAvatar.Move.IsFacingRight ? -1 : 1) * 0.25f;
+            var dy = 0.5f;
+            var position = leaderAvatar.Ground.LastGroundPosition + new Vector3(dx, dy, 0);
+            avatar.Move.TeleportTo(position);
+        }
+
         void RefreshNavGraph()
         {
             var x = Mathf.FloorToInt(avatar.Ground.FeetPosition.x);
@@ -141,6 +149,9 @@ namespace Avatar
 
         void Update()
         {
+            if (InputManager.Instance.DebugFollowerRespawn())
+                TeleportBehindLeader();
+
 #if UNITY_EDITOR
             if (Application.isPlaying == false)
                 UpdateAgent();
@@ -156,13 +167,8 @@ namespace Avatar
             distanceToLeader = deltaToLeader.magnitude;
 
             if (Mathf.Abs(deltaToLeader.y) > Parameters.yDistanceToLeaderMaxBeforeTeleporting)
-            {
                 // Teleport the follower to the leader (debug solution).
-                var dx = (leaderAvatar.Move.IsFacingRight ? -1 : 1) * 0.25f;
-                var dy = 0.5f;
-                var position = leaderAvatar.transform.position + new Vector3(dx, dy, 0);
-                avatar.Move.TeleportTo(position);
-            }
+                TeleportBehindLeader();
 
             if (Time.time > navGraphTime + Parameters.navGraphObsolenceTime)
             {

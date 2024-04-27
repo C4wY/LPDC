@@ -23,8 +23,13 @@ public class InputManager : MonoBehaviour
         return Input.GetKey(KeyCode.LeftShift);
     }
 
-    public bool DebugRespawn()
+    public bool DebugFollowerRespawn()
     {
-        return Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift);
+        return Input.GetKey(KeyCode.U);
+    }
+
+    public bool DebugBothRespawn()
+    {
+        return DebugFollowerRespawn() || Input.GetKey(KeyCode.I);
     }
 }
