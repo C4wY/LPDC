@@ -16,15 +16,15 @@ public class MIC_Attaque_Joueur : MonoBehaviour
 
     void Start()
     {
-       
-        spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();   
 
-                // Récupérer le SpriteRenderer du joueur
+        spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
+
+        // Récupérer le SpriteRenderer du joueur
         playerSpriteRenderer = transform.Find("Avatar (Leader)/Sprite").GetComponent<SpriteRenderer>();
 
         // Sauvegarder le sprite d'origine du joueur
         originalSprite = playerSpriteRenderer.sprite;
-        
+
     }
 
     void Update()

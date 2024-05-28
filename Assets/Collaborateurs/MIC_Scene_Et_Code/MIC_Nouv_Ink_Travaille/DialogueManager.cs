@@ -11,17 +11,17 @@ public class DialogueManager : MonoBehaviour
 
     private Story story;
     private bool isDialogueActive = false;
-    private bool isLeaderInRange = true;
 
     void Start()
     {
         dialogueText.gameObject.SetActive(false);
         InitializeGlobals();
+
     }
 
     void Update()
     {
-        if (isLeaderInRange && Input.GetKeyDown(activationKey))
+        if (story != null && Input.GetKeyDown(activationKey))
         {
             if (!isDialogueActive)
             {
@@ -40,8 +40,14 @@ public class DialogueManager : MonoBehaviour
         ApplyGlobals();
     }
 
+    public void ClearStory()
+    {
+        story = null;
+    }
+
     private void StartDialogue()
     {
+        Debug.Log($"Starting dialogue with {story.variablesState["name"]} {story.canContinue}");
         if (story.canContinue)
         {
             isDialogueActive = true;
@@ -85,41 +91,7 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         isDialogueActive = false;
-        if (!isLeaderInRange)
-        {
-            dialogueText.gameObject.SetActive(false);
-        }
-        else
-        {
-            dialogueText.text = "Appuyez sur 'F' pour parler";
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (IsLeader(other.gameObject))
-        {
-            isLeaderInRange = true;
-            dialogueText.gameObject.SetActive(true);
-            dialogueText.text = "Appuyez sur 'F' pour parler";
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (IsLeader(other.gameObject))
-        {
-            isLeaderInRange = false;
-            if (!isDialogueActive)
-            {
-                dialogueText.gameObject.SetActive(false);
-            }
-        }
-    }
-
-    private bool IsLeader(GameObject obj)
-    {
-        return obj.name.Contains("(Leader)");
+        dialogueText.gameObject.SetActive(false);
     }
 
     private void InitializeGlobals()
