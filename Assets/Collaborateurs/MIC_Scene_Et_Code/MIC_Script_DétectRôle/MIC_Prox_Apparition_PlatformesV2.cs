@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//Importer l'espace de noms Avatar
+// Importer l'espace de noms Avatar
 using Avatar;
 
 public class MIC_Prox_Apparition_PlatformesV2 : MonoBehaviour
@@ -15,49 +15,55 @@ public class MIC_Prox_Apparition_PlatformesV2 : MonoBehaviour
     public AudioClip leverSound;
     public AudioSource audioSource;
 
-    private bool isLeaderInRange = false; // Utilisation du rôle Leader
+    private bool isLeaderInRange = false;
     private bool leverActivated = false;
-
-    //Utiliser Avatar.Avatar comme type de cible
-    public Avatar.Avatar target;
-    // Référence directe à l'avatar actif
 
     void Update()
     {
-        if (isLeaderInRange && Input.GetKeyDown(activationKey)) // Utilisation de isLeaderInRange
+        // Vérifier si l'Avatar Leader est dans la zone du levier
+        if (IsLeaderInRange() && Input.GetKeyDown(activationKey))
         {
-            
-            
             ActivateLever();
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Vérifier si le collider appartient à un objet avec le script Avatar et est un leader
-        Avatar.Avatar  avatar = other.GetComponent<Avatar.Avatar>();
-        if (avatar != null && avatar.IsLeader)
+        // Vérifier si le collider appartient à un Avatar Leader
+        if (IsLeader(other.gameObject))
         {
-            isLeaderInRange = true; // Utilisation de isLeaderInRange
+            isLeaderInRange = true;
             leverText.SetActive(true);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        // Vérifier si le collider appartient à un objet avec le script Avatar et est un leader
-        Avatar.Avatar avatar = other.GetComponent<Avatar.Avatar>();
-        if (avatar != null)
+        // Vérifier si le collider appartient à un Avatar Leader
+        if (IsLeader(other.gameObject))
         {
-            isLeaderInRange = false; // Utilisation de isLeaderInRange
+            isLeaderInRange = false;
             leverText.SetActive(false);
         }
+    }
+
+    private bool IsLeaderInRange()
+    {
+        // Vérifier si l'Avatar Leader est dans la zone du levier
+        return isLeaderInRange;
+    }
+
+    private bool IsLeader(GameObject obj)
+    {
+        // Vérifier si l'objet est un Avatar avec le rôle Leader
+        return obj.name.Contains("(Leader)");
     }
 
     private void ActivateLever()
     {
         if (!leverActivated)
         {
+            // Activer les plateformes
             foreach (GameObject platform in platformsToActivate)
             {
                 platform.SetActive(true);
@@ -65,6 +71,7 @@ public class MIC_Prox_Apparition_PlatformesV2 : MonoBehaviour
             leverActivated = true;
             Debug.Log("Le levier a été activé !");
             
+            // Jouer le son du levier
             if (audioSource && leverSound)
             {
                 audioSource.PlayOneShot(leverSound);
