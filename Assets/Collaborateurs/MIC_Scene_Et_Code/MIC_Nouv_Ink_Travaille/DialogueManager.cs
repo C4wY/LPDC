@@ -11,7 +11,7 @@ public class DialogueManager : MonoBehaviour
 
     private Story story;
     private bool isDialogueActive = false;
-    private bool isLeaderInRange = false;
+    private bool isLeaderInRange = true;
 
     void Start()
     {

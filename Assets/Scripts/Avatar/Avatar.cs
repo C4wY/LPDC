@@ -83,6 +83,12 @@ namespace Avatar
                 avatars.FirstOrDefault(a => a.IsFollower));
         }
 
+        public static Avatar GetLeader()
+        {
+            var (leader, follower) = GetLeaderFollower();
+            return leader;
+        }
+
         public static void UpdateAllAvatar()
         {
             foreach (var avatar in GetAllAvatars())
