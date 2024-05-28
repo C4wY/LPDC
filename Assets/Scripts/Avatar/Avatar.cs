@@ -94,7 +94,9 @@ namespace Avatar
             foreach (var avatar in GetAllAvatars())
             {
                 avatar.RoleUpdate();
+#if UNITY_EDITOR
                 EditorUtility.SetDirty(avatar);
+#endif
             }
         }
 
