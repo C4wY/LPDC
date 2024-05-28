@@ -85,8 +85,14 @@ namespace Avatar
 
         public static Avatar GetLeader()
         {
-            var (leader, follower) = GetLeaderFollower();
+            var (leader, _) = GetLeaderFollower();
             return leader;
+        }
+
+        public static Avatar GetFollower()
+        {
+            var (_, follower) = GetLeaderFollower();
+            return follower;
         }
 
         public static void UpdateAllAvatar()
