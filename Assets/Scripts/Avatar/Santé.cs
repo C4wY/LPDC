@@ -51,17 +51,17 @@ namespace Avatar
                 if (PV == 0)
                 {
                     // Afficher l'écran de fin de jeu avec le texte "Vous êtes mort"
-                gameOverScreen.SetActive(true);
-                // Désactiver la barre de vie
-                BarredeVie.SetActive(false);
-                Time.timeScale = 0f;
-                deathText.text = "Vous êtes mort";
-                background.enabled = true; // Activer l'image de fond
-                // Mettre en pause le jeu ou effectuer d'autres actions nécessaires lorsque le joueur est mort
-                
+                    gameOverScreen.SetActive(true);
+                    // Désactiver la barre de vie
+                    BarredeVie.SetActive(false);
+                    Time.timeScale = 0f;
+                    deathText.text = "Vous êtes mort";
+                    background.enabled = true; // Activer l'image de fond
+                                               // Mettre en pause le jeu ou effectuer d'autres actions nécessaires lorsque le joueur est mort
 
-                
-                
+
+
+
                 }
             }
         }
