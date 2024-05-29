@@ -7,7 +7,7 @@ public class Controles : MonoBehaviour
 {
     public void ShowControl ()
     {
-        SceneManager.LoadSceneAsync(1);
+        SceneManager.LoadScene("Controles manette");
     }
     
 }

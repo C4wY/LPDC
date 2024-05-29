@@ -7,7 +7,7 @@ public class Son : MonoBehaviour
 {
     public void SonO ()
     {
-        SceneManager.LoadSceneAsync(2);
+        SceneManager.LoadScene("Son");
     }
     
 }

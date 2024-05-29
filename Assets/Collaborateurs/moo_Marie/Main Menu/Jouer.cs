@@ -7,7 +7,7 @@ public class Jouer : MonoBehaviour
 {
     public void PlayGame ()
     {
-        SceneManager.LoadSceneAsync(4);
+        SceneManager.LoadScene("Jouer");
     }
     
 }
