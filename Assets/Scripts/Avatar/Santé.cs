@@ -24,7 +24,8 @@ namespace Avatar
         void Start()
         {
             // Désactivez l'écran de fin de jeu au démarrage
-            gameOverScreen.SetActive(false);
+            if (gameOverScreen != null)
+                gameOverScreen.SetActive(false);
         }
 
         void Update()
@@ -48,7 +49,7 @@ namespace Avatar
                     animationDégâts.JoueurPrisDégâts(dégâts);
                 }
 
-                if (PV == 0)
+                if (PV <= 0)
                 {
                     // Afficher l'écran de fin de jeu avec le texte "Vous êtes mort"
                     gameOverScreen.SetActive(true);
@@ -58,10 +59,6 @@ namespace Avatar
                     deathText.text = "Vous êtes mort";
                     background.enabled = true; // Activer l'image de fond
                                                // Mettre en pause le jeu ou effectuer d'autres actions nécessaires lorsque le joueur est mort
-
-
-
-
                 }
             }
         }

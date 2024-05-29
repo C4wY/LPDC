@@ -5,10 +5,16 @@ public partial class NavGraph
 {
     public class Agent
     {
+        /// <summary>
+        /// Path point differs from a graph node in that it can be a point in space
+        /// (e.g. start and end points).
+        /// </summary>
         public class PathPoint
         {
             public readonly Vector3 position;
             public readonly Node node;
+
+            public bool IsNodeGraph => node != null;
 
             public PathPoint(Vector3 position, Node node)
             {
@@ -17,9 +23,15 @@ public partial class NavGraph
             }
         }
 
+        /// <summary>
+        /// Path segment differs from a graph segment in that it can be a straight 
+        /// line between two points that are not necessarily graph nodes (e.g. start 
+        /// and end points). 
+        /// </summary>
         public class PathSegment
         {
             public readonly PathPoint a, b;
+            public readonly Segment graphSegment;
             public readonly float length;
             public readonly float previouslyAccumulatedLength;
 
@@ -29,12 +41,13 @@ public partial class NavGraph
             public Vector3 Direction => AB / length;
             public Vector3 MidPoint => a.position + AB / 2;
 
-            public bool IsNodeToNode => a.node != null && b.node != null;
+            public bool IsGraphSegment => graphSegment != null;
 
-            public PathSegment(PathPoint a, PathPoint b, float length, float previouslyAccumulatedLength)
+            public PathSegment(PathPoint a, PathPoint b, Segment graphSegment, float length, float previouslyAccumulatedLength)
             {
                 this.a = a;
                 this.b = b;
+                this.graphSegment = graphSegment;
                 this.length = length;
                 this.previouslyAccumulatedLength = previouslyAccumulatedLength;
 
@@ -42,12 +55,13 @@ public partial class NavGraph
                 {
                     if (b.position.y > a.position.y)
                     {
+                        // Check if the angle is too steep.
                         const float MAX_ANGLE = 30;
                         var angle = Mathf.Atan2(AB.y, Mathf.Abs(AB.x)) * Mathf.Rad2Deg; // Z is ignored
-
                         if (angle > MAX_ANGLE)
                             return true;
 
+                        // Check if there is an obstacle.
                         var ray = new Ray(a.position + Vector3.up * 0.2f, Direction);
                         if (Physics.Raycast(ray, length, LayerMask.GetMask("LevelBlock")))
                             return true;
@@ -79,6 +93,9 @@ public partial class NavGraph
         public bool HasPath =>
             segments.Length > 0;
 
+        public bool HasCurrentSegment =>
+            segments.Length > 0 && segmentIndex < segments.Length;
+
         public PathSegment CurrentSegment =>
             segments[segmentIndex];
 
@@ -102,6 +119,7 @@ public partial class NavGraph
             graph = null;
             points = new PathPoint[] { };
             segments = new PathSegment[] { };
+            segmentIndex = 0;
             TotalLength = 0;
         }
 
@@ -124,6 +142,12 @@ public partial class NavGraph
                 .Select(node => new PathPoint(node.position, node))
                 .ToList();
 
+            if (points.Count < 2)
+            {
+                found = false;
+                return;
+            }
+
             MathUtils.NearestPointOnLine(
                 points[0].position,
                 points[1].position - points[0].position,
@@ -133,6 +157,13 @@ public partial class NavGraph
                 points = points
                     .Skip(1)
                     .ToList();
+
+            // If the path is too short, don't bother.
+            if (points.Count == 1)
+            {
+                found = false;
+                return;
+            }
 
             MathUtils.NearestPointOnLine(
                 points[^2].position,
@@ -158,7 +189,8 @@ public partial class NavGraph
                 {
                     var (a, b) = pair;
                     var length = Vector3.Distance(a.position, b.position);
-                    var segment = new PathSegment(a, b, length, TotalLength);
+                    var graphSegment = a.IsNodeGraph && b.IsNodeGraph ? graph.GetSegment(a.node.id, b.node.id) : null;
+                    var segment = new PathSegment(a, b, graphSegment, length, TotalLength);
                     TotalLength += length;
                     return segment;
                 })
@@ -214,7 +246,7 @@ public partial class NavGraph
             Gizmos.matrix = Matrix4x4.identity;
             foreach (var segment in segments)
             {
-                Gizmos.color = segment.IsNodeToNode
+                Gizmos.color = segment.IsGraphSegment
                     ? Colors.Hex("FF0")
                     : Colors.Hex("F60");
 

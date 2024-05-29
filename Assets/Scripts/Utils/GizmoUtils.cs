@@ -25,6 +25,23 @@ public static class GizmosUtils
         }
     }
 
+    public static void DrawParabola(Vector3 start, Vector3 end, float height, int subdivisions = 32)
+    {
+        var delta = end - start;
+        var apex = start + delta * 0.5f + Vector3.up * height;
+        var previous = start;
+        for (int i = 1; i <= subdivisions; i++)
+        {
+            float t = (float)i / subdivisions;
+            var p = Vector3.Lerp(start, end, t);
+            var q = Vector3.Lerp(start, apex, t);
+            var r = Vector3.Lerp(apex, end, t);
+            var s = Vector3.Lerp(q, r, t);
+            Gizmos.DrawLine(previous, s);
+            previous = s;
+        }
+    }
+
     public static void DrawPath(
         IEnumerable<Vector3> path,
         Color? colorStart = null,

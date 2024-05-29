@@ -4,12 +4,23 @@ public partial class NavGraph
 {
     public class Segment
     {
+        [System.Flags]
+        public enum Type
+        {
+            Ground = 1 << 0,
+            Air = 1 << 1,
+        }
+
         readonly NavGraph navGraph;
 
         public readonly int n0;
         public readonly int n1;
         public readonly float length;
-        public Vector3 direction;
+        public readonly Vector3 direction;
+        public readonly Type type;
+
+        public bool IsGround => type.HasFlag(Type.Ground);
+        public bool IsAir => type.HasFlag(Type.Air);
 
         public Node Node0 => navGraph.nodes[n0];
         public Vector3 Position0 => Node0.position;
@@ -19,13 +30,14 @@ public partial class NavGraph
 
         public Vector3 Delta => Position1 - Position0;
 
-        public Segment(NavGraph navGraph, int n0, int n1, float length, Vector3 direction)
+        public Segment(NavGraph navGraph, int n0, int n1, float length, Vector3 direction, Type type = Type.Ground)
         {
             this.navGraph = navGraph;
             this.n0 = n0;
             this.n1 = n1;
             this.length = length;
             this.direction = direction;
+            this.type = type;
         }
 
         public Vector3 Position(float t)

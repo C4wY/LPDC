@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MIC_Téléportation_Obstacle : MonoBehaviour
-
-
 {
-public Transform teleportReference;
-public AudioClip teleportSound;
+    public Transform teleportReference;
+    public AudioClip teleportSound;
 
-private bool hasTeleported = false;
+    // private bool hasTeleported = false;
 
-private AudioSource audioSource;
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +28,7 @@ private AudioSource audioSource;
             {
                 audioSource.PlayOneShot(teleportSound);
             }
-            hasTeleported = true;
+            // hasTeleported = true;
         }
     }
 
