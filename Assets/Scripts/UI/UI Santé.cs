@@ -18,14 +18,16 @@ public class UISanté : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
-            var image = transform.GetChild(i).GetComponent<Image>();
-            if (i < PV)
+            if (transform.GetChild(i).TryGetComponent<Image>(out var image))
             {
-                image.sprite = plein;
-            }
-            else
-            {
-                image.sprite = vide;
+                if (i < PV)
+                {
+                    image.sprite = plein;
+                }
+                else
+                {
+                    image.sprite = vide;
+                }
             }
         }
     }
