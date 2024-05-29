@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 181208504972887940}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.023, z: 0}
-  m_LocalScale: {x: 0.8085, y: 0.8085, z: 0.8085}
+  m_LocalPosition: {x: 0, y: -0.991, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7295979769435162380}
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 1075451103
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: de23c1a681bab624bb18ebd7213dd4e6, type: 3}
+  m_Sprite: {fileID: -233501040, guid: ebb7e42231b30dd4488174fee419d31c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -384,6 +384,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceDown: 0
+  facing: 1
+  mode: 0
+  switchSourcePosition: {x: 0, y: 0, z: 0}
+  switchTargetPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &5883021434040560440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,7 +400,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4f744bfd027d9f45822b78bce94774f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viemax: 0
+  "compteurInvincibilit\xE9": 0
   PV: 3
+  "animationD\xE9g\xE2ts": {fileID: 0}
+  gameOverScreen: {fileID: 0}
+  deathText: {fileID: 0}
+  background: {fileID: 0}
+  BarredeVie: {fileID: 0}
 --- !u!114 &719985179100331000
 MonoBehaviour:
   m_ObjectHideFlags: 0
