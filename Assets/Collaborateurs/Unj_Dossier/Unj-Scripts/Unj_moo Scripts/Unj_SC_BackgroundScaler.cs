@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class SC_BackgroundScaler : MonoBehaviour
+public class Unj_SC_BackgroundScaler : MonoBehaviour
 {
     Image backgroundImage;
     RectTransform rt;
@@ -23,7 +23,7 @@ public class SC_BackgroundScaler : MonoBehaviour
             return;
 
         //Scale image proportionally to fit the screen dimensions, while preserving aspect ratio
-        if(Screen.height * ratio >= Screen.width)
+        if (Screen.height * ratio >= Screen.width)
         {
             rt.sizeDelta = new Vector2(Screen.height * ratio, Screen.height);
         }

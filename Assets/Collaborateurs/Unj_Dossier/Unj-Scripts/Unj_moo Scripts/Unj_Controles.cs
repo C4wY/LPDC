@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Controles : MonoBehaviour
+public class Unj_Controles : MonoBehaviour
 {
     public void ShowControl()
     {
-        SceneManager.LoadScene("Controles manette");
+        SceneManager.LoadScene("Unj_Controles manette");
     }
 
 }

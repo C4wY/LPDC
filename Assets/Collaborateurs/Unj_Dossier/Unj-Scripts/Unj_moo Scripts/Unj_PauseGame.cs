@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseGame : MonoBehaviour
+public class Unj_PauseGame : MonoBehaviour
 {
 
     public static bool GameIsPaused = false;
@@ -12,19 +12,19 @@ public class PauseGame : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
-    {
-        if (GameIsPaused)
         {
-            Continuer();
+            if (GameIsPaused)
+            {
+                Continuer();
+            }
+            else
+            {
+                Pause();
+            }
         }
-        else 
-        {
-            Pause();
-        }
-    }
     }
 
-    public void Continuer () 
+    public void Continuer()
     {
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
@@ -45,10 +45,10 @@ public class PauseGame : MonoBehaviour
 
     public void MainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Unj_MainMenu");
     }
 
-    public void Quitter ()
+    public void Quitter()
     {
         Application.Quit();
     }

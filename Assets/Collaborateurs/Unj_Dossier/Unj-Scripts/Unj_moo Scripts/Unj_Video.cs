@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Video : MonoBehaviour
+public class Unj_Video : MonoBehaviour
 {
-    public void VideoO ()
+    public void VideoO()
     {
-        SceneManager.LoadScene("Video");
+        SceneManager.LoadScene("Unj_Video");
     }
-    
+
 }

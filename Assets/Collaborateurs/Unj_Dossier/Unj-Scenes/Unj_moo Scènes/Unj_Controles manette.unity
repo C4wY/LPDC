@@ -201,8 +201,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1094610272}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+      - m_Target: {fileID: 1094610277}
+        m_TargetAssemblyTypeName: Unj_MainMenu, Assembly-CSharp
         m_MethodName: MainM
         m_Mode: 1
         m_Arguments:
@@ -1058,8 +1058,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1094610274}
-        m_TargetAssemblyTypeName: Son, Assembly-CSharp
+      - m_Target: {fileID: 1094610279}
+        m_TargetAssemblyTypeName: Unj_Son, Assembly-CSharp
         m_MethodName: SonO
         m_Mode: 1
         m_Arguments:
@@ -1082,10 +1082,10 @@ GameObject:
   - component: {fileID: 1094610270}
   - component: {fileID: 1094610269}
   - component: {fileID: 1094610275}
-  - component: {fileID: 1094610274}
-  - component: {fileID: 1094610273}
-  - component: {fileID: 1094610272}
   - component: {fileID: 1094610276}
+  - component: {fileID: 1094610279}
+  - component: {fileID: 1094610278}
+  - component: {fileID: 1094610277}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1168,42 +1168,6 @@ Transform:
   - {fileID: 47427714}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1094610272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1094610268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb2ca655e7c01a241878b06f53e59115, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1094610273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1094610268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80a9d1ac29605494687f0473a2421199, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1094610274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1094610268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcde759398b024d44ab90d9863a4ef6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1094610275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1258,6 +1222,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4ee6c42b72321240a93e6b0b78395ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1094610277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094610268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b6b629f0c3ff342846fd2742b7f06a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1094610278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094610268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df354711425a8ac4e9f565b7d545c203, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1094610279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094610268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e38caf23045041921ae6a2ce9d04c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1747322896
@@ -1417,8 +1417,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1094610273}
-        m_TargetAssemblyTypeName: Video, Assembly-CSharp
+      - m_Target: {fileID: 1094610278}
+        m_TargetAssemblyTypeName: Unj_Video, Assembly-CSharp
         m_MethodName: VideoO
         m_Mode: 1
         m_Arguments:

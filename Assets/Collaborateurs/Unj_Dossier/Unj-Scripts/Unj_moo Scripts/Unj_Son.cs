@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Son : MonoBehaviour
+public class Unj_Son : MonoBehaviour
 {
-    public void SonO ()
+    public void SonO()
     {
-        SceneManager.LoadScene("Son");
+        SceneManager.LoadScene("Unj_Son");
     }
-    
+
 }

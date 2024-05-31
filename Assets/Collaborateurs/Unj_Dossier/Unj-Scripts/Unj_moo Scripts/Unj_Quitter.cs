@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Quitter : MonoBehaviour
+public class Unj_Quitter : MonoBehaviour
 {
-    public void QuitGame ()
+    public void QuitGame()
     {
         Application.Quit();
     }
-    
+
 }

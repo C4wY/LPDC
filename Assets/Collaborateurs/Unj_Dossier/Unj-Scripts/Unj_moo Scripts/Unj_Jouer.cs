@@ -7,7 +7,7 @@ public class Unj_Jouer : MonoBehaviour
 {
     public void PlayGame()
     {
-        SceneManager.LoadScene("Unj_moo Jouer");
+        SceneManager.LoadScene("Unj_Jouer");
     }
 
 }
