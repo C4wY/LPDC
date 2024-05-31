@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Controles : MonoBehaviour
+public class Video : MonoBehaviour
 {
-    public void ShowControl ()
+    public void VideoO ()
     {
-        SceneManager.LoadScene("Controles manette");
+        SceneManager.LoadScene("Video");
     }
     
 }
