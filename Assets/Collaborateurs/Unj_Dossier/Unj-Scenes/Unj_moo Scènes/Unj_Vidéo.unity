@@ -290,7 +290,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 159576485}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f876010615d8594c9e3dca9d6ef831d, type: 3}
+  m_Script: {fileID: 11500000, guid: 499b6936d65047546a1bb8cef3043dc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &175753662
@@ -472,7 +472,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 159576487}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ChangementQualite, Assembly-CSharp
         m_MethodName: ChangeQuality
         m_Mode: 0
@@ -1079,9 +1079,9 @@ GameObject:
   - component: {fileID: 877090963}
   - component: {fileID: 877090962}
   - component: {fileID: 877090968}
-  - component: {fileID: 877090965}
-  - component: {fileID: 877090966}
-  - component: {fileID: 877090967}
+  - component: {fileID: 877090971}
+  - component: {fileID: 877090970}
+  - component: {fileID: 877090969}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1163,42 +1163,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &877090965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 877090961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89135573e4b48da4680c6f00830d5073, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &877090966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 877090961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcde759398b024d44ab90d9863a4ef6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &877090967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 877090961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb2ca655e7c01a241878b06f53e59115, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &877090968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1243,6 +1207,42 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &877090969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877090961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b6b629f0c3ff342846fd2742b7f06a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &877090970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877090961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 757e38caf23045041921ae6a2ce9d04c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &877090971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877090961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35ae99c0017fbb34a9a1ae22f45fe292, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &914494756
 GameObject:
   m_ObjectHideFlags: 0
@@ -1535,8 +1535,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 877090966}
-        m_TargetAssemblyTypeName: Son, Assembly-CSharp
+      - m_Target: {fileID: 877090970}
+        m_TargetAssemblyTypeName: Unj_Son, Assembly-CSharp
         m_MethodName: SonO
         m_Mode: 1
         m_Arguments:
@@ -1969,7 +1969,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 159576487}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ChangementQualite, Assembly-CSharp
         m_MethodName: SetFullscreen
         m_Mode: 0
@@ -2898,8 +2898,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 877090967}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+      - m_Target: {fileID: 877090969}
+        m_TargetAssemblyTypeName: Unj_MainMenu, Assembly-CSharp
         m_MethodName: MainM
         m_Mode: 1
         m_Arguments:
@@ -3030,8 +3030,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 877090965}
-        m_TargetAssemblyTypeName: Controles, Assembly-CSharp
+      - m_Target: {fileID: 877090971}
+        m_TargetAssemblyTypeName: Unj_Controles, Assembly-CSharp
         m_MethodName: ShowControl
         m_Mode: 1
         m_Arguments:

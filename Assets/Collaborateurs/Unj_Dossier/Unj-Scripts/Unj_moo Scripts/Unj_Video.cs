@@ -7,7 +7,7 @@ public class Unj_Video : MonoBehaviour
 {
     public void VideoO()
     {
-        SceneManager.LoadScene("Unj_Video");
+        SceneManager.LoadScene("Unj_Vidéo");
     }
 
 }

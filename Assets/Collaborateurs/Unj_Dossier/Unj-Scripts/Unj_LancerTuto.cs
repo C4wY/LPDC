@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Unj_MainMenu : MonoBehaviour
+public class Unj_LancerTuto : MonoBehaviour
 {
-    public void MainM()
+    public void LancerTuto()
     {
-        SceneManager.LoadScene("Unj_MainMenu");
+        SceneManager.LoadScene("Unj_Tuto Final");
     }
-
 }

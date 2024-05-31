@@ -2843,8 +2843,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Video, Assembly-CSharp
+      - m_Target: {fileID: 877090969}
+        m_TargetAssemblyTypeName: Unj_Video, Assembly-CSharp
         m_MethodName: VideoO
         m_Mode: 1
         m_Arguments:
@@ -3290,8 +3290,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+      - m_Target: {fileID: 877090970}
+        m_TargetAssemblyTypeName: Unj_MainMenu, Assembly-CSharp
         m_MethodName: MainM
         m_Mode: 1
         m_Arguments:
@@ -3422,8 +3422,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Controles, Assembly-CSharp
+      - m_Target: {fileID: 877090971}
+        m_TargetAssemblyTypeName: Unj_Controles, Assembly-CSharp
         m_MethodName: ShowControl
         m_Mode: 1
         m_Arguments:
