@@ -83,12 +83,26 @@ namespace Avatar
                 avatars.FirstOrDefault(a => a.IsFollower));
         }
 
+        public static Avatar GetLeader()
+        {
+            var (leader, _) = GetLeaderFollower();
+            return leader;
+        }
+
+        public static Avatar GetFollower()
+        {
+            var (_, follower) = GetLeaderFollower();
+            return follower;
+        }
+
         public static void UpdateAllAvatar()
         {
             foreach (var avatar in GetAllAvatars())
             {
                 avatar.RoleUpdate();
+#if UNITY_EDITOR
                 EditorUtility.SetDirty(avatar);
+#endif
             }
         }
 

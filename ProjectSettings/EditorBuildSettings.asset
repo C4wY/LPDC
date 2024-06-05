@@ -18,10 +18,32 @@ EditorBuildSettings:
     path: Assets/Collaborateurs/moo_Marie/Main Menu/Scenes/Video.unity
     guid: 7fed90baea6d7554d84c3a47f40f45e3
   - enabled: 1
+    path: Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_Tuto Final.unity
+    guid: a064d842f074aa64bb282f2adb6d9bfe
+  - enabled: 1
     path: Assets/Collaborateurs/moo_Marie/Main Menu/Scenes/Jouer.unity
     guid: 8f40f17fdd24fd544a732fe6dc0b7398
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: "Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_moo Sc\xE8nes/Unj_Controles
+      manette.unity"
+    guid: e034ab8e713c7834ebf20ef6e3a02bd1
+  - enabled: 1
+    path: "Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_moo Sc\xE8nes/Unj_Jouer.unity"
+    guid: db83565aea247ec45b7004c9cbf3a5cb
+  - enabled: 1
+    path: "Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_moo Sc\xE8nes/Unj_MainMenu.unity"
+    guid: f796590d217a0904b896eade0ccbc666
+  - enabled: 1
+    path: "Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_moo Sc\xE8nes/Unj_MenuPause.unity"
+    guid: e4f71e353eb53bd4890e4e3910e1be43
+  - enabled: 1
+    path: "Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_moo Sc\xE8nes/Unj_Vid\xE9o.unity"
+    guid: a9a643ccd2f92e045ab899a3814d4793
+  - enabled: 1
+    path: "Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_moo Sc\xE8nes/Unj_son.unity"
+    guid: 4e16fe5e39ce05c43b3e8cd10cf2d97b
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

@@ -25,17 +25,19 @@ MonoBehaviour:
     jumpCooldown: 0.33
     jumpHeightRatioWhileDashing: 2
     walkVelocity: 3.5
-    runVelocity: 7
+    runVelocity: 9
     dashDuration: 0.15
     dashCooldown: 0.58
     dashVelocity: 30
+    switchVelocity: 15
     goBackwardCooldown: 0.33
   leaderController:
     traceIntervalDistanceMax: 0.25
-    gizmos: -2
+    gizmos: 0
   followerController:
     distanceToLeaderMin: 1
     distanceToLeaderMax: 3
+    yDistanceToLeaderMaxBeforeTeleporting: 30
     navGraphSampleWidth: 60
     navGraphObsolenceTime: 1
     gizmos: -1

@@ -1,32 +1,55 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteAlways]
-public class UISanté : MonoBehaviour
+public class UpdateChildImages : MonoBehaviour
 {
-    public Sprite plein;
-    public Sprite vide;
+    public int PV; // Public variable to set the threshold
+    public Sprite plein; // Sprite to set if i < PV
+    public Sprite vide; // Sprite to set if i >= PV
 
-    void Update()
+    void UpdateChildSprites()
     {
-        var avatars = FindObjectsByType<Avatar.Avatar>(FindObjectsSortMode.None);
-        var récupleader = avatars.First(a => a.IsLeader);
-        var PV = récupleader.Santé.PV;
+        int childCount = transform.childCount;
 
-        for (int i = 0; i < 3; i++)
+        // Debug log to verify the number of children
+        Debug.Log("Number of children: " + childCount);
+
+        // Ensure the loop does not exceed the number of children
+        for (int i = 0; i < Mathf.Min(3, childCount); i++)
         {
-            var image = transform.GetChild(i).GetComponent<Image>();
-            if (i < PV)
+            Transform child = transform.GetChild(i);
+
+            // Debug log to verify each child's index
+            Debug.Log("Processing child index: " + i);
+
+            if (child.TryGetComponent<Image>(out var image))
             {
-                image.sprite = plein;
+                // Debug log to verify if the component was found
+                Debug.Log("Image component found on child index: " + i);
+
+                if (i < PV)
+                {
+                    image.sprite = plein;
+                }
+                else
+                {
+                    image.sprite = vide;
+                }
+
+                // Debug log to verify the sprite assignment
+                Debug.Log("Assigned sprite to child index: " + i);
             }
             else
             {
-                image.sprite = vide;
+                // Debug log to verify if the component was not found
+                Debug.Log("Image component not found on child index: " + i);
             }
         }
+    }
+
+    // Optionally, you can call this method from Start or Update
+    void Start()
+    {
+        UpdateChildSprites();
     }
 }

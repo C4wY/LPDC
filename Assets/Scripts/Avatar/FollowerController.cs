@@ -66,6 +66,7 @@ namespace Avatar
         {
             var x = Mathf.FloorToInt(avatar.Ground.FeetPosition.x);
             var width = Parameters.navGraphSampleWidth;
+
             navGraph.Clear();
             navGraph.SampleWorld(x - width / 2, x + width / 2, 0, 5);
             navGraph.CreateGroundSegments();
