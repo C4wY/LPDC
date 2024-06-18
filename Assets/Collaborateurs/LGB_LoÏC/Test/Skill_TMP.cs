@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class skill : MonoBehaviour
+public class Skill : MonoBehaviour
 {
     [System.Serializable]
     public class SkillKeyBinding
@@ -19,6 +19,12 @@ public class skill : MonoBehaviour
     public SkillSet[] skillSets;
     private int currentSkillSetIndex = 0;
 
+    void Activate(GameObject gameObject)
+    {
+        // (Joseph Merdrignac) fix compilation error
+        // TODO: Activate the skill
+    }
+
     void Update()
     {
         // Switch skill set
@@ -33,7 +39,8 @@ public class skill : MonoBehaviour
         {
             if (Input.GetKeyDown(binding.key))
             {
-                binding.skill?.Activate(gameObject);
+                if (binding.skill != null)
+                    binding.skill.Activate(gameObject);
             }
         }
     }
