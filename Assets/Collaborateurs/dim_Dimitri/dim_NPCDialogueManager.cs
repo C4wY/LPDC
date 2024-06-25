@@ -43,11 +43,32 @@ public class dim_NPCDialogueManager : MonoBehaviour
         buttonArray = canvas.GetComponentsInChildren<Button>(); // On récupère les différents boutons dans le canvas.
 
         // On crée une boucle pour rattacher les boutons à leur fonction dédiée.
-        int i = 0;
+        int i = 0; 
+
         foreach (Button button in buttonArray)
         {
-            button.GetComponent<Button>().onClick.AddListener(() => { choiceButtonClick(i); });
+            if (i == 0)
+            {
+                button.GetComponent<Button>().onClick.AddListener(button0);
+            }
+
+            if (i == 1)
+            {
+                button.GetComponent<Button>().onClick.AddListener(button1);
+            }
+
+            if (i == 2)
+            {
+                button.GetComponent<Button>().onClick.AddListener(button2);
+            }
+
+            if (i == 3)
+            {
+                button.GetComponent<Button>().onClick.AddListener(button3);
+            }
+
             button.gameObject.SetActive(false);
+
             i += 1;
         }
     }
@@ -221,6 +242,26 @@ public class dim_NPCDialogueManager : MonoBehaviour
         
     }
     
+    public void button0 ()
+    {
+        choiceButtonClick(0);
+    }
+
+    public void button1()
+    {
+        choiceButtonClick(1);
+    }
+
+    public void button2()
+    {
+        choiceButtonClick(2);
+    }
+
+    public void button3()
+    {
+        choiceButtonClick(3);
+    }
+
     public void choiceButtonClick(int index)
     {
         int choiceSelected = index;
