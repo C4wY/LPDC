@@ -9,10 +9,13 @@ using UnityEditor.VersionControl;
 
 public class dim_NPCDialogueManager : MonoBehaviour
 {
+    public KeyCode activationKey = KeyCode.F; 
     private Story story;
     public TextAsset globalsInkJSON; // Le Json contenant les dialogues.
     private bool isDialogueActive = false;
     public TextMeshProUGUI dialogueText; // Le TMP de la boite de dialogue
+    private bool dialogueTriggered = false;
+    public const string DialogueStart = "Press F to talk";
 
     void Start()
     {
@@ -22,6 +25,44 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKey(activationKey))
+        {
+            if (dialogueTriggered == true)
+            {
+                StartDialogue();
+                dialogueTriggered = false;
+            }
+
+            else
+            {
+                ContinueDialogue();
+
+                if (story.currentChoices.Count != 0)
+                {
+                    //Debug.Log("Show Choices");
+                    // StartCoroutine(ShowChoices());
+                    // ShowChoices();
+                }
+
+            }
+        }
+    }
+
+    void OnTriggerEnter(Collider collider)
+    {
+
+        // Test : le collider correspond au tag recherché
+        if (collider.gameObject.tag == "Player")
+        {
+            // Test : le collider est bien le leader
+            var isLeader = Avatar.Avatar.GetLeader() == collider.GetComponentInParent<Avatar.Avatar>();
+            if (isLeader)
+            {
+                dialogueText.text = DialogueStart;
+                dialogueTriggered = true;
+            }
+        }
+
 
     }
 
@@ -55,12 +96,12 @@ public class dim_NPCDialogueManager : MonoBehaviour
         }
     }
 
-    private void EndDialogue()
+    void EndDialogue()
     {
         isDialogueActive = false;
     }
 
-    private void checkTags()
+    void checkTags()
     {
         // On récupère les tags
         var tags = story.currentTags;
@@ -90,7 +131,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     // private void SetTextColor(string param) => dialogueText.color = param;
 
-    private IEnumerator DisplayNextLine()
+    IEnumerator DisplayNextLine()
     {
         if (story.canContinue)
         {
@@ -102,6 +143,13 @@ public class dim_NPCDialogueManager : MonoBehaviour
             foreach (char letter in text.ToCharArray())
             {
                 dialogueText.text += letter;
+                float timer = 0f;
+                while (timer < 10f)
+                {
+                    timer += Time.deltaTime;
+                    Debug.Log(timer);
+                }
+
                 yield return null;
             }
             

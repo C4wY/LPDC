@@ -29,7 +29,7 @@ public class dim_NPCDialogueTrigger : MonoBehaviour
         if (dialogueTriggered == true)
             if (Input.GetKey(dialogueManager.activationKey))
             {
-                dialogueManager.StartDialogue(Key);
+                // dialogueManager.StartDialogue();
                 dialogueTriggered = false;
 }
 

@@ -33,8 +33,5 @@ public class dim_DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartDialogue (Key)
-    {
-
-    }
+    
 }
