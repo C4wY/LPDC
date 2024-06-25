@@ -5,7 +5,7 @@ using UnityEngine;
 public class DisablePhysics : MonoBehaviour
 {
     public GameObject player; // Assignez l'objet Player via l'inspecteur
-    
+
     private Rigidbody playerRigidbody;
     private Collider playerCollider;
     private bool isPhysicsDisabled = false;
@@ -69,6 +69,9 @@ public class DisablePhysics : MonoBehaviour
         if (playerRigidbody != null)
         {
             playerRigidbody.useGravity = false; // Désactive la gravité
+
+            // Désactiver les déplacements sur les axes Y et Z
+            playerRigidbody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         }
 
         isPhysicsDisabled = true;
@@ -81,6 +84,9 @@ public class DisablePhysics : MonoBehaviour
         if (playerRigidbody != null)
         {
             playerRigidbody.useGravity = true; // Réactive la gravité
+
+            // Réactiver les déplacements sur les axes Y et Z
+            playerRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
         isPhysicsDisabled = false;
