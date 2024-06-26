@@ -54,14 +54,14 @@ public class DisablePhysics : MonoBehaviour
                 // Désactiver la gravité
                 DisablePhysicsComponents();
                 // Réactiver la gravité après 3 secondes
-                Invoke("EnablePhysicsComponents", 3f);
+                Invoke("EnablePhysicsComponents", 2f);
             }
         }
 
         if (player != null && playerRigidbody != null && !playerRigidbody.useGravity && moveDirection != Vector3.zero)
         {
             // Déplacement du Player dans la direction spécifiée
-            player.transform.position += moveDirection * Time.deltaTime * 40;
+            player.transform.position += moveDirection * Time.deltaTime * 20;
         }
     }
 
@@ -95,7 +95,7 @@ public class DisablePhysics : MonoBehaviour
         moveDirection = Vector3.zero; // Réinitialise la direction de déplacement
 
         // Démarrer le cooldown de 5 secondes avant de pouvoir désactiver la gravité à nouveau
-        Invoke("ResetCooldown", 5f);
+        Invoke("ResetCooldown", 3f);
     }
 
     void ResetCooldown()
@@ -112,4 +112,4 @@ public class DisablePhysics : MonoBehaviour
             EnablePhysicsComponents();
         }
     }
-}
+} 
