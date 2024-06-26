@@ -19,9 +19,16 @@ namespace Avatar
             Follower,
         }
 
+        public enum PairName
+        {
+            Sora,
+            Dooms,
+        }
+
         public AvatarParameters parameters;
 
         public PairRole role;
+        new public PairName name;
 
         public AvatarParameters SafeParameters =>
             parameters == null ? parameters = ScriptableObject.CreateInstance<AvatarParameters>() : parameters;
@@ -48,7 +55,7 @@ namespace Avatar
 #if UNITY_EDITOR
             // Do not change the name of the object in prefab mode.
             if (PrefabStageUtility.GetCurrentPrefabStage() == null)
-                gameObject.name = $"{GetType().Name} ({role})";
+                gameObject.name = $"{GetType().Name}-{name} ({role})";
 #endif
         }
 
