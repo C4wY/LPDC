@@ -21,7 +21,16 @@ public class dim_NPCDialogueManager : MonoBehaviour
     private Story story;
     private TextMeshProUGUI dialogueText;
     private Image textPanel;
+    private GameObject textPanelNPC;
+    private GameObject textPanelDooms;
+    private GameObject textPanelSora;
+    private GameObject playersIcon;
+    private GameObject npcIcon;
     private Array buttonArray;
+    private List<Color> buttonColorList;
+    private string displayText;
+    private float updateCooldown;
+    private bool skip = false;
 
     // Booléens de Contrôle
     private bool isDialogueActive = false;
@@ -37,8 +46,21 @@ public class dim_NPCDialogueManager : MonoBehaviour
         dialogueText = canvas.GetComponentInChildren<TextMeshProUGUI>(); // On récupère la zone de texte dans le canvas.
         dialogueText.gameObject.SetActive(false);
 
-        textPanel = canvas.GetComponentInChildren<Image>();
-        textPanel.gameObject.SetActive(false);
+        textPanelNPC = GameObject.Find("TextPanelNPC");
+        textPanelNPC.gameObject.SetActive(false);
+        textPanelDooms = GameObject.Find("TextPanelDooms");
+        textPanelDooms.gameObject.SetActive(false);
+        textPanelSora = GameObject.Find("TextPanelSora");
+        textPanelSora.gameObject.SetActive(false);
+
+        playersIcon = GameObject.Find("PlayersIcon");
+        playersIcon.gameObject.SetActive(false);
+        npcIcon = GameObject.Find("NPC_Icon");
+        npcIcon.gameObject.SetActive(false);
+
+        buttonColorList = new List<Color>();
+        for (int j = 0; j < 4; j++)
+            buttonColorList.Add(Color.white);
 
         buttonArray = canvas.GetComponentsInChildren<Button>(); // On récupère les différents boutons dans le canvas.
 
@@ -76,6 +98,9 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     void Update()
     {
+        updateCooldown += Time.deltaTime;
+        Debug.Log(updateCooldown);
+
         // On vérifie si le joueur appuie sur F et si le dialogue n'est pas déjà en train de se jouer.
         if ((Input.GetKey(activationKey)) && (!isDialoguePlaying)) 
         {
@@ -83,19 +108,27 @@ public class dim_NPCDialogueManager : MonoBehaviour
             {
                 StartDialogue();
                 dialogueTriggered = false;
+                updateCooldown = 0;
             }
 
             else // Si le dialogue a déjà été lancé, on avance dans le dialogue.
             {
-                ContinueDialogue();
-
-                if (story.currentChoices.Count != 0) // Si le joueur se trouve à un embranchement, on affiche les différents choix possibles.
+                if ((story.currentChoices.Count == 0) && (updateCooldown > 0.5))
                 {
-                    StartCoroutine(ShowChoices());
+                    ContinueDialogue();
+                    updateCooldown = 0;
                 }
 
             }
         }
+
+        if ((Input.GetKey(activationKey)) && (isDialoguePlaying) && (updateCooldown > 0.5))
+        {
+            skipDialogue();
+            updateCooldown = 0;
+            
+        }
+
     }
 
     void OnTriggerEnter(Collider collider)
@@ -110,7 +143,8 @@ public class dim_NPCDialogueManager : MonoBehaviour
             {
                 if (!isDialogueActive)
                 {
-                    textPanel.gameObject.SetActive(true); 
+                    npcIcon.gameObject.SetActive(true); 
+                    textPanelNPC.gameObject.SetActive(true); 
                     dialogueText.gameObject.SetActive(true); 
                     dialogueText.text = DialogueStart;
                     dialogueTriggered = true;
@@ -133,11 +167,10 @@ public class dim_NPCDialogueManager : MonoBehaviour
         story = new Story(globalsInkJSON.text);
         isDialogueActive = true;
 
+        playersIcon.gameObject.SetActive(true);
+
         // On affiche la première ligne de dialogue
-        if (story.canContinue)
-        {
-            ContinueDialogue();
-        }
+        ContinueDialogue();
     }
 
     private void ContinueDialogue()
@@ -146,11 +179,11 @@ public class dim_NPCDialogueManager : MonoBehaviour
         {
             isDialoguePlaying = true;
                 
-            // On verifie les tags
-            checkTags();
-
             // On lance l'affichage du texte
             StartCoroutine(DisplayNextLine());
+
+            // On verifie les tags
+            checkTags();
         }
         else
         {
@@ -161,8 +194,12 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
-        textPanel.gameObject.SetActive(false); 
-        dialogueText.gameObject.SetActive(false); 
+        textPanelNPC.gameObject.SetActive(false);
+        textPanelDooms.gameObject.SetActive(false);
+        textPanelSora.gameObject.SetActive(false);
+        dialogueText.gameObject.SetActive(false);
+        playersIcon.gameObject.SetActive(false);
+        npcIcon.gameObject.SetActive(false);
         isDialogueActive = false;
     }
 
@@ -172,21 +209,53 @@ public class dim_NPCDialogueManager : MonoBehaviour
         var tags = story.currentTags;
         foreach (string t in tags)
         {
+
             // On sépare le préfix du paramètre (#color blue -> prefix = color, param = blue)
             string prefix = t.Split (' ')[0];
             string param = t.Split (' ')[1];
-
             switch (prefix.ToLower())
             {
+                case "choice":
+                    
+                    Debug.Log(t);
+                    for (int i = 0; i<4; i++)
+                    {
+                        Debug.Log(t.Split(' ')[i + 1]);
+                        if ((t.Split(' ')[i+1]) == "Dooms")
+                            buttonColorList[i] = Color.green;
+
+                        if ((t.Split(' ')[i + 1]) == "Sora")
+                            buttonColorList[i] = Color.magenta;
+
+                        if ((t.Split(' ')[i + 1]) == "Neutral")
+                            buttonColorList[i] = Color.white;
+                    }
+                    break;
+
                 case "color":
                     // SetTextColor(param);
                     break;
                 case "speaker":
-                    // Guess who speaks
+
+                    textPanelNPC.gameObject.SetActive(false);
+                    textPanelDooms.gameObject.SetActive(false);
+                    textPanelSora.gameObject.SetActive(false);
+
+                    if (param == "Dooms")
+                        textPanelDooms.gameObject.SetActive(true);
+
+                    if (param == "Sora")
+                        textPanelSora.gameObject.SetActive(true);
+
+                    if ((param != "Sora") && (param != "Dooms"))
+                        textPanelNPC.gameObject.SetActive(true);
+
                     break;
+
                 case "portrait":
                     break;
-                case "layout":
+                case "debug":
+                    Debug.Log(param);
                     break;
 
             }
@@ -201,17 +270,28 @@ public class dim_NPCDialogueManager : MonoBehaviour
         if (story.canContinue)
         {
             // On actualise le texte à afficher
-            string text = story.Continue();
+            displayText = story.Continue();
             dialogueText.text = "";
 
             // On affiche les lettres une par une
-            foreach (char letter in text.ToCharArray())
+            foreach (char letter in displayText.ToCharArray())
             {
+                if (skip)
+                {
+                    skip = false;
+                    break;
+                }
+                    
                 dialogueText.text += letter;
                 yield return new WaitForSeconds(0.05f);
             }
 
             isDialoguePlaying = false;
+
+            if (story.currentChoices.Count != 0) // Si le joueur se trouve à un embranchement, on affiche les différents choix possibles.
+            {
+                StartCoroutine(ShowChoices());
+            }
 
         }
         else
@@ -222,6 +302,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     private IEnumerator ShowChoices()
     {
+        Debug.Log("ChoicesDisplay");
         List<Choice> _choices = story.currentChoices;
         int i = 0;
 
@@ -229,7 +310,8 @@ public class dim_NPCDialogueManager : MonoBehaviour
         {
             if (i < _choices.Count)
             {
-                button.gameObject.SetActive(true); 
+                button.gameObject.SetActive(true);
+                button.image.color = buttonColorList[i];
                 TextMeshProUGUI buttonText = button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
                 buttonText.text = _choices[i].text;
                 yield return null;
@@ -240,6 +322,8 @@ public class dim_NPCDialogueManager : MonoBehaviour
         }
 
         
+
+
     }
     
     public void button0 ()
@@ -264,6 +348,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     public void choiceButtonClick(int index)
     {
+        updateCooldown = 0; 
         int choiceSelected = index;
         story.ChooseChoiceIndex(choiceSelected);
         foreach (Button button in buttonArray)
@@ -274,7 +359,12 @@ public class dim_NPCDialogueManager : MonoBehaviour
         ContinueDialogue();
     }
 
-
+    private void skipDialogue()
+    {
+        StopCoroutine(DisplayNextLine());
+        skip = true;
+        dialogueText.text = displayText;
+    }
 
 
 }
