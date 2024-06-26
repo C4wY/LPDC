@@ -3514,7 +3514,7 @@ TerrainCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_ProvidesContacts: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_TerrainData: {fileID: 0}
   m_EnableTreeColliders: 1
@@ -3615,17 +3615,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c31d4f18930f385498763cfe1a7e8842,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 17.766014
+      value: 20.766016
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c31d4f18930f385498763cfe1a7e8842,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.5551
+      value: -1.4448999
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c31d4f18930f385498763cfe1a7e8842,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.3895274
+      value: 2.3895257
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c31d4f18930f385498763cfe1a7e8842,
         type: 3}
@@ -4555,12 +4555,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 61bfd3e503a91bf4b8462aaee6a2389f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 38.92
+      value: 44.92
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 61bfd3e503a91bf4b8462aaee6a2389f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.46
+      value: -4.4599943
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 61bfd3e503a91bf4b8462aaee6a2389f,
         type: 3}
