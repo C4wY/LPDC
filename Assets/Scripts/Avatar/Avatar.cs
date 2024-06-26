@@ -102,6 +102,12 @@ namespace Avatar
             return follower;
         }
 
+        public static Avatar GetTheOther(Avatar avatar)
+        {
+            var (leader, follower) = GetLeaderFollower();
+            return avatar == leader ? follower : leader;
+        }
+
         public static void UpdateAllAvatar()
         {
             foreach (var avatar in GetAllAvatars())
@@ -160,10 +166,11 @@ namespace Avatar
                 base.OnInspectorGUI();
 
                 var otherRole = Target.role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
-                if (GUILayout.Button($"Switch to {otherRole}"))
+                if (GUILayout.Button("Switch Roles (Leader/Follower)"))
                 {
                     Undo.RecordObjects(GetAllAvatars(), "Switch role");
-                    Target.role = otherRole;
+                    var (leader, follower) = GetLeaderFollower();
+                    (leader.role, follower.role) = (follower.role, leader.role);
                     UpdateAllAvatar();
                 }
 

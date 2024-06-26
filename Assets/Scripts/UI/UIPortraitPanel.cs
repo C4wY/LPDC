@@ -15,11 +15,20 @@ public class UIPortraitPanel : MonoBehaviour
 
     void UpdateHealth(Transform healthTransform, Avatar.Avatar avatar)
     {
-        var pv = avatar.Santé.PV;
-        for (var i = 0; i < healthTransform.childCount; i++)
+        if (avatar == null)
         {
-            var heart = healthTransform.GetChild(i).gameObject;
-            heart.GetComponent<Image>().sprite = i < pv ? fullHeart : emptyHeart;
+            for (var i = 0; i < healthTransform.childCount; i++)
+            {
+                var heart = healthTransform.GetChild(i).gameObject;
+            }
+        }
+        else
+        {
+            var pv = avatar.Santé.PV;
+            for (var i = 0; i < healthTransform.childCount; i++)
+            {
+                var heart = healthTransform.GetChild(i).gameObject;
+            }
         }
     }
 
@@ -27,6 +36,7 @@ public class UIPortraitPanel : MonoBehaviour
     {
         var animator = GetComponentInChildren<Animator>();
         var clips = animator.runtimeAnimatorController.animationClips;
+        if (clips.Length == 0) return;
         animator.Play(clips[0].name);
         animator.Update(0);
     }
