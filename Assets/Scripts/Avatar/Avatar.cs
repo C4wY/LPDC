@@ -19,9 +19,16 @@ namespace Avatar
             Follower,
         }
 
+        public enum PairName
+        {
+            Sora,
+            Dooms,
+        }
+
         public AvatarParameters parameters;
 
         public PairRole role;
+        new public PairName name;
 
         public AvatarParameters SafeParameters =>
             parameters == null ? parameters = ScriptableObject.CreateInstance<AvatarParameters>() : parameters;
@@ -48,7 +55,7 @@ namespace Avatar
 #if UNITY_EDITOR
             // Do not change the name of the object in prefab mode.
             if (PrefabStageUtility.GetCurrentPrefabStage() == null)
-                gameObject.name = $"{GetType().Name} ({role})";
+                gameObject.name = $"{GetType().Name}-{name} ({role})";
 #endif
         }
 
@@ -93,6 +100,12 @@ namespace Avatar
         {
             var (_, follower) = GetLeaderFollower();
             return follower;
+        }
+
+        public static Avatar GetTheOther(Avatar avatar)
+        {
+            var (leader, follower) = GetLeaderFollower();
+            return avatar == leader ? follower : leader;
         }
 
         public static void UpdateAllAvatar()
@@ -153,10 +166,11 @@ namespace Avatar
                 base.OnInspectorGUI();
 
                 var otherRole = Target.role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
-                if (GUILayout.Button($"Switch to {otherRole}"))
+                if (GUILayout.Button("Switch Roles (Leader/Follower)"))
                 {
                     Undo.RecordObjects(GetAllAvatars(), "Switch role");
-                    Target.role = otherRole;
+                    var (leader, follower) = GetLeaderFollower();
+                    (leader.role, follower.role) = (follower.role, leader.role);
                     UpdateAllAvatar();
                 }
 
