@@ -113,7 +113,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
             else // Si le dialogue a déjà été lancé, on avance dans le dialogue.
             {
-                if ((story.currentChoices.Count == 0) && (updateCooldown > 0.5))
+                if ((story.currentChoices.Count == 0) && (updateCooldown > 0.2))
                 {
                     ContinueDialogue();
                     updateCooldown = 0;
@@ -122,7 +122,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
             }
         }
 
-        if ((Input.GetKey(activationKey)) && (isDialoguePlaying) && (updateCooldown > 0.5))
+        if ((Input.GetKey(activationKey)) && (isDialoguePlaying) && (updateCooldown > 0.2))
         {
             skipDialogue();
             updateCooldown = 0;
