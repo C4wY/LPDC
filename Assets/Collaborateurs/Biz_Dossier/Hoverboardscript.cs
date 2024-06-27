@@ -26,20 +26,6 @@ public class DisablePhysics : MonoBehaviour
 
     void Update()
     {
-        // Déterminer la direction du déplacement
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Q))
-        {
-            moveDirection = Vector3.left;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            moveDirection = Vector3.right;
-        }
-        else
-        {
-            moveDirection = Vector3.zero; // Pas de mouvement si aucune touche n'est pressée
-        }
-
         // Vérifiez si la touche A est pressée et que le joueur bouge sur l'axe X
         if (Input.GetKeyDown(KeyCode.A) && player != null)
         {
@@ -49,8 +35,18 @@ public class DisablePhysics : MonoBehaviour
                 CancelInvoke("EnablePhysicsComponents");
                 EnablePhysicsComponents();
             }
-            else if (!isCooldownActive && moveDirection != Vector3.zero)
+            else if (!isCooldownActive && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)))
             {
+                // Déterminer la direction initiale du déplacement
+                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Q))
+                {
+                    moveDirection = Vector3.left;
+                }
+                else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+                {
+                    moveDirection = Vector3.right;
+                }
+
                 // Désactiver la gravité
                 DisablePhysicsComponents();
                 // Réactiver la gravité après 3 secondes
@@ -112,4 +108,4 @@ public class DisablePhysics : MonoBehaviour
             EnablePhysicsComponents();
         }
     }
-} 
+}
