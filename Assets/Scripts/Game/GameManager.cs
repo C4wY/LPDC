@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Avatar;
 using UnityEngine;
 
+[ExecuteAlways]
 public class GameManager : MonoBehaviour
 {
     const float SWITCH_COOLDOWN = 0.5f;
@@ -16,8 +14,8 @@ public class GameManager : MonoBehaviour
         var (leader, follower) = Avatar.Avatar.GetLeaderFollower();
 
         // Role switching
-        leader.role = Avatar.Avatar.PairRole.Follower;
-        follower.role = Avatar.Avatar.PairRole.Leader;
+        leader.avatarRole = Avatar.Avatar.Role.Follower;
+        follower.avatarRole = Avatar.Avatar.Role.Leader;
 
         var delta = leader.transform.position - follower.transform.position;
         const float SWITCH_DISTANCE = 5;
@@ -39,6 +37,19 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR
+        // In the editor for safety reasons, we make sure that the roles and names are correct.
+        var avatars = Avatar.Avatar.GetAllAvatars();
+        if (avatars.Length == 2)
+        {
+            Avatar.Avatar.TryFixAvatarRolesAndNames();
+        }
+        else if (avatars.Length == 1)
+        {
+            avatars[0].avatarRole = Avatar.Avatar.Role.Leader;
+        }
+#endif
+
         if (InputManager.Instance.TheSwitch())
         {
             DoSwitch();

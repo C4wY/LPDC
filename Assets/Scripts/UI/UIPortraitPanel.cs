@@ -20,6 +20,7 @@ public class UIPortraitPanel : MonoBehaviour
             for (var i = 0; i < healthTransform.childCount; i++)
             {
                 var heart = healthTransform.GetChild(i).gameObject;
+                heart.GetComponent<Animator>().SetTrigger("HP-Lost");
             }
         }
         else
@@ -28,6 +29,8 @@ public class UIPortraitPanel : MonoBehaviour
             for (var i = 0; i < healthTransform.childCount; i++)
             {
                 var heart = healthTransform.GetChild(i).gameObject;
+                var triggerName = i < pv ? "HP-Recover" : "HP-Lost";
+                heart.GetComponent<Animator>().SetTrigger(triggerName);
             }
         }
     }
