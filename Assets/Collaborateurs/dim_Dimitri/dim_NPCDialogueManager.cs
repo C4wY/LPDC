@@ -70,14 +70,14 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
         var (sora, dooms) = Avatar.Avatar.GetSoraDooms();
         
-        //if (sora.IsLeader)
+        if (sora.IsLeader)
         {
-            //portraitAnimator.SetTrigger("EntrySoraLeader"); 
+            portraitAnimator.SetTrigger("EntrySoraLeader"); 
         }
             
-        //if (dooms.IsLeader)
+        if (dooms.IsLeader)
         {
-            //portraitAnimator.SetTrigger("EntryDoomsLeader"); 
+            portraitAnimator.SetTrigger("EntryDoomsLeader"); 
         }
         
         // Initialisations
