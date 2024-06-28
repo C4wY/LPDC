@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
         var (leader, follower) = Avatar.Avatar.GetLeaderFollower();
 
         // Role switching
-        leader.role = Avatar.Avatar.PairRole.Follower;
-        follower.role = Avatar.Avatar.PairRole.Leader;
+        leader.avatarRole = Avatar.Avatar.AvatarRole.Follower;
+        follower.avatarRole = Avatar.Avatar.AvatarRole.Leader;
 
         var delta = leader.transform.position - follower.transform.position;
         const float SWITCH_DISTANCE = 5;

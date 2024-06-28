@@ -13,13 +13,13 @@ namespace Avatar
     [ExecuteAlways]
     public class Avatar : MonoBehaviour
     {
-        public enum PairRole
+        public enum AvatarRole
         {
             Leader,
             Follower,
         }
 
-        public enum PairName
+        public enum AvatarName
         {
             Sora,
             Dooms,
@@ -27,17 +27,16 @@ namespace Avatar
 
         public AvatarParameters parameters;
 
-        public PairRole role;
-        new public PairName name;
-
         public AvatarParameters SafeParameters =>
             parameters == null ? parameters = ScriptableObject.CreateInstance<AvatarParameters>() : parameters;
 
-        public bool IsLeader =>
-            role == PairRole.Leader;
+        public AvatarRole avatarRole;
+        public bool IsLeader => avatarRole == AvatarRole.Leader;
+        public bool IsFollower => avatarRole == AvatarRole.Follower;
 
-        public bool IsFollower =>
-            role == PairRole.Follower;
+        public AvatarName avatarName;
+        public bool IsSora => avatarName == AvatarName.Sora;
+        public bool IsDooms => avatarName == AvatarName.Dooms;
 
         public LeaderController LeaderController { get; private set; }
         public FollowerController FollowerController { get; private set; }
@@ -49,13 +48,15 @@ namespace Avatar
 
         void RoleUpdate()
         {
-            LeaderController.enabled = role == PairRole.Leader;
-            FollowerController.enabled = role == PairRole.Follower;
+            LeaderController.enabled = avatarRole == AvatarRole.Leader;
+            FollowerController.enabled = avatarRole == AvatarRole.Follower;
+
+            var soraIsLeader = GetLeaderFollower().leader.avatarName == AvatarName.Sora;
 
 #if UNITY_EDITOR
             // Do not change the name of the object in prefab mode.
             if (PrefabStageUtility.GetCurrentPrefabStage() == null)
-                gameObject.name = $"{GetType().Name}-{name} ({role})";
+                gameObject.name = $"{GetType().Name}-{avatarName} ({avatarRole})";
 #endif
         }
 
@@ -77,6 +78,8 @@ namespace Avatar
             RoleUpdate();
         }
 
+        #region Static methods
+
         public static Avatar[] GetAllAvatars()
         {
             return FindObjectsByType<Avatar>(FindObjectsSortMode.None);
@@ -88,6 +91,14 @@ namespace Avatar
             return (
                 avatars.FirstOrDefault(a => a.IsLeader),
                 avatars.FirstOrDefault(a => a.IsFollower));
+        }
+
+        public static (Avatar sora, Avatar Dooms) GetSoraDooms()
+        {
+            var avatars = GetAllAvatars();
+            return (
+                avatars.FirstOrDefault(a => a.avatarName == AvatarName.Sora),
+                avatars.FirstOrDefault(a => a.avatarName == AvatarName.Dooms));
         }
 
         public static Avatar GetLeader()
@@ -118,6 +129,8 @@ namespace Avatar
 #endif
             }
         }
+
+        #endregion
 
 #if UNITY_EDITOR
         void OnValidate()
@@ -165,12 +178,12 @@ namespace Avatar
             {
                 base.OnInspectorGUI();
 
-                var otherRole = Target.role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
+                var otherRole = Target.avatarRole == AvatarRole.Leader ? AvatarRole.Follower : AvatarRole.Leader;
                 if (GUILayout.Button("Switch Roles (Leader/Follower)"))
                 {
                     Undo.RecordObjects(GetAllAvatars(), "Switch role");
                     var (leader, follower) = GetLeaderFollower();
-                    (leader.role, follower.role) = (follower.role, leader.role);
+                    (leader.avatarRole, follower.avatarRole) = (follower.avatarRole, leader.avatarRole);
                     UpdateAllAvatar();
                 }
 
