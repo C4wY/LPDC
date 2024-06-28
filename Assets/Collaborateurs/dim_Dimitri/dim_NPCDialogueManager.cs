@@ -33,7 +33,6 @@ public class dim_NPCDialogueManager : MonoBehaviour
     private string leaderSpeaker;
     private float updateCooldown;
     private bool skip = false;
-    private float pauseScale = 0.0001f;
 
     // Booléens de Contrôle
     private bool isDialogueActive = false;
@@ -127,7 +126,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
             else
             {
-                if ((story.currentChoices.Count == 0) && (updateCooldown > 0.2* pauseScale))
+                if ((story.currentChoices.Count == 0) && (updateCooldown > 0.2f))
                 {
                     ContinueDialogue();
                     updateCooldown = 0;
@@ -138,7 +137,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
         // Si le dialogue est en cours, alors le joueur veut skip l'animation de dialogue.
 
-        if ((Input.GetKey(activationKey)) && (isDialoguePlaying) && (updateCooldown > 0.2* pauseScale)) 
+        if ((Input.GetKey(activationKey)) && (isDialoguePlaying) && (updateCooldown > 0.2f)) 
         {
             SkipDialogue();
             updateCooldown = 0;
@@ -180,8 +179,10 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     void StartDialogue()
     {
+        // On fige les personnages et pièges pendant le dialogue
+        SetPauseForDialogue();
+
         // Initialisations
-        Time.timeScale = pauseScale;
         story = new Story(globalsInkJSON.text);
         isDialogueActive = true;
 
@@ -225,7 +226,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
         playersIcon.gameObject.SetActive(false);
         npcIcon.gameObject.SetActive(false);
         isDialogueActive = false;
-        Time.timeScale = 1;
+        StopPauseForDialogue();
     }
 
     void checkTags()
@@ -327,7 +328,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
                 }
                     
                 dialogueText.text += letter;
-                yield return new WaitForSeconds(0.05f*pauseScale);
+                yield return new WaitForSeconds(0.05f);
             }
 
             isDialoguePlaying = false;
@@ -430,13 +431,28 @@ public class dim_NPCDialogueManager : MonoBehaviour
         dialogueText.text = displayText;
     }
 
-    void DisplayFirstPortraitImage()
+    public void SetPauseForDialogue()
     {
-        var animator = GetComponentInChildren<Animator>();
-        var clips = animator.runtimeAnimatorController.animationClips;
-        if (clips.Length == 0) return;
-        animator.Play(clips[0].name);
-        animator.Update(0);
+        // on récupère tous les objets de la scène
+        GameObject[] gameObjects = FindObjectsOfType<GameObject>() as GameObject[];
+
+        // On déclenche la fonction OnPauseForDialogue pour chaque objet en possédant une
+        foreach (GameObject actor in gameObjects)
+        {
+            actor.SendMessage("OnPauseForDialogue", SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
+    public void StopPauseForDialogue()
+    {
+        // on récupère tous les objets de la scène
+        GameObject[] gameObjects = FindObjectsOfType<GameObject>() as GameObject[];
+
+        // On déclenche la fonction OffPauseForDialogue pour chaque objet en possédant une
+        foreach (GameObject actor in gameObjects)
+        {
+            actor.SendMessage("OffPauseForDialogue", SendMessageOptions.DontRequireReceiver);
+        }
     }
 
 }
