@@ -16,6 +16,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
     public TextAsset globalsInkJSON; // Le Json contenant les dialogues.
     public string DialogueStart = "Press F to talk";
     public Canvas canvas; // Le canvas contenant les éléments d'UI.
+    public Sprite SpriteNPC1;
 
     // Variables Privées
     private Story story;
@@ -65,6 +66,20 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
         buttonArray = canvas.GetComponentsInChildren<Button>(); // On récupère les différents boutons dans le canvas.
 
+        // On récupère le leader pour lancer l'animator
+
+        var (sora, dooms) = Avatar.Avatar.GetSoraDooms();
+        
+        //if (sora.IsLeader)
+        {
+            //portraitAnimator.SetTrigger("EntrySoraLeader"); 
+        }
+            
+        //if (dooms.IsLeader)
+        {
+            //portraitAnimator.SetTrigger("EntryDoomsLeader"); 
+        }
+        
         // Initialisations
 
         buttonColorList = new List<Color>();
@@ -159,7 +174,9 @@ public class dim_NPCDialogueManager : MonoBehaviour
                 if (!isDialogueActive)
                 {
                     // On affiche le texte de départ, proposant au joueur de lancer le dialogue.
-                    npcIcon.gameObject.SetActive(true); 
+                    npcIcon.gameObject.SetActive(true);
+                    Image image = npcIcon.GetComponent<Image>();
+                    image.sprite = SpriteNPC1;
                     textPanelNPC.gameObject.SetActive(true); 
                     dialogueText.gameObject.SetActive(true); 
                     dialogueText.text = DialogueStart;
@@ -271,7 +288,6 @@ public class dim_NPCDialogueManager : MonoBehaviour
                         if (leaderSpeaker != param)
                         {
                             portraitAnimator.SetTrigger("SoraToDooms");
-
                         }
                         leaderSpeaker = param;
                     }
@@ -291,8 +307,6 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
                     if ((param != "Sora") && (param != "Dooms"))
                         textPanelNPC.gameObject.SetActive(true);
-
-                    Debug.Log(leaderSpeaker);
                     break;
 
                 case "portrait":
