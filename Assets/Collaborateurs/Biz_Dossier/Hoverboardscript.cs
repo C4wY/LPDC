@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine;
+
 public class DisablePhysics : MonoBehaviour
 {
     public GameObject player; // Assignez l'objet Player via l'inspecteur
-    
+
     private Rigidbody playerRigidbody;
     private Collider playerCollider;
     private bool isPhysicsDisabled = false;
@@ -24,7 +26,7 @@ public class DisablePhysics : MonoBehaviour
 
     void Update()
     {
-        // Vérifiez si la touche A est pressée et que le cooldown n'est pas actif
+        // Vérifiez si la touche A est pressée et que le joueur bouge sur l'axe X
         if (Input.GetKeyDown(KeyCode.A) && player != null)
         {
             if (isPhysicsDisabled)
@@ -33,9 +35,9 @@ public class DisablePhysics : MonoBehaviour
                 CancelInvoke("EnablePhysicsComponents");
                 EnablePhysicsComponents();
             }
-            else if (!isCooldownActive)
+            else if (!isCooldownActive && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)))
             {
-                // Déterminer la direction du déplacement
+                // Déterminer la direction initiale du déplacement
                 if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Q))
                 {
                     moveDirection = Vector3.left;
@@ -44,22 +46,18 @@ public class DisablePhysics : MonoBehaviour
                 {
                     moveDirection = Vector3.right;
                 }
-                else
-                {
-                    moveDirection = Vector3.zero; // Pas de mouvement si aucune touche n'est pressée
-                }
 
                 // Désactiver la gravité
                 DisablePhysicsComponents();
                 // Réactiver la gravité après 3 secondes
-                Invoke("EnablePhysicsComponents", 3f);
+                Invoke("EnablePhysicsComponents", 2f);
             }
         }
 
         if (player != null && playerRigidbody != null && !playerRigidbody.useGravity && moveDirection != Vector3.zero)
         {
             // Déplacement du Player dans la direction spécifiée
-            player.transform.position += moveDirection * Time.deltaTime * 40;
+            player.transform.position += moveDirection * Time.deltaTime * 20;
         }
     }
 
@@ -69,6 +67,9 @@ public class DisablePhysics : MonoBehaviour
         if (playerRigidbody != null)
         {
             playerRigidbody.useGravity = false; // Désactive la gravité
+
+            // Désactiver les déplacements sur les axes Y et Z
+            playerRigidbody.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         }
 
         isPhysicsDisabled = true;
@@ -81,13 +82,16 @@ public class DisablePhysics : MonoBehaviour
         if (playerRigidbody != null)
         {
             playerRigidbody.useGravity = true; // Réactive la gravité
+
+            // Réactiver les déplacements sur les axes Y et Z
+            playerRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
         isPhysicsDisabled = false;
         moveDirection = Vector3.zero; // Réinitialise la direction de déplacement
 
         // Démarrer le cooldown de 5 secondes avant de pouvoir désactiver la gravité à nouveau
-        Invoke("ResetCooldown", 5f);
+        Invoke("ResetCooldown", 3f);
     }
 
     void ResetCooldown()
