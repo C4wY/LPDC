@@ -35,6 +35,8 @@ public class dim_NPCDialogueManager : MonoBehaviour
     private float updateCooldown;
     private bool skip = false;
 
+    private Sprite angryDoomsIcon;
+
     // Booléens de Contrôle
     private bool isDialogueActive = false;
     private bool dialogueTriggered = false;
@@ -65,6 +67,10 @@ public class dim_NPCDialogueManager : MonoBehaviour
         portraitAnimator = playersIcon.GetComponentInChildren<Animator>();
 
         buttonArray = canvas.GetComponentsInChildren<Button>(); // On récupère les différents boutons dans le canvas.
+
+        // Test
+
+        angryDoomsIcon = Resources.Load<Sprite>("dim_UI_Doooms Angry Test");
 
         // On récupère le leader pour lancer l'animator
 
@@ -309,8 +315,18 @@ public class dim_NPCDialogueManager : MonoBehaviour
                         textPanelNPC.gameObject.SetActive(true);
                     break;
 
-                case "portrait":
+                case "portraitdooms":
+                    if (param == "angry")
+                    {
+                        Debug.Log("ANGRY");
+                        
+                        GameObject doomsIcon = GameObject.Find("UI_PortraitsDooms_0");
+                        Image image = doomsIcon.GetComponent<Image>();
+                        // image.sprite = angryDoomsIcon;
+                        image.sprite = SpriteNPC1;
+                    }
                     break;
+                
                 case "debug":
                     Debug.Log(param);
                     break;

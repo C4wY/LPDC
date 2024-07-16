@@ -5,7 +5,7 @@ Que faire ? # speaker Dooms #choice Dooms Sora Neutral None
 * [Sora - Séduire] -> Seduire 
 
 == Frapper ==
-Viens, on va leur casser la gueule #speaker Dooms
+Viens, on va leur casser la gueule #speaker Dooms #portraitdooms angry
 -> END
 
 == Seduire ==
