@@ -16,6 +16,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
     public TextAsset globalsInkJSON; // Le Json contenant les dialogues.
     public string DialogueStart = "Press F to talk";
     public Canvas canvas; // Le canvas contenant les éléments d'UI.
+    public Sprite SpriteNPC1;
 
     // Variables Privées
     private Story story;
@@ -26,11 +27,17 @@ public class dim_NPCDialogueManager : MonoBehaviour
     private GameObject textPanelSora;
     private GameObject playersIcon;
     private GameObject npcIcon;
+    private Animator portraitAnimator;
     private Array buttonArray;
     private List<Color> buttonColorList;
     private string displayText;
+    private string leaderSpeaker;
     private float updateCooldown;
     private bool skip = false;
+
+    private Sprite angryDoomsIcon;
+    private Sprite classicDoomsIcon;
+    private Sprite classicSoraIcon;
 
     // Booléens de Contrôle
     private bool isDialogueActive = false;
@@ -41,8 +48,9 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     private void Start()
     {
-        // Initialisations
-        
+
+        // On récupère les différents éléments de l'UI depuis le canvas
+
         dialogueText = canvas.GetComponentInChildren<TextMeshProUGUI>(); // On récupère la zone de texte dans le canvas.
         dialogueText.gameObject.SetActive(false);
 
@@ -58,11 +66,35 @@ public class dim_NPCDialogueManager : MonoBehaviour
         npcIcon = GameObject.Find("NPC_Icon");
         npcIcon.gameObject.SetActive(false);
 
+        portraitAnimator = playersIcon.GetComponentInChildren<Animator>();
+
+        buttonArray = canvas.GetComponentsInChildren<Button>(); // On récupère les différents boutons dans le canvas.
+
+        // Test
+
+        angryDoomsIcon = Resources.Load<Sprite>("dim_UI_Doooms Angry Test");
+        classicDoomsIcon = Resources.Load<Sprite>("UI_PortraitsDooms_0");
+        classicSoraIcon = Resources.Load<Sprite>("UI_PortraitsSora_0");
+
+        // On récupère le leader pour lancer l'animator
+
+        var (sora, dooms) = Avatar.Avatar.GetSoraDooms();
+        
+        if (sora.IsLeader)
+        {
+            portraitAnimator.SetTrigger("EntrySoraLeader"); 
+        }
+            
+        if (dooms.IsLeader)
+        {
+            portraitAnimator.SetTrigger("EntryDoomsLeader"); 
+        }
+        
+        // Initialisations
+
         buttonColorList = new List<Color>();
         for (int j = 0; j < 4; j++)
             buttonColorList.Add(Color.white);
-
-        buttonArray = canvas.GetComponentsInChildren<Button>(); // On récupère les différents boutons dans le canvas.
 
         // On crée une boucle pour rattacher les boutons à leur fonction dédiée.
         int i = 0; 
@@ -71,22 +103,22 @@ public class dim_NPCDialogueManager : MonoBehaviour
         {
             if (i == 0)
             {
-                button.GetComponent<Button>().onClick.AddListener(button0);
+                button.GetComponent<Button>().onClick.AddListener(Button0);
             }
 
             if (i == 1)
             {
-                button.GetComponent<Button>().onClick.AddListener(button1);
+                button.GetComponent<Button>().onClick.AddListener(Button1);
             }
 
             if (i == 2)
             {
-                button.GetComponent<Button>().onClick.AddListener(button2);
+                button.GetComponent<Button>().onClick.AddListener(Button2);
             }
 
             if (i == 3)
             {
-                button.GetComponent<Button>().onClick.AddListener(button3);
+                button.GetComponent<Button>().onClick.AddListener(Button3);
             }
 
             button.gameObject.SetActive(false);
@@ -98,22 +130,28 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     void Update()
     {
+        // On crée un cooldown pour éviter que le jeu ne perçoive un input durant plusieurs frmùaes consécutives, car le joueur garde le doit appuyé sur la touche plus longtemps qu'une frame.
+
         updateCooldown += Time.deltaTime;
-        Debug.Log(updateCooldown);
 
         // On vérifie si le joueur appuie sur F et si le dialogue n'est pas déjà en train de se jouer.
+
         if ((Input.GetKey(activationKey)) && (!isDialoguePlaying)) 
         {
-            if (dialogueTriggered == true) // Si le joueur se trouve dans la zone de détection du NPC, on active le dialogue.
+            // Si le joueur se trouve dans la zone de détection du NPC, on active le dialogue.
+            
+            if (dialogueTriggered == true) 
             {
                 StartDialogue();
                 dialogueTriggered = false;
                 updateCooldown = 0;
             }
 
-            else // Si le dialogue a déjà été lancé, on avance dans le dialogue.
+            // Si le dialogue a déjà été lancé, on avance dans le dialogue.
+
+            else
             {
-                if ((story.currentChoices.Count == 0) && (updateCooldown > 0.2))
+                if ((story.currentChoices.Count == 0) && (updateCooldown > 0.2f))
                 {
                     ContinueDialogue();
                     updateCooldown = 0;
@@ -122,9 +160,11 @@ public class dim_NPCDialogueManager : MonoBehaviour
             }
         }
 
-        if ((Input.GetKey(activationKey)) && (isDialoguePlaying) && (updateCooldown > 0.2))
+        // Si le dialogue est en cours, alors le joueur veut skip l'animation de dialogue.
+
+        if ((Input.GetKey(activationKey)) && (isDialoguePlaying) && (updateCooldown > 0.2f)) 
         {
-            skipDialogue();
+            SkipDialogue();
             updateCooldown = 0;
             
         }
@@ -143,7 +183,10 @@ public class dim_NPCDialogueManager : MonoBehaviour
             {
                 if (!isDialogueActive)
                 {
-                    npcIcon.gameObject.SetActive(true); 
+                    // On affiche le texte de départ, proposant au joueur de lancer le dialogue.
+                    npcIcon.gameObject.SetActive(true);
+                    Image image = npcIcon.GetComponent<Image>();
+                    image.sprite = SpriteNPC1;
                     textPanelNPC.gameObject.SetActive(true); 
                     dialogueText.gameObject.SetActive(true); 
                     dialogueText.text = DialogueStart;
@@ -163,11 +206,18 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     void StartDialogue()
     {
+        // On fige les personnages et pièges pendant le dialogue
+        SetPauseForDialogue();
+
         // Initialisations
         story = new Story(globalsInkJSON.text);
         isDialogueActive = true;
 
         playersIcon.gameObject.SetActive(true);
+
+        // Si Sora commence le dialogue
+
+        //
 
         // On affiche la première ligne de dialogue
         ContinueDialogue();
@@ -183,7 +233,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
             StartCoroutine(DisplayNextLine());
 
             // On verifie les tags
-            checkTags();
+            StartCoroutine(checkTags());
         }
         else
         {
@@ -194,6 +244,21 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
+        // On remet les sprites de portrait de base
+        GameObject doomsIcon = GameObject.Find("UI_PortraitsDooms_0");
+        Image image = doomsIcon.GetComponent<Image>();
+        image.sprite = classicDoomsIcon;
+        GameObject doomsIcon2 = GameObject.Find("UI_PortraitsDoomsSecondaire_0");
+        Image image2 = doomsIcon2.GetComponent<Image>();
+        image2.sprite = classicDoomsIcon;
+        GameObject soraIcon = GameObject.Find("UI_PortraitsSora_0");
+        Image image3 = soraIcon.GetComponent<Image>();
+        image3.sprite = classicSoraIcon;
+        GameObject soraIcon2 = GameObject.Find("UI_PortraitsSoraSecondaire_0");
+        Image image4 = soraIcon2.GetComponent<Image>();
+        image4.sprite = classicSoraIcon;
+
+        // On désactive les UI de dialogue et on remet à zéro les booléens.
         textPanelNPC.gameObject.SetActive(false);
         textPanelDooms.gameObject.SetActive(false);
         textPanelSora.gameObject.SetActive(false);
@@ -201,9 +266,10 @@ public class dim_NPCDialogueManager : MonoBehaviour
         playersIcon.gameObject.SetActive(false);
         npcIcon.gameObject.SetActive(false);
         isDialogueActive = false;
+        StopPauseForDialogue();
     }
 
-    void checkTags()
+    IEnumerator checkTags()
     {
         // On récupère les tags
         var tags = story.currentTags;
@@ -217,10 +283,8 @@ public class dim_NPCDialogueManager : MonoBehaviour
             {
                 case "choice":
                     
-                    Debug.Log(t);
                     for (int i = 0; i<4; i++)
                     {
-                        Debug.Log(t.Split(' ')[i + 1]);
                         if ((t.Split(' ')[i+1]) == "Dooms")
                             buttonColorList[i] = Color.green;
 
@@ -242,18 +306,47 @@ public class dim_NPCDialogueManager : MonoBehaviour
                     textPanelSora.gameObject.SetActive(false);
 
                     if (param == "Dooms")
+                    {
                         textPanelDooms.gameObject.SetActive(true);
+                        if (leaderSpeaker != param)
+                        {
+                            portraitAnimator.SetTrigger("SoraToDooms");
+                            yield return new WaitForSeconds(0.25f);
+                        }
+                        leaderSpeaker = param;
+                    }
+                        
 
                     if (param == "Sora")
+                    {
                         textPanelSora.gameObject.SetActive(true);
+                        if (leaderSpeaker != param)
+                        {
+                            portraitAnimator.SetTrigger("DoomsToSora");
+                            yield return new WaitForSeconds(0.25f);
+
+                        }
+                        leaderSpeaker = param;
+                    }
+                        
 
                     if ((param != "Sora") && (param != "Dooms"))
                         textPanelNPC.gameObject.SetActive(true);
-
                     break;
 
-                case "portrait":
+                case "portraitdooms":
+                    if (param == "angry")
+                    {
+                        GameObject doomsIcon = GameObject.Find("UI_PortraitsDooms_0");
+                        Image image = doomsIcon.GetComponent<Image>();
+                        // image.sprite = angryDoomsIcon;
+                        image.sprite = SpriteNPC1;
+                        GameObject doomsIcon2 = GameObject.Find("UI_PortraitsDoomsSecondaire_0");
+                        Image image2 = doomsIcon2.GetComponent<Image>();
+                        image2.sprite = SpriteNPC1;
+                    }
                     break;
+                
                 case "debug":
                     Debug.Log(param);
                     break;
@@ -276,6 +369,8 @@ public class dim_NPCDialogueManager : MonoBehaviour
             // On affiche les lettres une par une
             foreach (char letter in displayText.ToCharArray())
             {
+                // Si le joueur veut skip le dialogue, on casse la boucle pour arrêter la coroutine.
+
                 if (skip)
                 {
                     skip = false;
@@ -302,8 +397,12 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     private IEnumerator ShowChoices()
     {
-        Debug.Log("ChoicesDisplay");
+        // On récupère les différents choix proposés
+        
         List<Choice> _choices = story.currentChoices;
+
+        // On crée une boucle pour activer les différents boutons
+
         int i = 0;
 
         foreach (Button button in buttonArray)
@@ -326,45 +425,84 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     }
     
-    public void button0 ()
+    // Les 4 fonctions suivantes servent à initialiser les boutons
+
+    public void Button0 ()
     {
-        choiceButtonClick(0);
+        ChoiceButtonClick(0);
     }
 
-    public void button1()
+    public void Button1()
     {
-        choiceButtonClick(1);
+        ChoiceButtonClick(1);
     }
 
-    public void button2()
+    public void Button2()
     {
-        choiceButtonClick(2);
+        ChoiceButtonClick(2);
     }
 
-    public void button3()
+    public void Button3()
     {
-        choiceButtonClick(3);
+        ChoiceButtonClick(3);
     }
 
-    public void choiceButtonClick(int index)
+    public void ChoiceButtonClick(int index)
     {
+        // On remet le cooldown à 0
         updateCooldown = 0; 
+
+        // On récupère l'index du bouton sur lequel le joueur a cliqué
         int choiceSelected = index;
         story.ChooseChoiceIndex(choiceSelected);
+
+        // On fait disparaitre les boutons
         foreach (Button button in buttonArray)
         {
             button.gameObject.SetActive(false);
         }
+
+        // On réinitialise la variable
         choiceSelected = 99;
+
+        // On peut désormais continuer le dialogue
         ContinueDialogue();
     }
 
-    private void skipDialogue()
+    private void SkipDialogue()
     {
+        // On arrête la coroutine pour que le texte cesse de se taper lettre par lettre
         StopCoroutine(DisplayNextLine());
+
+        // En réalité, ça ne fonctionne pas, donc on utilise une méthode alternative pour arrêter la coroutine de manière plus directe (cf le code de la coroutine DisplayNextLine)
         skip = true;
+
+        // On affiche directement la ligne de dialogue entière
         dialogueText.text = displayText;
     }
 
+    public void SetPauseForDialogue()
+    {
+        // on récupère tous les objets de la scène
+        GameObject[] gameObjects = FindObjectsOfType<GameObject>() as GameObject[];
+
+        // On déclenche la fonction OnPauseForDialogue pour chaque objet en possédant une
+        foreach (GameObject actor in gameObjects)
+        {
+            actor.SendMessage("OnPauseForDialogue", SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
+    public void StopPauseForDialogue()
+    {
+        // on récupère tous les objets de la scène
+        GameObject[] gameObjects = FindObjectsOfType<GameObject>() as GameObject[];
+
+        // On déclenche la fonction OffPauseForDialogue pour chaque objet en possédant une
+        foreach (GameObject actor in gameObjects)
+        {
+            actor.SendMessage("OffPauseForDialogue", SendMessageOptions.DontRequireReceiver);
+        }
+    }
 
 }
