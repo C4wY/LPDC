@@ -35,6 +35,10 @@ public class dim_NPCDialogueManager : MonoBehaviour
     private float updateCooldown;
     private bool skip = false;
 
+    private Sprite angryDoomsIcon;
+    private Sprite classicDoomsIcon;
+    private Sprite classicSoraIcon;
+
     // Booléens de Contrôle
     private bool isDialogueActive = false;
     private bool dialogueTriggered = false;
@@ -65,6 +69,12 @@ public class dim_NPCDialogueManager : MonoBehaviour
         portraitAnimator = playersIcon.GetComponentInChildren<Animator>();
 
         buttonArray = canvas.GetComponentsInChildren<Button>(); // On récupère les différents boutons dans le canvas.
+
+        // Test
+
+        angryDoomsIcon = Resources.Load<Sprite>("dim_UI_Doooms Angry Test");
+        classicDoomsIcon = Resources.Load<Sprite>("UI_PortraitsDooms_0");
+        classicSoraIcon = Resources.Load<Sprite>("UI_PortraitsSora_0");
 
         // On récupère le leader pour lancer l'animator
 
@@ -223,7 +233,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
             StartCoroutine(DisplayNextLine());
 
             // On verifie les tags
-            checkTags();
+            StartCoroutine(checkTags());
         }
         else
         {
@@ -234,8 +244,21 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
-        // On désactive les UI de dialogue et on remet à zéro les booléens.
+        // On remet les sprites de portrait de base
+        GameObject doomsIcon = GameObject.Find("UI_PortraitsDooms_0");
+        Image image = doomsIcon.GetComponent<Image>();
+        image.sprite = classicDoomsIcon;
+        GameObject doomsIcon2 = GameObject.Find("UI_PortraitsDoomsSecondaire_0");
+        Image image2 = doomsIcon2.GetComponent<Image>();
+        image2.sprite = classicDoomsIcon;
+        GameObject soraIcon = GameObject.Find("UI_PortraitsSora_0");
+        Image image3 = soraIcon.GetComponent<Image>();
+        image3.sprite = classicSoraIcon;
+        GameObject soraIcon2 = GameObject.Find("UI_PortraitsSoraSecondaire_0");
+        Image image4 = soraIcon2.GetComponent<Image>();
+        image4.sprite = classicSoraIcon;
 
+        // On désactive les UI de dialogue et on remet à zéro les booléens.
         textPanelNPC.gameObject.SetActive(false);
         textPanelDooms.gameObject.SetActive(false);
         textPanelSora.gameObject.SetActive(false);
@@ -246,7 +269,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
         StopPauseForDialogue();
     }
 
-    void checkTags()
+    IEnumerator checkTags()
     {
         // On récupère les tags
         var tags = story.currentTags;
@@ -288,6 +311,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
                         if (leaderSpeaker != param)
                         {
                             portraitAnimator.SetTrigger("SoraToDooms");
+                            yield return new WaitForSeconds(0.25f);
                         }
                         leaderSpeaker = param;
                     }
@@ -299,6 +323,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
                         if (leaderSpeaker != param)
                         {
                             portraitAnimator.SetTrigger("DoomsToSora");
+                            yield return new WaitForSeconds(0.25f);
 
                         }
                         leaderSpeaker = param;
@@ -309,8 +334,19 @@ public class dim_NPCDialogueManager : MonoBehaviour
                         textPanelNPC.gameObject.SetActive(true);
                     break;
 
-                case "portrait":
+                case "portraitdooms":
+                    if (param == "angry")
+                    {
+                        GameObject doomsIcon = GameObject.Find("UI_PortraitsDooms_0");
+                        Image image = doomsIcon.GetComponent<Image>();
+                        // image.sprite = angryDoomsIcon;
+                        image.sprite = SpriteNPC1;
+                        GameObject doomsIcon2 = GameObject.Find("UI_PortraitsDoomsSecondaire_0");
+                        Image image2 = doomsIcon2.GetComponent<Image>();
+                        image2.sprite = SpriteNPC1;
+                    }
                     break;
+                
                 case "debug":
                     Debug.Log(param);
                     break;
