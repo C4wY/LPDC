@@ -29,6 +29,8 @@ namespace Avatar
     [ExecuteAlways]
     public class LeaderController : MonoBehaviour
     {
+        public bool dialoguePause = false; // Pour la fonction de pause, ajouté par Dim
+        
         public readonly Trace trace = new();
 
         public InputEntry input;
@@ -106,9 +108,13 @@ namespace Avatar
 
             wannaJump |= Input.GetButtonDown("Jump");
 
-            JumpUpdate();
-            DashUpdate();
-            CameraFollowUpdate();
+            if (!dialoguePause) // J'empêche le personnage de se déplacer pendant les dialogues (Dim)
+            {
+                JumpUpdate();
+                DashUpdate();
+                CameraFollowUpdate();
+            }
+            
         }
 
         void FixedUpdate()
@@ -126,16 +132,32 @@ namespace Avatar
 
             wannaJump = false;
 
-            avatar.Move.HorizontalUpdate(input.horizontal);
-            avatar.Move.VerticalUpdate(input.vertical);
-            avatar.Move.UpdateZ();
-            TraceUpdate();
+            if (!dialoguePause) // J'empêche le personnage de se déplacer pendant les dialogues (Dim)
+            {
+                avatar.Move.HorizontalUpdate(input.horizontal);
+                avatar.Move.VerticalUpdate(input.vertical);
+                avatar.Move.UpdateZ();
+                TraceUpdate();
+            }
+            
         }
 
         void OnDrawGizmos()
         {
             if (Parameters.gizmos.HasFlag(LeaderControllerParameters.GizmosMode.Trace))
                 trace.DrawGizmos();
+        }
+
+        // J'ajoute une fonction qui se déclenche quand un dialogue se déclenche, et une autre quand le dialogue se termine. (Dim)
+        
+        void OnPauseForDialogue()
+        {
+            dialoguePause = true;
+        }
+
+        void OffPauseForDialogue()
+        {
+            dialoguePause = false;
         }
     }
 }

@@ -13,24 +13,30 @@ namespace Avatar
     [ExecuteAlways]
     public class Avatar : MonoBehaviour
     {
-        public enum PairRole
+        public enum Role
         {
             Leader,
             Follower,
         }
 
-        public AvatarParameters parameters;
+        public enum Name
+        {
+            Sora,
+            Dooms,
+        }
 
-        public PairRole role;
+        public AvatarParameters parameters;
 
         public AvatarParameters SafeParameters =>
             parameters == null ? parameters = ScriptableObject.CreateInstance<AvatarParameters>() : parameters;
 
-        public bool IsLeader =>
-            role == PairRole.Leader;
+        public Role avatarRole;
+        public bool IsLeader => avatarRole == Role.Leader;
+        public bool IsFollower => avatarRole == Role.Follower;
 
-        public bool IsFollower =>
-            role == PairRole.Follower;
+        public Name avatarName;
+        public bool IsSora => avatarName == Name.Sora;
+        public bool IsDooms => avatarName == Name.Dooms;
 
         public LeaderController LeaderController { get; private set; }
         public FollowerController FollowerController { get; private set; }
@@ -42,13 +48,13 @@ namespace Avatar
 
         void RoleUpdate()
         {
-            LeaderController.enabled = role == PairRole.Leader;
-            FollowerController.enabled = role == PairRole.Follower;
+            LeaderController.enabled = avatarRole == Role.Leader;
+            FollowerController.enabled = avatarRole == Role.Follower;
 
 #if UNITY_EDITOR
             // Do not change the name of the object in prefab mode.
             if (PrefabStageUtility.GetCurrentPrefabStage() == null)
-                gameObject.name = $"{GetType().Name} ({role})";
+                gameObject.name = $"{GetType().Name}-{avatarName} ({avatarRole})";
 #endif
         }
 
@@ -70,17 +76,35 @@ namespace Avatar
             RoleUpdate();
         }
 
+        #region Static methods
+
         public static Avatar[] GetAllAvatars()
         {
             return FindObjectsByType<Avatar>(FindObjectsSortMode.None);
         }
 
+        /// <summary>
+        /// Warning: If there are more than one leader or follower, the first 
+        /// one will be returned. Inversely, if there are no leader or follower,
+        /// the result will be null.
+        /// </summary>
         public static (Avatar leader, Avatar follower) GetLeaderFollower()
         {
             var avatars = GetAllAvatars();
             return (
                 avatars.FirstOrDefault(a => a.IsLeader),
                 avatars.FirstOrDefault(a => a.IsFollower));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static (Avatar sora, Avatar dooms) GetSoraDooms()
+        {
+            var avatars = GetAllAvatars();
+            return (
+                avatars.FirstOrDefault(a => a.avatarName == Name.Sora),
+                avatars.FirstOrDefault(a => a.avatarName == Name.Dooms));
         }
 
         public static Avatar GetLeader()
@@ -95,6 +119,99 @@ namespace Avatar
             return follower;
         }
 
+        public static Avatar GetTheOther(Avatar avatar)
+        {
+            var (leader, follower) = GetLeaderFollower();
+            return avatar == leader ? follower : leader;
+        }
+
+        public static bool AvatarsAreValid()
+        {
+            var (leader, follower) = GetLeaderFollower();
+            var (sora, dooms) = GetSoraDooms();
+            return leader != null && follower != null && sora != null && dooms != null;
+        }
+
+        /// <summary>
+        /// Try to fix the roles and names of the avatars. If there are more or 
+        /// less than 2 avatars, an warning will be logged and nothing happens.
+        /// </summary>
+        public static bool TryFixAvatarRolesAndNames()
+        {
+            var avatars = GetAllAvatars();
+
+            if (avatars.Length != 2)
+            {
+                Debug.LogError("There must be exactly 2 avatars in the scene.");
+                return false;
+            }
+
+            var (leader, _) = GetLeaderFollower();
+            if (leader == null)
+                leader = avatars.FirstOrDefault();
+
+            var (sora, _) = GetSoraDooms();
+            if (sora == null)
+                sora = avatars.FirstOrDefault();
+
+            bool changed = false;
+            foreach (var avatar in avatars)
+            {
+                var role = avatar == leader ? Role.Leader : Role.Follower;
+                var name = avatar == sora ? Name.Sora : Name.Dooms;
+                if (avatar.avatarRole != role)
+                {
+                    avatar.avatarRole = role;
+                    changed = true;
+                }
+                if (avatar.avatarName != name)
+                {
+                    avatar.avatarName = name;
+                    changed = true;
+                }
+            }
+            return changed;
+        }
+
+        public static void SetLeader(Avatar avatar)
+        {
+            var (sora, dooms) = GetSoraDooms();
+            if (avatar == sora)
+            {
+                sora.avatarRole = Role.Leader;
+                dooms.avatarRole = Role.Follower;
+            }
+            else
+            {
+                sora.avatarRole = Role.Follower;
+                dooms.avatarRole = Role.Leader;
+            }
+            UpdateAllAvatar();
+        }
+
+        /// <summary>
+        /// If roles are not properly set, the first avatar will be set as leader.
+        /// </summary>
+        public static void EnsureRoles()
+        {
+            var currentLeader = GetAllAvatars().FirstOrDefault(a => a.IsLeader);
+            if (currentLeader == null)
+                currentLeader = GetAllAvatars().FirstOrDefault();
+            SetLeader(currentLeader);
+        }
+
+        public static void SwitchRoles()
+        {
+            SetLeader(GetAllAvatars().FirstOrDefault(a => a.IsFollower));
+        }
+
+        public static void SwitchNames()
+        {
+            var (sora, dooms) = GetSoraDooms();
+            (dooms.avatarName, sora.avatarName) = (sora.avatarName, dooms.avatarName);
+            UpdateAllAvatar();
+        }
+
         public static void UpdateAllAvatar()
         {
             foreach (var avatar in GetAllAvatars())
@@ -105,6 +222,8 @@ namespace Avatar
 #endif
             }
         }
+
+        #endregion
 
 #if UNITY_EDITOR
         void OnValidate()
@@ -152,12 +271,17 @@ namespace Avatar
             {
                 base.OnInspectorGUI();
 
-                var otherRole = Target.role == PairRole.Leader ? PairRole.Follower : PairRole.Leader;
-                if (GUILayout.Button($"Switch to {otherRole}"))
+                var otherRole = Target.avatarRole == Role.Leader ? Role.Follower : Role.Leader;
+                if (GUILayout.Button("Switch Roles (Leader / Follower)"))
                 {
-                    Undo.RecordObjects(GetAllAvatars(), "Switch role");
-                    Target.role = otherRole;
-                    UpdateAllAvatar();
+                    Undo.RecordObjects(GetAllAvatars(), "Switch Roles");
+                    SwitchRoles();
+                }
+
+                if (GUILayout.Button("Switch Names (Sora / Dooms)"))
+                {
+                    Undo.RecordObjects(GetAllAvatars(), "Switch Names");
+                    SwitchNames();
                 }
 
                 if (GUILayout.Button("Regroup all Avatar"))

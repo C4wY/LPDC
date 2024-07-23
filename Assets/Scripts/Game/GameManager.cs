@@ -1,11 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Avatar;
 using UnityEngine;
 
+[ExecuteAlways]
 public class GameManager : MonoBehaviour
 {
+    public Animator portraitAnimator;
+
     const float SWITCH_COOLDOWN = 0.5f;
     float lastSwitchTime = 0;
     void DoSwitch()
@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
         var (leader, follower) = Avatar.Avatar.GetLeaderFollower();
 
         // Role switching
-        leader.role = Avatar.Avatar.PairRole.Follower;
-        follower.role = Avatar.Avatar.PairRole.Leader;
+        leader.avatarRole = Avatar.Avatar.Role.Follower;
+        follower.avatarRole = Avatar.Avatar.Role.Leader;
 
         var delta = leader.transform.position - follower.transform.position;
         const float SWITCH_DISTANCE = 5;
@@ -35,10 +35,34 @@ public class GameManager : MonoBehaviour
 
         lastSwitchTime = Time.time;
         Avatar.Avatar.UpdateAllAvatar();
+
+        //update UI
+        var trigger = leader.avatarName == Avatar.Avatar.Name.Sora ? "Sora > Dooms" : "Dooms > Sora";
+        portraitAnimator.SetTrigger(trigger);
+    }
+
+    void Start ()
+    { 
+        var leader = Avatar.Avatar.GetLeader();
+        var soraIsLeader = leader.avatarName == Avatar.Avatar.Name.Sora;
+        portraitAnimator.SetBool("Sora Is Leader On Start", soraIsLeader);
     }
 
     void Update()
     {
+#if UNITY_EDITOR
+        // In the editor for safety reasons, we make sure that the roles and names are correct.
+        var avatars = Avatar.Avatar.GetAllAvatars();
+        if (avatars.Length == 2)
+        {
+            Avatar.Avatar.TryFixAvatarRolesAndNames();
+        }
+        else if (avatars.Length == 1)
+        {
+            avatars[0].avatarRole = Avatar.Avatar.Role.Leader;
+        }
+#endif
+
         if (InputManager.Instance.TheSwitch())
         {
             DoSwitch();

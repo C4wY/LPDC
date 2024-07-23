@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace Avatar
 {
@@ -13,6 +14,8 @@ namespace Avatar
 
     public class SpriteHandler : MonoBehaviour
     {
+        public bool dialoguePause = false; // Pour la fonction de pause, ajouté par Dim
+
         Avatar avatar;
         Animator animator;
         SpriteRenderer spriteRenderer;
@@ -47,13 +50,29 @@ namespace Avatar
                 realIsGrounded = realIsGroundedNew;
             }
 
-            var x = avatar.IsLeader
-                ? avatar.LeaderController.input.horizontal
-                : avatar.Rigidbody.velocity.x;
-            animator.SetFloat("HSpeed", Mathf.Abs(x));
-            animator.SetBool("IsGrounded", SpriteIsGrounded);
+            if (!dialoguePause) // J'empêche le personnage de se déplacer pendant les dialogues (Dim)
+            {
+                var x = avatar.IsLeader
+                 ? avatar.LeaderController.input.horizontal
+                 : avatar.Rigidbody.velocity.x;
+                animator.SetFloat("HSpeed", Mathf.Abs(x));
+                animator.SetBool("IsGrounded", SpriteIsGrounded);
 
-            spriteRenderer.flipX = !avatar.Move.IsFacingRight;
+                spriteRenderer.flipX = !avatar.Move.IsFacingRight;
+            }
+            
+        }
+
+        // J'ajoute une fonction qui se déclenche quand un dialogue se déclenche, et une autre quand le dialogue se termine. (Dim)
+
+        void OnPauseForDialogue()
+        {
+            dialoguePause = true;
+        }
+
+        void OffPauseForDialogue()
+        {
+            dialoguePause = false;
         }
     }
 }
