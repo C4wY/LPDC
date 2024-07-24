@@ -34,5 +34,16 @@ public class LancerdeSora : MonoBehaviour
 
         // Applique la force de propulsion
         GetComponent<Rigidbody>().AddForce(propulsionDirection * propulsionForce, ForceMode.Impulse);
+
+        GetComponent<Avatar.Avatar>().Move.enabled = false; // Désactive le mouvement du joueur
+
+        StartCoroutine(EnablePlayerMovement()); // Réactive le mouvement du joueur après 0.5 secondes
+    }
+
+    IEnumerator EnablePlayerMovement()
+    {
+        yield return new WaitForSeconds(0.5f); // Attend 0.5 secondes
+
+        GetComponent<Avatar.Avatar>().Move.enabled = true; // Réactive le mouvement du joueur
     }
 }
