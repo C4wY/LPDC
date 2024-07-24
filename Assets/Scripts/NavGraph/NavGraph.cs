@@ -1,36 +1,53 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public partial class NavGraph
 {
-    readonly Dictionary<int, Node> nodes = new();
-    readonly Dictionary<(int n0, int n1), Segment> segments = new();
+    readonly Dictionary<int, Node> nodesDict = new();
+    readonly Dictionary<(int n0, int n1), Segment> segmentsDict = new();
+    public Node[] Nodes { get; private set; }
 
     static readonly RaycastHit[] raycastHits = new RaycastHit[10];
     static readonly Collider[] overlaps = new Collider[10];
 
+    static float DistanceXY(Vector3 a, Vector3 b) =>
+        Vector2.Distance(a, b);
+
+    static class AirConfig
+    {
+        public const float horizontalDistanceMax = 5;
+        public const float verticalDistanceMax = 2;
+        public const float radius = 1.05f;
+        public const float verticalOffset = 1.2f;
+
+        public static float RayMaxDistance =>
+            Mathf.Sqrt(horizontalDistanceMax * horizontalDistanceMax + verticalDistanceMax * verticalDistanceMax);
+    }
+
     public void Clear()
     {
-        nodes.Clear();
-        segments.Clear();
+        nodesDict.Clear();
+        segmentsDict.Clear();
+        Nodes = Array.Empty<Node>();
     }
 
     public Node GetNode(int id) =>
-        nodes[id];
+        nodesDict[id];
 
     public (Node, Node) GetNodes(int id0, int id1) =>
-        (nodes[id0], nodes[id1]);
+        (nodesDict[id0], nodesDict[id1]);
 
     public (Node, Node) GetNodes(Segment segment) =>
-        (nodes[segment.n0], nodes[segment.n1]);
+        (nodesDict[segment.n0], nodesDict[segment.n1]);
 
     public Segment GetSegment(int n0, int n1)
     {
         if (n0 > n1)
             (n0, n1) = (n1, n0);
 
-        return segments[(n0, n1)];
+        return segmentsDict[(n0, n1)];
     }
 
     public void SampleWorld(int xMin, int xMax, int zMin, int zMax, float originY = 100, float distance = 200)
@@ -57,7 +74,7 @@ public partial class NavGraph
                     if (overlapCount == 0)
                     {
                         var node = new Node { position = new(x, hit.point.y, z) };
-                        var xy = node.PositionXY;
+                        var xy = node.RoundedPositionXY;
 
                         if (nodeTable.TryGetValue(xy, out var existingNode))
                         {
@@ -73,12 +90,14 @@ public partial class NavGraph
             }
 
         foreach (var node in nodeTable.Values)
-            nodes.Add(node.id, node);
+            nodesDict.Add(node.id, node);
+
+        Nodes = nodesDict.Values.ToArray();
     }
 
     public void RemoveDangerNodes()
     {
-        var dangerNodes = nodes.Values
+        var dangerNodes = nodesDict.Values
             .Where(node =>
             {
                 var count = Physics.OverlapSphereNonAlloc(node.position, 0.25f, overlaps, LayerMask.GetMask("Danger"));
@@ -87,7 +106,9 @@ public partial class NavGraph
             .ToArray();
 
         foreach (var node in dangerNodes)
-            nodes.Remove(node.id);
+            nodesDict.Remove(node.id);
+
+        Nodes = nodesDict.Values.ToArray();
     }
 
     public bool TryGetSegment(int n0, int n1, out Segment link)
@@ -95,7 +116,7 @@ public partial class NavGraph
         if (n0 > n1)
             (n0, n1) = (n1, n0);
 
-        return segments.TryGetValue((n0, n1), out link);
+        return segmentsDict.TryGetValue((n0, n1), out link);
     }
 
     Segment CreateSegment(Node node0, Node node1, float distance, Vector3 direction, Segment.Type type = Segment.Type.Ground)
@@ -111,14 +132,14 @@ public partial class NavGraph
         node0.segments.Add(segment);
         node1.segments.Add(segment);
 
-        segments.Add((n0, n1), segment);
+        segmentsDict.Add((n0, n1), segment);
 
         return segment;
     }
 
     public void CreateGroundSegments(float maxDistance = 1.5f)
     {
-        var nodeArray = nodes.Values.ToArray();
+        var nodeArray = nodesDict.Values.ToArray();
         var count = nodeArray.Length;
         for (var i = 0; i < count; i++)
         {
@@ -145,59 +166,103 @@ public partial class NavGraph
         }
     }
 
-    public void CreateAirSegments(float distanceMax = 5)
+    /// <summary>
+    /// Radius and vertical offset are used to check if there is an obstacle 
+    /// between the nodes based on a sphere cast.    
+    /// </summary>
+    /// <param name="distanceMax"></param>
+    /// <param name="radius"></param>
+    /// <param name="verticalOffset"></param>
+    public void CreateAirSegments()
     {
-        var nodeArray = nodes.Values.ToArray();
+        var nodeArray = nodesDict.Values.ToArray();
         var nodeCount = nodeArray.Length;
+        var layer = LayerMask.GetMask("LevelBlock");
+
         for (int i = 0; i < nodeCount; i++)
         {
             var node0 = nodeArray[i];
             for (int j = i + 1; j < nodeCount; j++)
             {
                 var node1 = nodeArray[j];
-                var delta = node1.position - node0.position;
-                var (dx, dy, _) = delta;
-                var distance = Mathf.Sqrt(dx * dx + dy * dy); // Ignoring Z axis for distance calculation.
+                var delta = node1.RoundedPositionXY - node0.RoundedPositionXY;
+                var (dx, dy) = delta.Abs();
 
-                if (distance < distanceMax)
+                if (dx > AirConfig.horizontalDistanceMax + 0.1f || dy > AirConfig.verticalDistanceMax + 0.1f)
+                    continue;
+
+                // Ignore if there is an obstacle between the nodes.
+                var p0 = node0.position + Vector3.up * AirConfig.verticalOffset;
+                var p1 = node1.position + Vector3.up * AirConfig.verticalOffset;
+                var v01 = p1 - p0;
+                var v01Magnitude = v01.magnitude;
+                var hitCount = Physics.RaycastNonAlloc(
+                    ray: new Ray(p0, v01 / v01Magnitude),
+                    raycastHits, v01Magnitude, layer);
+
+                if (hitCount > 0)
+                    continue;
+
+                // Create a jump segment only if there is no direct path between the nodes.
+                if (TryFindPath(node0, node1, out var _, Segment.Type.Ground) == false)
                 {
-                    // Ignore if there is an obstacle between the nodes.
-                    var p0 = node0.position + Vector3.up * 0.25f;
-                    var p1 = node1.position + Vector3.up * 0.25f;
-                    var hitCount = Physics.RaycastNonAlloc(new Ray(p0, (p1 - p0).normalized), raycastHits, 10.0f, LayerMask.GetMask("LevelBlock"));
-                    if (hitCount > 0)
-                        continue;
-
-                    // Create a jump segment only if there is no direct path between the nodes.
-                    if (TryFindPath(node0, node1, out var _, Segment.Type.Ground) == false)
-                    {
-                        CreateSegment(node0, node1, distance, delta / distance, Segment.Type.Air);
-                    }
+                    var distance = DistanceXY(p0, p1);
+                    CreateSegment(node0, node1, distance, delta / distance, Segment.Type.Air);
                 }
             }
         }
     }
 
+    public Memory<RaycastHit> AirRaycast(int node0, int node1) =>
+        AirRaycast(Nodes[node0], Nodes[node1]);
+
+    public Memory<RaycastHit> AirRaycast(Node node0, Node node1)
+    {
+        var layer = LayerMask.GetMask("LevelBlock");
+
+        var p0 = node0.position + Vector3.up * AirConfig.verticalOffset;
+        var p1 = node1.position + Vector3.up * AirConfig.verticalOffset;
+        var v01 = p1 - p0;
+        var v01Magnitude = v01.magnitude;
+        var count = Physics.RaycastNonAlloc(
+            ray: new Ray(p0, v01 / v01Magnitude),
+            raycastHits, v01Magnitude, layer);
+
+        return new Memory<RaycastHit>(raycastHits, 0, count);
+    }
+
+    public void DrawAirRaycast(int node0, int node1) =>
+        DrawAirRaycast(Nodes[node0], Nodes[node1]);
+
+    public void DrawAirRaycast(Node node0, Node node1)
+    {
+        var p0 = node0.position + Vector3.up * AirConfig.verticalOffset;
+        var p1 = node1.position + Vector3.up * AirConfig.verticalOffset;
+        Gizmos.DrawLine(p0, p1);
+        foreach (var hit in AirRaycast(node0, node1).Span)
+            Gizmos.DrawSphere(hit.point, 0.1f);
+    }
+
     public Node FindNearestNode(Vector3 position)
     {
-        if (nodes.Count == 0)
+        if (nodesDict.Count == 0)
             return null;
 
-        return nodes.Values
+        return nodesDict.Values
             .OrderBy(n => (n.position - position).sqrMagnitude)
             .First();
     }
 
     public (Segment segment, float t) FindNearestSegment(Vector3 position)
     {
-        if (segments.Count == 0)
+        if (segmentsDict.Count == 0)
             return (null, float.NaN);
 
-        return segments.Values
+        return segmentsDict.Values
             .Select(segment =>
             {
-                var n0 = nodes[segment.n0];
-                var n1 = nodes[segment.n1];
+                var n0 = nodesDict[segment.n0];
+                var n1 = nodesDict[segment.n1];
                 var d = n1.position - n0.position;
                 MathUtils.NearestPointOnLine(n0.position, d, position, out var t);
                 return (segment, t);
@@ -205,8 +270,8 @@ public partial class NavGraph
             .OrderBy(item =>
             {
                 var (segment, t) = item;
-                var n0 = nodes[segment.n0];
-                var n1 = nodes[segment.n1];
+                var n0 = nodesDict[segment.n0];
+                var n1 = nodesDict[segment.n1];
                 var d = n1.position - n0.position;
                 var p = n0.position + d * Mathf.Clamp01(t);
                 return (p - position).sqrMagnitude;
@@ -231,9 +296,6 @@ public partial class NavGraph
     /// </summary>
     public bool TryFindPath(Node from, Node to, out Path path, Segment.Type segmentTypeMask = (Segment.Type)~0)
     {
-        static float DistanceXY(Vector3 a, Vector3 b) =>
-            Vector2.Distance(a, b);
-
         var openSet = new HashSet<int> { from.id };
         var cameFrom = new Dictionary<int, int>();
         var gScore = new Dictionary<int, float> { [from.id] = 0 };
@@ -241,12 +303,12 @@ public partial class NavGraph
 
         (Node[], float[]) ReconstructPath(int current)
         {
-            var path = new List<Node> { nodes[current] };
+            var path = new List<Node> { nodesDict[current] };
             var distances = new List<float>();
             while (cameFrom.TryGetValue(current, out var previous))
             {
-                distances.Add(DistanceXY(nodes[current].position, nodes[previous].position));
-                path.Add(nodes[previous]);
+                distances.Add(DistanceXY(nodesDict[current].position, nodesDict[previous].position));
+                path.Add(nodesDict[previous]);
                 current = previous;
             }
             path.Reverse();
@@ -267,7 +329,7 @@ public partial class NavGraph
 
             openSet.Remove(current);
 
-            foreach (var segment in nodes[current].segments)
+            foreach (var segment in nodesDict[current].segments)
             {
                 if (segmentTypeMask.HasFlag(segment.type) == false)
                     continue;
@@ -279,7 +341,7 @@ public partial class NavGraph
                 {
                     cameFrom[neighbor] = current;
                     gScore[neighbor] = tentativeGScore;
-                    fScore[neighbor] = gScore[neighbor] + DistanceXY(nodes[neighbor].position, to.position);
+                    fScore[neighbor] = gScore[neighbor] + DistanceXY(nodesDict[neighbor].position, to.position);
 
                     if (!openSet.Contains(neighbor))
                         openSet.Add(neighbor);
@@ -305,13 +367,13 @@ public partial class NavGraph
     {
         Gizmos.color = color;
 
-        foreach (var node in nodes.Values)
+        foreach (var node in nodesDict.Values)
             Gizmos.DrawSphere(node.position, 0.033f);
 
-        foreach (var link in segments.Values)
+        foreach (var link in segmentsDict.Values)
         {
-            var n0 = nodes[link.n0];
-            var n1 = nodes[link.n1];
+            var n0 = nodesDict[link.n0];
+            var n1 = nodesDict[link.n1];
 
             if (link.type == Segment.Type.Ground)
             {

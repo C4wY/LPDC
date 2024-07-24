@@ -18,7 +18,7 @@ namespace Avatar
         public float yDistanceToLeaderMaxBeforeTeleporting = 30.0f;
 
         [Tooltip("The width in world units of the nav graph samples (samples are centered on the x position of the avatar).")]
-        public int navGraphSampleWidth = 60;
+        public int navGraphSampleWidth = 100;
 
         [Tooltip("The time in seconds to wait before refreshing the navigation graph (and the path).")]
         public float navGraphObsolenceTime = 1.0f;

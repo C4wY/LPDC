@@ -22,10 +22,10 @@ public partial class NavGraph
         public bool IsGround => type.HasFlag(Type.Ground);
         public bool IsAir => type.HasFlag(Type.Air);
 
-        public Node Node0 => navGraph.nodes[n0];
+        public Node Node0 => navGraph.nodesDict[n0];
         public Vector3 Position0 => Node0.position;
 
-        public Node Node1 => navGraph.nodes[n1];
+        public Node Node1 => navGraph.nodesDict[n1];
         public Vector3 Position1 => Node1.position;
 
         public Vector3 Delta => Position1 - Position0;
@@ -43,8 +43,8 @@ public partial class NavGraph
         public Vector3 Position(float t)
         {
             return Vector3.Lerp(
-                navGraph.nodes[n0].position,
-                navGraph.nodes[n1].position,
+                navGraph.nodesDict[n0].position,
+                navGraph.nodesDict[n1].position,
                 t);
         }
 
