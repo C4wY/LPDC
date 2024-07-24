@@ -37,6 +37,8 @@ namespace Avatar
     [ExecuteAlways]
     public class FollowerController : MonoBehaviour
     {
+        public Color navGraphColor = new(0, 0.5f, 1);
+
         Avatar avatar, leaderAvatar;
 
         FollowerControllerParameters Parameters =>
@@ -69,6 +71,7 @@ namespace Avatar
 
             navGraph.Clear();
             navGraph.SampleWorld(x - width / 2, x + width / 2, 0, 5);
+            navGraph.RemoveDangerNodes();
             navGraph.CreateGroundSegments();
             navGraph.CreateAirSegments();
 
@@ -224,7 +227,7 @@ namespace Avatar
                 Gizmos.DrawWireSphere(tracePoint.Value.position, avatar.parameters.leaderController.traceIntervalDistanceMax * 1.1f);
 
             if (mode.HasFlag(FollowerControllerParameters.GizmosMode.NavGraph))
-                navGraph.DrawGizmos();
+                navGraph.DrawGizmos(navGraphColor);
 
             if (mode.HasFlag(FollowerControllerParameters.GizmosMode.Agent))
                 agent?.DrawGizmos();

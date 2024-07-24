@@ -76,6 +76,20 @@ public partial class NavGraph
             nodes.Add(node.id, node);
     }
 
+    public void RemoveDangerNodes()
+    {
+        var dangerNodes = nodes.Values
+            .Where(node =>
+            {
+                var count = Physics.OverlapSphereNonAlloc(node.position, 0.25f, overlaps, LayerMask.GetMask("Danger"));
+                return count > 0;
+            })
+            .ToArray();
+
+        foreach (var node in dangerNodes)
+            nodes.Remove(node.id);
+    }
+
     public bool TryGetSegment(int n0, int n1, out Segment link)
     {
         if (n0 > n1)
@@ -264,9 +278,12 @@ public partial class NavGraph
         return TryFindPath(fromNode, toNode, out path);
     }
 
-    public void DrawGizmos()
+    public void DrawGizmos() =>
+        DrawGizmos(new Color(0, 0.5f, 1));
+
+    public void DrawGizmos(Color color)
     {
-        Gizmos.color = new Color(0, 0.5f, 1);
+        Gizmos.color = color;
 
         foreach (var node in nodes.Values)
             Gizmos.DrawSphere(node.position, 0.033f);
