@@ -101,9 +101,14 @@ namespace Avatar
             JumpTime = Time.time;
         }
 
+        public bool CanJump()
+        {
+            return avatar.Ground.IsGrounded && Time.time > JumpTime + Parameters.jumpCooldown;
+        }
+
         public bool TryToJump()
         {
-            if (avatar.Ground.IsGrounded && Time.time > JumpTime + Parameters.jumpCooldown)
+            if (CanJump())
             {
                 Jump();
                 return true;

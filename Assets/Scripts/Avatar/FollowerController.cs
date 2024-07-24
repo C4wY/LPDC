@@ -48,6 +48,12 @@ namespace Avatar
         float distanceToLeader;
         TracePoint? tracePoint;
 
+        Vector3 deltaToAgent;
+        float distanceToAgent;
+
+        Vector3 deltaPathToLeader;
+        float distancePathToLeader;
+
         float navGraphTime = -1;
         readonly NavGraph navGraph = new();
 
@@ -56,7 +62,7 @@ namespace Avatar
         float horizontalInput = 0;
         float verticalInput = 0;
 
-        public string debugInfo;
+        string followDebugInfo;
 
         public void TeleportBehindLeader()
         {
@@ -92,6 +98,12 @@ namespace Avatar
                 FindPath();
 
             agent.UpdatePosition(avatar.Ground.FeetPosition);
+
+            deltaToAgent = agent.CurrentPosition - avatar.Ground.FeetPosition;
+            distanceToAgent = deltaToAgent.magnitude;
+
+            deltaPathToLeader = leaderAvatar.Ground.FeetPosition - agent.points.Last().position;
+            distancePathToLeader = deltaPathToLeader.magnitude;
         }
 
         void UpdateFollow()
@@ -109,25 +121,25 @@ namespace Avatar
             if (segmentIsAir)
             {
                 horizontalInput = segmentDirection.x > 0 ? 1 : -1;
-                debugInfo = $"Jumping, following the segment direction {segmentDirection.x}";
+                followDebugInfo = $"Jumping, following the segment direction {segmentDirection.x}";
             }
             else
             {
                 if (agent.RemainingDistance < 1f || HasToJumpButCant())
                 {
                     horizontalInput = 0;
-                    debugInfo = "Stopping";
+                    followDebugInfo = "Stopping";
                 }
                 else
                 {
                     if (avatar.Ground.IsGrounded)
                     {
                         horizontalInput = segmentDirection.x > 0 ? 1 : -1;
-                        debugInfo = $"Grounded, following the segment direction {segmentDirection.x}";
+                        followDebugInfo = $"Grounded, following the segment direction {segmentDirection.x}";
                     }
                     else
                     {
-                        debugInfo = "Not grounded, maintaining last input";
+                        followDebugInfo = "Not grounded, maintaining last input";
                     }
                 }
 
@@ -203,6 +215,16 @@ namespace Avatar
                 }
             }
 
+            // If the follower is too far from the path, the path should be recalculated.
+            if (avatar.Ground.IsGrounded)
+            {
+                if (distanceToAgent > 1.5f)
+                    FindPath();
+
+                if (distancePathToLeader > 1.5f)
+                    FindPath();
+            }
+
             if (avatar.Move.mode == MoveMode.Switching)
             {
                 avatar.Move.HorizontalUpdate(0);
@@ -270,14 +292,14 @@ namespace Avatar
                 var agent = Target.agent;
                 if (agent != null)
                 {
-                    GUIStyle style = new(EditorStyles.label)
-                    {
-                        wordWrap = true
-                    };
-                    EditorGUILayout.LabelField("Segment:",
-                        $"{agent.CurrentSegment}\n{agent.segmentIndex} / {agent.segments.Length} ({agent.segmentProgress * 100:F1})% {agent.CurrentSegment.graphSegment}",
+                    GUIStyle style = new(EditorStyles.label) { wordWrap = true };
+                    EditorGUILayout.LabelField("Agent:",
+                        $"segment{agent.CurrentSegment}\n" +
+                        $"distance to agent {Target.distanceToAgent:F1}\n" +
+                        $"{agent.segmentIndex} / {agent.segments.Length} ({agent.segmentProgress * 100:F1})% {agent.CurrentSegment.graphSegment}",
                         style);
-                    EditorGUILayout.LabelField("Debug", Target.debugInfo);
+
+                    EditorGUILayout.LabelField("Debug", Target.followDebugInfo);
                 }
 
                 GUI.enabled = Target.enabled;
