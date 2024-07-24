@@ -30,6 +30,7 @@ public partial class NavGraph
         /// </summary>
         public class AgentSegment
         {
+            public readonly int index;
             public readonly AgentPoint a, b;
             public readonly Segment graphSegment;
             public readonly float length;
@@ -43,8 +44,9 @@ public partial class NavGraph
 
             public bool IsGraphSegment => graphSegment != null;
 
-            public AgentSegment(AgentPoint a, AgentPoint b, Segment graphSegment, float length, float previouslyAccumulatedLength)
+            public AgentSegment(int index, AgentPoint a, AgentPoint b, Segment graphSegment, float length, float previouslyAccumulatedLength)
             {
+                this.index = index;
                 this.a = a;
                 this.b = b;
                 this.graphSegment = graphSegment;
@@ -79,7 +81,7 @@ public partial class NavGraph
                 a.position + AB * Mathf.Clamp01(t);
 
             override public string ToString() =>
-                $"({length:F1}, {(IsGraphSegment ? "graph" : "agent-only")})";
+                $"(#{index} {length:F1}, {(requiresJump ? "JMP, " : "")}{(IsGraphSegment ? $"navgraph({graphSegment.n0}-{graphSegment.n1})" : "agent-only")})";
         }
 
         public NavGraph graph;
@@ -100,10 +102,10 @@ public partial class NavGraph
             segments.Length > 0 && segmentIndex < segments.Length;
 
         public AgentSegment CurrentSegment =>
-            segments[segmentIndex];
+           HasCurrentSegment ? segments[segmentIndex] : null;
 
         public float CurrentDistance =>
-            CurrentSegment.DistanceAt(segmentProgress);
+            CurrentSegment?.DistanceAt(segmentProgress) ?? 0;
 
         public float RemainingDistance =>
             TotalLength - CurrentDistance;
@@ -188,22 +190,31 @@ public partial class NavGraph
             TotalLength = 0f;
             segments = points
                 .Pairwise()
-                .Select(pair =>
+                .Select((pair, index) =>
                 {
                     var (a, b) = pair;
                     var length = Vector3.Distance(a.position, b.position);
                     var graphSegment = a.IsNodeGraph && b.IsNodeGraph ? graph.GetSegment(a.node.id, b.node.id) : null;
-                    var segment = new AgentSegment(a, b, graphSegment, length, TotalLength);
+                    var segment = new AgentSegment(index, a, b, graphSegment, length, TotalLength);
                     TotalLength += length;
                     return segment;
                 })
                 .ToArray();
         }
 
-        public void UpdatePosition(Vector3 sourcePosition)
+        public void UpdatePosition(Vector3 sourcePosition, int singleSegmentIndex = -1)
         {
             if (segments.Length == 0)
                 return;
+
+            if (singleSegmentIndex != -1)
+            {
+                var segment = segments[singleSegmentIndex];
+                MathUtils.NearestPointOnLine(segment.a.position, segment.AB, sourcePosition, out var t);
+                segmentIndex = singleSegmentIndex;
+                segmentProgress = Mathf.Clamp01(t);
+                return;
+            }
 
             var smallestSqrDistance = float.MaxValue;
             foreach (var (index, segment) in segments.Entries())
