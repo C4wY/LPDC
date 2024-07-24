@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 670a1ae7e4efe164da8c4198d96f1e76
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - "pr\xE9fabSuperCass\xE9": {fileID: 4053350509683236175, guid: 1a36edffb844f9347bf5c28d3467c026,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
