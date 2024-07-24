@@ -60,7 +60,7 @@ public partial class NavGraph
 
         public override string ToString()
         {
-            return $"{n0} - {n1} ({length:F3})";
+            return $"{n0} - {n1} ({type}, {length:F3})";
         }
     }
 }

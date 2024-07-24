@@ -9,14 +9,14 @@ public partial class NavGraph
         /// Path point differs from a graph node in that it can be a point in space
         /// (e.g. start and end points).
         /// </summary>
-        public class PathPoint
+        public class AgentPoint
         {
             public readonly Vector3 position;
             public readonly Node node;
 
             public bool IsNodeGraph => node != null;
 
-            public PathPoint(Vector3 position, Node node)
+            public AgentPoint(Vector3 position, Node node)
             {
                 this.position = position;
                 this.node = node;
@@ -28,9 +28,9 @@ public partial class NavGraph
         /// line between two points that are not necessarily graph nodes (e.g. start 
         /// and end points). 
         /// </summary>
-        public class PathSegment
+        public class AgentSegment
         {
-            public readonly PathPoint a, b;
+            public readonly AgentPoint a, b;
             public readonly Segment graphSegment;
             public readonly float length;
             public readonly float previouslyAccumulatedLength;
@@ -43,7 +43,7 @@ public partial class NavGraph
 
             public bool IsGraphSegment => graphSegment != null;
 
-            public PathSegment(PathPoint a, PathPoint b, Segment graphSegment, float length, float previouslyAccumulatedLength)
+            public AgentSegment(AgentPoint a, AgentPoint b, Segment graphSegment, float length, float previouslyAccumulatedLength)
             {
                 this.a = a;
                 this.b = b;
@@ -77,12 +77,15 @@ public partial class NavGraph
 
             public Vector3 PositionAt(float t) =>
                 a.position + AB * Mathf.Clamp01(t);
+
+            override public string ToString() =>
+                $"({length:F1}, {(IsGraphSegment ? "graph" : "agent-only")})";
         }
 
         public NavGraph graph;
 
-        public PathPoint[] points = { };
-        public PathSegment[] segments = { };
+        public AgentPoint[] points = { };
+        public AgentSegment[] segments = { };
         public float TotalLength { get; private set; }
 
         public (Segment segment, float t) startSegment, endSegment;
@@ -96,7 +99,7 @@ public partial class NavGraph
         public bool HasCurrentSegment =>
             segments.Length > 0 && segmentIndex < segments.Length;
 
-        public PathSegment CurrentSegment =>
+        public AgentSegment CurrentSegment =>
             segments[segmentIndex];
 
         public float CurrentDistance =>
@@ -117,8 +120,8 @@ public partial class NavGraph
         public void ClearPath()
         {
             graph = null;
-            points = new PathPoint[] { };
-            segments = new PathSegment[] { };
+            points = new AgentPoint[] { };
+            segments = new AgentSegment[] { };
             segmentIndex = 0;
             TotalLength = 0;
         }
@@ -139,7 +142,7 @@ public partial class NavGraph
                 return;
 
             var points = path.nodes
-                .Select(node => new PathPoint(node.position, node))
+                .Select(node => new AgentPoint(node.position, node))
                 .ToList();
 
             if (points.Count < 2)
@@ -176,8 +179,8 @@ public partial class NavGraph
                     .ToList();
 
             points = points
-                .Prepend(new PathPoint(from, null))
-                .Append(new PathPoint(to, null))
+                .Prepend(new AgentPoint(from, null))
+                .Append(new AgentPoint(to, null))
                 .ToList();
 
             this.points = points.ToArray();
@@ -190,7 +193,7 @@ public partial class NavGraph
                     var (a, b) = pair;
                     var length = Vector3.Distance(a.position, b.position);
                     var graphSegment = a.IsNodeGraph && b.IsNodeGraph ? graph.GetSegment(a.node.id, b.node.id) : null;
-                    var segment = new PathSegment(a, b, graphSegment, length, TotalLength);
+                    var segment = new AgentSegment(a, b, graphSegment, length, TotalLength);
                     TotalLength += length;
                     return segment;
                 })

@@ -56,6 +56,8 @@ namespace Avatar
         float horizontalInput = 0;
         float verticalInput = 0;
 
+        public string debugInfo;
+
         public void TeleportBehindLeader()
         {
             var dx = (leaderAvatar.Move.IsFacingRight ? -1 : 1) * 0.25f;
@@ -103,20 +105,37 @@ namespace Avatar
 
             bool HasToJumpButCant() => agent.CurrentSegment.requiresJump && avatar.Move.IsJumping == false;
 
-            var dir = agent.CurrentSegment.Direction;
-            horizontalInput =
-                segmentIsAir
-                    ? avatar.Move.JumpVelocityAtJumpTime.x > 0 ? 1 : -1
-                    : (agent.RemainingDistance < 1f || HasToJumpButCant())
-                        ? 0
-                        : avatar.Ground.IsGrounded
-                            ? (dir.x > 0 ? 1 : -1)
-                            : horizontalInput; // Keep the last input if not grounded.
+            var segmentDirection = agent.CurrentSegment.Direction;
+            if (segmentIsAir)
+            {
+                horizontalInput = segmentDirection.x > 0 ? 1 : -1;
+                debugInfo = $"Jumping, following the segment direction {segmentDirection.x}";
+            }
+            else
+            {
+                if (agent.RemainingDistance < 1f || HasToJumpButCant())
+                {
+                    horizontalInput = 0;
+                    debugInfo = "Stopping";
+                }
+                else
+                {
+                    if (avatar.Ground.IsGrounded)
+                    {
+                        horizontalInput = segmentDirection.x > 0 ? 1 : -1;
+                        debugInfo = $"Grounded, following the segment direction {segmentDirection.x}";
+                    }
+                    else
+                    {
+                        debugInfo = "Not grounded, maintaining last input";
+                    }
+                }
 
-            var wannaGoForeground = dir.z < 0 && dir.y < 0;
-            verticalInput = wannaGoForeground ? -1 : 0;
-
+            }
             avatar.Move.HorizontalUpdate(horizontalInput);
+
+            var wannaGoForeground = segmentDirection.z < 0 && segmentDirection.y < 0;
+            verticalInput = wannaGoForeground ? -1 : 0;
             avatar.Move.VerticalUpdate(verticalInput);
         }
 
@@ -177,7 +196,7 @@ namespace Avatar
             if (Time.time > navGraphTime + Parameters.navGraphObsolenceTime)
             {
                 // Only if the avatar is grounded, refresh the nav graph.
-                if (avatar.Ground.IsGrounded)
+                if (avatar.Ground.IsGroundedFor(3))
                 {
                     RefreshNavGraph();
                     agent.ClearPath();
@@ -251,7 +270,14 @@ namespace Avatar
                 var agent = Target.agent;
                 if (agent != null)
                 {
-                    EditorGUILayout.LabelField("Segment:", $"{agent.segmentIndex} / {agent.segments.Length} ({agent.segmentProgress * 100:F1})%");
+                    GUIStyle style = new(EditorStyles.label)
+                    {
+                        wordWrap = true
+                    };
+                    EditorGUILayout.LabelField("Segment:",
+                        $"{agent.CurrentSegment}\n{agent.segmentIndex} / {agent.segments.Length} ({agent.segmentProgress * 100:F1})% {agent.CurrentSegment.graphSegment}",
+                        style);
+                    EditorGUILayout.LabelField("Debug", Target.debugInfo);
                 }
 
                 GUI.enabled = Target.enabled;
