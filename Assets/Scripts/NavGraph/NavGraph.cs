@@ -148,11 +148,11 @@ public partial class NavGraph
     public void CreateAirSegments(float distanceMax = 5)
     {
         var nodeArray = nodes.Values.ToArray();
-        var count = nodeArray.Length;
-        for (int i = 0; i < count; i++)
+        var nodeCount = nodeArray.Length;
+        for (int i = 0; i < nodeCount; i++)
         {
             var node0 = nodeArray[i];
-            for (int j = i + 1; j < count; j++)
+            for (int j = i + 1; j < nodeCount; j++)
             {
                 var node1 = nodeArray[j];
                 var delta = node1.position - node0.position;
@@ -168,9 +168,9 @@ public partial class NavGraph
                     if (hitCount > 0)
                         continue;
 
+                    // Create a jump segment only if there is no direct path between the nodes.
                     if (TryFindPath(node0, node1, out var _, Segment.Type.Ground) == false)
                     {
-                        // Create a jump segment only if there is no direct path between the nodes.
                         CreateSegment(node0, node1, distance, delta / distance, Segment.Type.Air);
                     }
                 }
@@ -183,7 +183,9 @@ public partial class NavGraph
         if (nodes.Count == 0)
             return null;
 
-        return nodes.Values.OrderBy(n => (n.position - position).sqrMagnitude).First();
+        return nodes.Values
+            .OrderBy(n => (n.position - position).sqrMagnitude)
+            .First();
     }
 
     public (Segment segment, float t) FindNearestSegment(Vector3 position)
@@ -212,26 +214,44 @@ public partial class NavGraph
             .First();
     }
 
-    /// <summary>
-    /// A* pathfinding algorithm. 
-    /// </summary>
-    public bool TryFindPath(Node from, Node to, out Node[] path, Segment.Type segmentTypeMask = (Segment.Type)~0)
+    public struct Path
     {
+        public Node[] nodes;
+        public float[] distances;
+
+        public Path(Node[] nodes, float[] distances)
+        {
+            this.nodes = nodes;
+            this.distances = distances;
+        }
+    }
+
+    /// <summary>
+    /// A* pathfinding algorithm (where Z axis is ignored).
+    /// </summary>
+    public bool TryFindPath(Node from, Node to, out Path path, Segment.Type segmentTypeMask = (Segment.Type)~0)
+    {
+        static float DistanceXY(Vector3 a, Vector3 b) =>
+            Vector2.Distance(a, b);
+
         var openSet = new HashSet<int> { from.id };
         var cameFrom = new Dictionary<int, int>();
         var gScore = new Dictionary<int, float> { [from.id] = 0 };
-        var fScore = new Dictionary<int, float> { [from.id] = Vector3.Distance(from.position, to.position) };
+        var fScore = new Dictionary<int, float> { [from.id] = DistanceXY(from.position, to.position) };
 
-        Node[] ReconstructPath(int current)
+        (Node[], float[]) ReconstructPath(int current)
         {
             var path = new List<Node> { nodes[current] };
+            var distances = new List<float>();
             while (cameFrom.TryGetValue(current, out var previous))
             {
+                distances.Add(DistanceXY(nodes[current].position, nodes[previous].position));
                 path.Add(nodes[previous]);
                 current = previous;
             }
             path.Reverse();
-            return path.ToArray();
+            distances.Reverse();
+            return (path.ToArray(), distances.ToArray());
         }
 
         while (openSet.Count > 0)
@@ -240,7 +260,8 @@ public partial class NavGraph
 
             if (current == to.id)
             {
-                path = ReconstructPath(current);
+                var (nodesPath, distancesPath) = ReconstructPath(current);
+                path = new Path(nodesPath, distancesPath);
                 return true;
             }
 
@@ -258,8 +279,7 @@ public partial class NavGraph
                 {
                     cameFrom[neighbor] = current;
                     gScore[neighbor] = tentativeGScore;
-                    // fScore[neighbor] = gScore[neighbor] + Vector3.Distance(nodes[neighbor].position, to.position);
-                    fScore[neighbor] = gScore[neighbor] + segment.length;
+                    fScore[neighbor] = gScore[neighbor] + DistanceXY(nodes[neighbor].position, to.position);
 
                     if (!openSet.Contains(neighbor))
                         openSet.Add(neighbor);
@@ -267,11 +287,11 @@ public partial class NavGraph
             }
         }
 
-        path = null;
+        path = default;
         return false;
     }
 
-    public bool TryFindPath(Vector3 from, Vector3 to, out Node[] path)
+    public bool TryFindPath(Vector3 from, Vector3 to, out Path path)
     {
         var fromNode = FindNearestNode(from);
         var toNode = FindNearestNode(to);

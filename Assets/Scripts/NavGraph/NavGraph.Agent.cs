@@ -133,12 +133,12 @@ public partial class NavGraph
             var found = graph.TryFindPath(
                 startSegment.t < 0.5 ? startSegment.segment.Node0 : startSegment.segment.Node1,
                 endSegment.t < 0.5 ? endSegment.segment.Node0 : endSegment.segment.Node1,
-                out var nodes);
+                out var path);
 
             if (found == false)
                 return;
 
-            var points = nodes
+            var points = path.nodes
                 .Select(node => new PathPoint(node.position, node))
                 .ToList();
 
