@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using NUnit.Framework.Internal.Filters;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
+using static UnityEditor.EditorGUILayout;
 #endif
 
 namespace Avatar
@@ -48,15 +51,85 @@ namespace Avatar
         float distanceToLeader;
         TracePoint? tracePoint;
 
+        Vector3 deltaToAgent;
+        float distanceToAgent;
+
+        Vector3 deltaPathToLeader;
+        float distancePathToLeader;
+
         float navGraphTime = -1;
         readonly NavGraph navGraph = new();
 
         readonly NavGraph.Agent agent = new();
 
+        enum Phases
+        {
+            NONE,
+
+            JUMP_PROGRESS,
+            JUMP_POST_WAITING,
+            JUMP_CANNOT,
+
+            STOP,
+            MOVE,
+            FALL,
+        }
+
+        Phases phases = Phases.NONE;
+
+        class JumpState
+        {
+            public const float POST_JUMP_TIMER_LIMIT = 0.2f;
+            public readonly NavGraph.Agent agent;
+
+            public int segmentIndex = -1;
+            public float segmentProgress = 0;
+            public float postJumpTimer = 0;
+
+            public bool Jumping => segmentIndex != -1;
+            public float PostJumpTimerProgress => postJumpTimer / POST_JUMP_TIMER_LIMIT;
+
+            public NavGraph.Agent.AgentSegment AgentSegment =>
+                segmentIndex != -1 ? agent.segments[segmentIndex] : null;
+
+            public JumpState(NavGraph.Agent agent) { this.agent = agent; }
+
+            public bool PostJumpTimerComplete()
+            {
+                return postJumpTimer > POST_JUMP_TIMER_LIMIT;
+            }
+
+            public bool IncrementPostJumpTimer(float deltaTime)
+            {
+                postJumpTimer += deltaTime;
+                return PostJumpTimerComplete();
+            }
+
+            public void Reset()
+            {
+                segmentIndex = -1;
+                segmentProgress = 0;
+                postJumpTimer = 0;
+            }
+
+            public override string ToString()
+            {
+                return (AgentSegment?.ToString() ?? "None")
+                    + $"\nProgress: {100 * segmentProgress:F1}%"
+                    + $"\nPost Jump Timer: {postJumpTimer:F3} {100 * PostJumpTimerProgress:F1}%";
+            }
+        }
+        readonly JumpState jumpState;
+
         float horizontalInput = 0;
         float verticalInput = 0;
 
-        public string debugInfo;
+        string followDebugInfo;
+
+        FollowerController()
+        {
+            jumpState = new(agent);
+        }
 
         public void TeleportBehindLeader()
         {
@@ -91,43 +164,92 @@ namespace Avatar
             if (agent.HasPath == false)
                 FindPath();
 
-            agent.UpdatePosition(avatar.Ground.FeetPosition);
+            if (jumpState.Jumping)
+            {
+                // While jumping, clamp the progression to the current single "jump" segment.
+                agent.UpdatePosition(avatar.Ground.FeetPosition, jumpState.segmentIndex);
+                jumpState.segmentProgress = agent.segmentProgress;
+            }
+            else
+            {
+                agent.UpdatePosition(avatar.Ground.FeetPosition);
+            }
+
+            deltaToAgent = agent.CurrentPosition - avatar.Ground.FeetPosition;
+            distanceToAgent = deltaToAgent.magnitude;
+
+            deltaPathToLeader = leaderAvatar.Ground.FeetPosition - agent.points.Last().position;
+            distancePathToLeader = deltaPathToLeader.magnitude;
         }
 
-        void UpdateFollow()
+        void UpdateFollow(float deltaTime)
         {
             if (agent.HasPath == false)
                 return;
 
             var segmentIsAir = agent.CurrentSegment.graphSegment?.type.HasFlag(NavGraph.Segment.Type.Air) ?? false;
-            if (agent.CurrentSegment.requiresJump || segmentIsAir)
-                avatar.Move.TryToJump();
+            var segmentIsAirOrRequireJump = agent.CurrentSegment.requiresJump || segmentIsAir;
+            if (segmentIsAirOrRequireJump && agent.segmentProgress < 0.5f)
+            {
+                if (avatar.Move.TryToJump())
+                {
+                    jumpState.segmentIndex = agent.CurrentSegment.index;
+                }
+            }
 
             bool HasToJumpButCant() => agent.CurrentSegment.requiresJump && avatar.Move.IsJumping == false;
 
             var segmentDirection = agent.CurrentSegment.Direction;
-            if (segmentIsAir)
+            if (segmentIsAirOrRequireJump)
             {
-                horizontalInput = segmentDirection.x > 0 ? 1 : -1;
-                debugInfo = $"Jumping, following the segment direction {segmentDirection.x}";
+                if (jumpState.Jumping)
+                {
+                    if (jumpState.segmentProgress < 1)
+                    {
+                        // Progressing along the jump direction.
+                        phases = Phases.JUMP_PROGRESS;
+                        var x = jumpState.AgentSegment.Direction.x;
+                        horizontalInput = x > 0 ? 1 : -1;
+                        followDebugInfo = $"Jumping, following the \"jump\" segment x direction ({x:F1})";
+                    }
+                    else
+                    {
+                        // Jump is done, please recover a little.
+                        phases = Phases.JUMP_POST_WAITING;
+                        horizontalInput = 0;
+                        jumpState.IncrementPostJumpTimer(deltaTime);
+                        followDebugInfo = $"Jumping done, cooldown ({jumpState.PostJumpTimerProgress * 100:F1}%).";
+                        if (jumpState.PostJumpTimerComplete())
+                            jumpState.Reset();
+                    }
+                }
+                else
+                {
+                    phases = Phases.JUMP_CANNOT;
+                    horizontalInput = 0;
+                    followDebugInfo = "Not jumping, stopping";
+                }
             }
             else
             {
                 if (agent.RemainingDistance < 1f || HasToJumpButCant())
                 {
+                    phases = Phases.STOP;
                     horizontalInput = 0;
-                    debugInfo = "Stopping";
+                    followDebugInfo = "Stopping";
                 }
                 else
                 {
                     if (avatar.Ground.IsGrounded)
                     {
+                        phases = Phases.MOVE;
                         horizontalInput = segmentDirection.x > 0 ? 1 : -1;
-                        debugInfo = $"Grounded, following the segment direction {segmentDirection.x}";
+                        followDebugInfo = $"Grounded, following the segment direction {segmentDirection.x}";
                     }
                     else
                     {
-                        debugInfo = "Not grounded, maintaining last input";
+                        phases = Phases.FALL;
+                        followDebugInfo = "Not grounded, maintaining last input";
                     }
                 }
 
@@ -203,6 +325,16 @@ namespace Avatar
                 }
             }
 
+            // If the follower is too far from the path, the path should be recalculated.
+            if (avatar.Ground.IsGrounded)
+            {
+                if (distanceToAgent > 1.5f)
+                    FindPath();
+
+                if (distancePathToLeader > 1.5f)
+                    FindPath();
+            }
+
             if (avatar.Move.mode == MoveMode.Switching)
             {
                 avatar.Move.HorizontalUpdate(0);
@@ -220,7 +352,7 @@ namespace Avatar
                 if (shouldFollow)
                 {
                     UpdateAgent();
-                    UpdateFollow();
+                    UpdateFollow(Time.fixedDeltaTime);
                 }
             }
 
@@ -261,23 +393,28 @@ namespace Avatar
 
             public override void OnInspectorGUI()
             {
+                GUIStyle multilineStyle = new(EditorStyles.label) { wordWrap = true };
                 base.OnInspectorGUI();
 
-                EditorGUILayout.LabelField("Horizontal Input", $"{Target.horizontalInput}");
-                EditorGUILayout.LabelField("Vertical Input", $"{Target.verticalInput}");
+                LabelField("Horizontal Input", $"{Target.horizontalInput}");
+                LabelField("Vertical Input", $"{Target.verticalInput}");
 
-                EditorGUILayout.LabelField("Agent", EditorStyles.boldLabel);
+                LabelField("Follower", EditorStyles.boldLabel);
+                LabelField("Phase", $"{Target.phases}");
+                LabelField("Debug", Target.followDebugInfo);
+                LabelField("Can jump", $"{Target.avatar.Move.CanJump()}");
+                LabelField("Jump State", $"{Target.jumpState}", multilineStyle);
+
+                LabelField("Agent", EditorStyles.boldLabel);
                 var agent = Target.agent;
                 if (agent != null)
                 {
-                    GUIStyle style = new(EditorStyles.label)
-                    {
-                        wordWrap = true
-                    };
-                    EditorGUILayout.LabelField("Segment:",
-                        $"{agent.CurrentSegment}\n{agent.segmentIndex} / {agent.segments.Length} ({agent.segmentProgress * 100:F1})% {agent.CurrentSegment.graphSegment}",
-                        style);
-                    EditorGUILayout.LabelField("Debug", Target.debugInfo);
+                    LabelField("Path:",
+                        $"#{agent.segmentIndex} / {agent.segments.Length} ({agent.segmentProgress * 100:F1})% {agent.CurrentSegment?.graphSegment}"
+                        + $"\nCur Seg. {agent.CurrentSegment}"
+                        + $"\nRemaining Dist. {agent.RemainingDistance:F1}"
+                        + $"\nDist. to agent {Target.distanceToAgent:F1}",
+                        multilineStyle);
                 }
 
                 GUI.enabled = Target.enabled;

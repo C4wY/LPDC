@@ -41,6 +41,14 @@ public static class MathUtils
     /// <summary>
     /// Direction vector DOES NOT have to be normalized!
     /// </summary>
+    public static void NearestPointOnLine(Vector2 origin, Vector2 direction, Vector2 point, out float t)
+    {
+        t = Vector2.Dot(point - origin, direction) / direction.sqrMagnitude;
+    }
+
+    /// <summary>
+    /// Direction vector DOES NOT have to be normalized!
+    /// </summary>
     public static void NearestPointOnLine(Vector3 origin, Vector3 direction, Vector3 point, out float t)
     {
         t = Vector3.Dot(point - origin, direction) / direction.sqrMagnitude;

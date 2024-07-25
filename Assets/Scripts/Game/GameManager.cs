@@ -37,15 +37,21 @@ public class GameManager : MonoBehaviour
         Avatar.Avatar.UpdateAllAvatar();
 
         //update UI
-        var trigger = leader.avatarName == Avatar.Avatar.Name.Sora ? "Sora > Dooms" : "Dooms > Sora";
-        portraitAnimator.SetTrigger(trigger);
+        if (portraitAnimator != null)
+        {
+            var trigger = leader.avatarName == Avatar.Avatar.Name.Sora ? "Sora > Dooms" : "Dooms > Sora";
+            portraitAnimator.SetTrigger(trigger);
+        }
     }
 
-    void Start ()
-    { 
-        var leader = Avatar.Avatar.GetLeader();
-        var soraIsLeader = leader.avatarName == Avatar.Avatar.Name.Sora;
-        portraitAnimator.SetBool("Sora Is Leader On Start", soraIsLeader);
+    void Start()
+    {
+        if (portraitAnimator != null)
+        {
+            var leader = Avatar.Avatar.GetLeader();
+            var soraIsLeader = leader.avatarName == Avatar.Avatar.Name.Sora;
+            portraitAnimator.SetBool("Sora Is Leader On Start", soraIsLeader);
+        }
     }
 
     void Update()
