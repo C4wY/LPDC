@@ -171,10 +171,6 @@ namespace Avatar
             else
             {
                 // Normal mode.
-                // var x = IsDashing
-                //     ? horizontalInput * Parameters.dashVelocity
-                //     : horizontalInput * Parameters.runVelocity;
-
                 var x = IsDashing
                     ? DashDirection * Parameters.dashVelocity
                     : horizontalInput * Parameters.runVelocity;
