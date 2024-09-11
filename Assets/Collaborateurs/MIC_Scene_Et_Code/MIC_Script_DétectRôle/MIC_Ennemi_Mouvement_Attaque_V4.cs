@@ -101,7 +101,7 @@ public class MIC_Ennemi_Mouvement_Attaque_V4 : MonoBehaviour
     private Avatar.Avatar FindLeaderAvatar()
     {
         // Rechercher tous les objets dans la scène ayant le script Avatar et filtrer ceux avec le rôle Leader
-        Avatar.Avatar[] avatars = GameObject.FindObjectsOfType<Avatar.Avatar>();
+        Avatar.Avatar[] avatars = FindObjectsByType<Avatar.Avatar>(FindObjectsSortMode.None);
         foreach (Avatar.Avatar avatar in avatars)
         {
             if (IsLeader(avatar.gameObject))

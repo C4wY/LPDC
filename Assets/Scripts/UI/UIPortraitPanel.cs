@@ -46,8 +46,6 @@ public class UIPortraitPanel : MonoBehaviour
 
     void Update()
     {
-        if (!Application.isPlaying) DisplayFirstPortraitImage();
-
         var (leader, follower) = Avatar.Avatar.GetLeaderFollower();
         UpdateHealth(healthLeader, leader);
         UpdateHealth(healthFollower, follower);
@@ -75,6 +73,12 @@ public class UIPortraitPanel : MonoBehaviour
                 var panel = (UIPortraitPanel)target;
                 var animator = panel.GetComponentInChildren<Animator>();
                 animator.SetTrigger("Dooms > Sora");
+            }
+
+            if (GUILayout.Button("Display First Portrait Image"))
+            {
+                var panel = (UIPortraitPanel)target;
+                panel.DisplayFirstPortraitImage();
             }
         }
 

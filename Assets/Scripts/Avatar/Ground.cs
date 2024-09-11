@@ -93,7 +93,7 @@ namespace Avatar
 
         public float GroundDuration => Time.time - GroundEnterTime;
 
-        public bool IsOnGroundFor(float duration) =>
+        public bool IsGroundedFor(float duration) =>
             IsGrounded && GroundDuration >= duration;
 
         Avatar avatar;

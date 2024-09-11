@@ -11,7 +11,10 @@ public partial class NavGraph
 
         public Vector3 position;
 
-        public Vector2 PositionXY =>
+        public Vector3 Center =>
+            new(position.x - 0.5f, position.y, position.z - 0.5f);
+
+        public Vector2 RoundedPositionXY =>
             new(Mathf.Round(position.x / 0.1f) * 0.1f, Mathf.Round(position.y / 0.1f) * 0.1f);
 
         public List<Segment> segments = new();

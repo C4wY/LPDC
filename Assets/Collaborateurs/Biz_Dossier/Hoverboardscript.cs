@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using UnityEngine;
-
 public class DisablePhysics : MonoBehaviour
 {
     public GameObject player; // Assignez l'objet Player via l'inspecteur

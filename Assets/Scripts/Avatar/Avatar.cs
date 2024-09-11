@@ -205,6 +205,13 @@ namespace Avatar
             SetLeader(GetAllAvatars().FirstOrDefault(a => a.IsFollower));
         }
 
+        public static void SwitchNames()
+        {
+            var (sora, dooms) = GetSoraDooms();
+            (dooms.avatarName, sora.avatarName) = (sora.avatarName, dooms.avatarName);
+            UpdateAllAvatar();
+        }
+
         public static void UpdateAllAvatar()
         {
             foreach (var avatar in GetAllAvatars())
@@ -265,10 +272,16 @@ namespace Avatar
                 base.OnInspectorGUI();
 
                 var otherRole = Target.avatarRole == Role.Leader ? Role.Follower : Role.Leader;
-                if (GUILayout.Button("Switch Roles (Leader/Follower)"))
+                if (GUILayout.Button("Switch Roles (Leader / Follower)"))
                 {
-                    Undo.RecordObjects(GetAllAvatars(), "Switch role");
+                    Undo.RecordObjects(GetAllAvatars(), "Switch Roles");
                     SwitchRoles();
+                }
+
+                if (GUILayout.Button("Switch Names (Sora / Dooms)"))
+                {
+                    Undo.RecordObjects(GetAllAvatars(), "Switch Names");
+                    SwitchNames();
                 }
 
                 if (GUILayout.Button("Regroup all Avatar"))
