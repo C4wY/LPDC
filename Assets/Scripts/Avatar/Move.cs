@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 namespace Avatar
@@ -46,6 +47,7 @@ namespace Avatar
             Time.time < JumpTime + Parameters.jumpCooldown;
 
         public float DashTime { get; private set; } = -1;
+        public float DashDirection { get; private set; } = 1;
         public bool IsDashing =>
             Time.time < DashTime + Parameters.dashDuration;
 
@@ -120,6 +122,9 @@ namespace Avatar
         void Dash()
         {
             DashTime = Time.time;
+            DashDirection = facing == MoveFacing.Left
+                ? -1
+                : 1;
 
             Avatar.Santé.compteurInvincibilité = 0.15f;
         }
@@ -166,8 +171,12 @@ namespace Avatar
             else
             {
                 // Normal mode.
+                // var x = IsDashing
+                //     ? horizontalInput * Parameters.dashVelocity
+                //     : horizontalInput * Parameters.runVelocity;
+
                 var x = IsDashing
-                    ? horizontalInput * Parameters.dashVelocity
+                    ? DashDirection * Parameters.dashVelocity
                     : horizontalInput * Parameters.runVelocity;
 
                 var y = avatar.Rigidbody.velocity.y;
