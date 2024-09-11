@@ -9,14 +9,14 @@ public partial class NavGraph
         /// Path point differs from a graph node in that it can be a point in space
         /// (e.g. start and end points).
         /// </summary>
-        public class PathPoint
+        public class AgentPoint
         {
             public readonly Vector3 position;
             public readonly Node node;
 
             public bool IsNodeGraph => node != null;
 
-            public PathPoint(Vector3 position, Node node)
+            public AgentPoint(Vector3 position, Node node)
             {
                 this.position = position;
                 this.node = node;
@@ -28,9 +28,10 @@ public partial class NavGraph
         /// line between two points that are not necessarily graph nodes (e.g. start 
         /// and end points). 
         /// </summary>
-        public class PathSegment
+        public class AgentSegment
         {
-            public readonly PathPoint a, b;
+            public readonly int index;
+            public readonly AgentPoint a, b;
             public readonly Segment graphSegment;
             public readonly float length;
             public readonly float previouslyAccumulatedLength;
@@ -43,8 +44,9 @@ public partial class NavGraph
 
             public bool IsGraphSegment => graphSegment != null;
 
-            public PathSegment(PathPoint a, PathPoint b, Segment graphSegment, float length, float previouslyAccumulatedLength)
+            public AgentSegment(int index, AgentPoint a, AgentPoint b, Segment graphSegment, float length, float previouslyAccumulatedLength)
             {
+                this.index = index;
                 this.a = a;
                 this.b = b;
                 this.graphSegment = graphSegment;
@@ -77,12 +79,15 @@ public partial class NavGraph
 
             public Vector3 PositionAt(float t) =>
                 a.position + AB * Mathf.Clamp01(t);
+
+            override public string ToString() =>
+                $"(#{index} {length:F1}, {(requiresJump ? "JMP, " : "")}{(IsGraphSegment ? $"navgraph({graphSegment.n0}-{graphSegment.n1})" : "agent-only")})";
         }
 
         public NavGraph graph;
 
-        public PathPoint[] points = { };
-        public PathSegment[] segments = { };
+        public AgentPoint[] points = { };
+        public AgentSegment[] segments = { };
         public float TotalLength { get; private set; }
 
         public (Segment segment, float t) startSegment, endSegment;
@@ -96,11 +101,11 @@ public partial class NavGraph
         public bool HasCurrentSegment =>
             segments.Length > 0 && segmentIndex < segments.Length;
 
-        public PathSegment CurrentSegment =>
-            segments[segmentIndex];
+        public AgentSegment CurrentSegment =>
+           HasCurrentSegment ? segments[segmentIndex] : null;
 
         public float CurrentDistance =>
-            CurrentSegment.DistanceAt(segmentProgress);
+            CurrentSegment?.DistanceAt(segmentProgress) ?? 0;
 
         public float RemainingDistance =>
             TotalLength - CurrentDistance;
@@ -117,8 +122,8 @@ public partial class NavGraph
         public void ClearPath()
         {
             graph = null;
-            points = new PathPoint[] { };
-            segments = new PathSegment[] { };
+            points = new AgentPoint[] { };
+            segments = new AgentSegment[] { };
             segmentIndex = 0;
             TotalLength = 0;
         }
@@ -133,13 +138,13 @@ public partial class NavGraph
             var found = graph.TryFindPath(
                 startSegment.t < 0.5 ? startSegment.segment.Node0 : startSegment.segment.Node1,
                 endSegment.t < 0.5 ? endSegment.segment.Node0 : endSegment.segment.Node1,
-                out var nodes);
+                out var path);
 
             if (found == false)
                 return;
 
-            var points = nodes
-                .Select(node => new PathPoint(node.position, node))
+            var points = path.nodes
+                .Select(node => new AgentPoint(node.position, node))
                 .ToList();
 
             if (points.Count < 2)
@@ -176,8 +181,8 @@ public partial class NavGraph
                     .ToList();
 
             points = points
-                .Prepend(new PathPoint(from, null))
-                .Append(new PathPoint(to, null))
+                .Prepend(new AgentPoint(from, null))
+                .Append(new AgentPoint(to, null))
                 .ToList();
 
             this.points = points.ToArray();
@@ -185,22 +190,31 @@ public partial class NavGraph
             TotalLength = 0f;
             segments = points
                 .Pairwise()
-                .Select(pair =>
+                .Select((pair, index) =>
                 {
                     var (a, b) = pair;
                     var length = Vector3.Distance(a.position, b.position);
                     var graphSegment = a.IsNodeGraph && b.IsNodeGraph ? graph.GetSegment(a.node.id, b.node.id) : null;
-                    var segment = new PathSegment(a, b, graphSegment, length, TotalLength);
+                    var segment = new AgentSegment(index, a, b, graphSegment, length, TotalLength);
                     TotalLength += length;
                     return segment;
                 })
                 .ToArray();
         }
 
-        public void UpdatePosition(Vector3 sourcePosition)
+        public void UpdatePosition(Vector3 sourcePosition, int singleSegmentIndex = -1)
         {
             if (segments.Length == 0)
                 return;
+
+            if (singleSegmentIndex != -1)
+            {
+                var segment = segments[singleSegmentIndex];
+                MathUtils.NearestPointOnLine(segment.a.position, segment.AB, sourcePosition, out var t);
+                segmentIndex = singleSegmentIndex;
+                segmentProgress = Mathf.Clamp01(t);
+                return;
+            }
 
             var smallestSqrDistance = float.MaxValue;
             foreach (var (index, segment) in segments.Entries())

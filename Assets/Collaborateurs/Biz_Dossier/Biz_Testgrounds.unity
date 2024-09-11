@@ -675,7 +675,7 @@ PrefabInstance:
     - target: {fileID: 7802931173180564744, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
       propertyPath: m_Name
-      value: Avatar-Sora (Follower)
+      value: Avatar-Dooms (Follower)
       objectReference: {fileID: 0}
     - target: {fileID: 7802931173180564744, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
