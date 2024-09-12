@@ -113,8 +113,23 @@ public partial class NavGraph
         public float CurrentProgress =>
             CurrentDistance / TotalLength;
 
-        public Vector3 CurrentPosition =>
-            segments[segmentIndex].PositionAt(segmentProgress);
+        public Vector3 CurrentPosition
+        {
+            get
+            {
+                if (segments.Length == 0)
+                {
+                    Debug.LogWarning("No segments in path!");
+                    return Vector3.zero;
+                }
+                if (segmentIndex >= segments.Length || segmentIndex < 0)
+                {
+                    Debug.LogWarning($"Segment index out of bounds ({segmentIndex})!");
+                    return Vector3.zero;
+                }
+                return segments[segmentIndex].PositionAt(segmentProgress);
+            }
+        }
 
         public Vector3 CurrentDirection =>
             segments[segmentIndex].Direction;
