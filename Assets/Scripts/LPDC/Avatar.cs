@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Unity.VisualScripting;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -50,6 +52,13 @@ namespace LPDC
         {
             LeaderController.enabled = avatarRole == Role.Leader;
             FollowerController.enabled = avatarRole == Role.Follower;
+
+            var layerName = avatarRole == Role.Leader ? "Leader" : "Follower";
+            var layer = LayerMask.NameToLayer(layerName);
+            gameObject.layer = layer;
+            var descendants = GetComponentsInChildren<Transform>();
+            foreach (var descendant in descendants)
+                descendant.gameObject.layer = layer;
 
 #if UNITY_EDITOR
             // Do not change the name of the object in prefab mode.
