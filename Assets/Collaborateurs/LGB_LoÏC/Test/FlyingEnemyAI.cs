@@ -103,7 +103,10 @@ public class FlyingEnemyAI : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        var avatar = other.GetComponent<LPDC.Avatar>();
-        TrySelfDestroy(avatar);
+        if (other.isTrigger == false)
+        {
+            var avatar = other.GetComponent<LPDC.Avatar>();
+            TrySelfDestroy(avatar);
+        }
     }
 }

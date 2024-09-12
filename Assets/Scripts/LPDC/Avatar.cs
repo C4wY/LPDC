@@ -47,6 +47,7 @@ namespace LPDC
         public Rigidbody Rigidbody { get; private set; }
         public OneSidedPlatformAgent OneSidedPlatformAgent { get; private set; }
         public Santé Santé { get; private set; }
+        public Attack Attack { get; private set; }
 
         void RoleUpdate()
         {
@@ -76,6 +77,7 @@ namespace LPDC
             Rigidbody = GetComponent<Rigidbody>();
             OneSidedPlatformAgent = GetComponentInChildren<OneSidedPlatformAgent>();
             Santé = GetComponent<Santé>();
+            Attack = GetComponent<Attack>();
 
             RoleUpdate();
         }

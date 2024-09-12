@@ -7,7 +7,7 @@ TagManager:
   - Follower
   - GPE
   - Ground
-  - Ennemy
+  - Enemy
   layers:
   - Default
   - TransparentFX
