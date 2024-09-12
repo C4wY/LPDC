@@ -287,8 +287,11 @@ public partial class NavGraph
                 }
             }
 
-            Gizmos.color = Colors.Hex("6FF");
-            Gizmos.DrawSphere(segments[segmentIndex].PositionAt(segmentProgress), 0.1f);
+            if (segmentIndex >= 0 && segmentIndex < segments.Length)
+            {
+                Gizmos.color = Colors.Hex("6FF");
+                Gizmos.DrawSphere(segments[segmentIndex].PositionAt(segmentProgress), 0.1f);
+            }
         }
     }
 }
