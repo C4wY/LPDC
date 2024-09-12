@@ -66,7 +66,8 @@ public class FlyingEnemyAI : MonoBehaviour
 
         state = State.Destroyed;
         rigidbody.useGravity = true;
-
+        transform.rotation = Random.rotation;
+        rigidbody.angularVelocity = Random.onUnitSphere * 100;
         if (avatar != null)
         {
             avatar.Santé.FaireDégâts(damage);
