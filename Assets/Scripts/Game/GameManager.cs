@@ -1,4 +1,4 @@
-using Avatar;
+using LPDC;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -13,11 +13,11 @@ public class GameManager : MonoBehaviour
         if (Time.time - lastSwitchTime < SWITCH_COOLDOWN)
             return;
 
-        var (leader, follower) = Avatar.Avatar.GetLeaderFollower();
+        var (leader, follower) = LPDC.Avatar.GetLeaderFollower();
 
         // Role switching
-        leader.avatarRole = Avatar.Avatar.Role.Follower;
-        follower.avatarRole = Avatar.Avatar.Role.Leader;
+        leader.avatarRole = LPDC.Avatar.Role.Follower;
+        follower.avatarRole = LPDC.Avatar.Role.Leader;
 
         var delta = leader.transform.position - follower.transform.position;
         const float SWITCH_DISTANCE = 5;
@@ -34,12 +34,12 @@ public class GameManager : MonoBehaviour
         }
 
         lastSwitchTime = Time.time;
-        Avatar.Avatar.UpdateAllAvatar();
+        LPDC.Avatar.UpdateAllAvatar();
 
         //update UI
         if (portraitAnimator != null)
         {
-            var trigger = leader.avatarName == Avatar.Avatar.Name.Sora ? "Sora > Dooms" : "Dooms > Sora";
+            var trigger = leader.avatarName == LPDC.Avatar.Name.Sora ? "Sora > Dooms" : "Dooms > Sora";
             portraitAnimator.SetTrigger(trigger);
         }
     }
@@ -48,8 +48,8 @@ public class GameManager : MonoBehaviour
     {
         if (portraitAnimator != null)
         {
-            var leader = Avatar.Avatar.GetLeader();
-            var soraIsLeader = leader.avatarName == Avatar.Avatar.Name.Sora;
+            var leader = LPDC.Avatar.GetLeader();
+            var soraIsLeader = leader.avatarName == LPDC.Avatar.Name.Sora;
             portraitAnimator.SetBool("Sora Is Leader On Start", soraIsLeader);
         }
     }
@@ -58,14 +58,14 @@ public class GameManager : MonoBehaviour
     {
 #if UNITY_EDITOR
         // In the editor for safety reasons, we make sure that the roles and names are correct.
-        var avatars = Avatar.Avatar.GetAllAvatars();
+        var avatars = LPDC.Avatar.GetAllAvatars();
         if (avatars.Length == 2)
         {
-            Avatar.Avatar.TryFixAvatarRolesAndNames();
+            LPDC.Avatar.TryFixAvatarRolesAndNames();
         }
         else if (avatars.Length == 1)
         {
-            avatars[0].avatarRole = Avatar.Avatar.Role.Leader;
+            avatars[0].avatarRole = LPDC.Avatar.Role.Leader;
         }
 #endif
 

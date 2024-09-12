@@ -1,22 +1,29 @@
+using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class FlyingEnemyAI : MonoBehaviour
 {
-    public Transform target = null;
+    public enum State
+    {
+        InitialIdle,
+        Chase,
+        Destroyed,
+    }
+
+
     public float chaseSpeed = 2;
     public float idleAmplitude = 0.25f;
     public float idleFrequence = 0.5f;
     public float chaseRange = 4f;
+    public int damage = 1;
+    public float destroyTimer = 3f;
 
+    State state = State.InitialIdle;
+    Transform target = null;
     Vector3 initialPosition;
     float idleTime = 0;
     new Rigidbody rigidbody;
-
-    void Start()
-    {
-        rigidbody = GetComponent<Rigidbody>();
-        initialPosition = rigidbody.position;
-    }
 
     void Idle()
     {
@@ -33,13 +40,12 @@ public class FlyingEnemyAI : MonoBehaviour
     {
         var p = target.position;
         p.z = transform.position.z;
-        rigidbody.velocity = Vector3.zero;
-        rigidbody.position = Vector3.MoveTowards(rigidbody.position, target.position, chaseSpeed * Time.fixedDeltaTime);
+        rigidbody.velocity = (p - rigidbody.position).normalized * chaseSpeed;
     }
 
     void CheckForTarget()
     {
-        var leader = Avatar.Avatar.GetLeader();
+        var leader = LPDC.Avatar.GetLeader();
 
         if (leader != null)
         {
@@ -48,25 +54,55 @@ public class FlyingEnemyAI : MonoBehaviour
             if (distanceToLeader < chaseRange)
             {
                 target = leader.transform;
-            }
-            else
-            {
-                target = null;
+                state = State.Chase;
             }
         }
     }
 
+    void TrySelfDestroy(LPDC.Avatar avatar)
+    {
+        if (state == State.Destroyed)
+            return;
+
+        state = State.Destroyed;
+        rigidbody.useGravity = true;
+
+        if (avatar != null)
+        {
+            avatar.Santé.FaireDégâts(damage);
+        }
+
+        Destroy(gameObject, destroyTimer);
+    }
+
+
+    // Unity Message:
+
+    void Start()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+        initialPosition = rigidbody.position;
+    }
+
     void FixedUpdate()
     {
-        CheckForTarget();
 
-        if (target == null)
+        switch (state)
         {
-            Idle();
+            case State.InitialIdle:
+                Idle();
+                CheckForTarget();
+                break;
+
+            case State.Chase:
+                Chase();
+                break;
         }
-        else
-        {
-            Chase();
-        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        var avatar = other.GetComponent<LPDC.Avatar>();
+        TrySelfDestroy(avatar);
     }
 }

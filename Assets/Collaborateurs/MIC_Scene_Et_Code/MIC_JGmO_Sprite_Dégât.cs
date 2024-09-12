@@ -12,7 +12,7 @@ public class MIC_JGmO_Sprite_Dégât : MonoBehaviour
     private SpriteRenderer DégâtsSpriteJoueur; // Référence au SpriteRenderer du sprite d'attaque
 
     // Référence au script de santé du joueur
-    private Avatar.Santé santéDuJoueur;
+    private LPDC.Santé santéDuJoueur;
 
     void Start()
     {
@@ -26,7 +26,7 @@ public class MIC_JGmO_Sprite_Dégât : MonoBehaviour
         DégâtsSpriteJoueur.enabled = false;
 
         // Récupérer le script de santé du joueur
-        santéDuJoueur = transform.parent.GetComponent<Avatar.Santé>();
+        santéDuJoueur = transform.parent.GetComponent<LPDC.Santé>();
     }
 
     // Méthode appelée lorsqu'un joueur prend des dégâts

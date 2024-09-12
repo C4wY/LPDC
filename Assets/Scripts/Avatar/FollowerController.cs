@@ -9,7 +9,7 @@ using UnityEditor;
 using static UnityEditor.EditorGUILayout;
 #endif
 
-namespace Avatar
+namespace LPDC
 {
     [System.Serializable]
     public class FollowerControllerParameters
@@ -396,16 +396,24 @@ namespace Avatar
                 GUIStyle multilineStyle = new(EditorStyles.label) { wordWrap = true };
                 base.OnInspectorGUI();
 
-                LabelField("Horizontal Input", $"{Target.horizontalInput}");
-                LabelField("Vertical Input", $"{Target.verticalInput}");
+                try
+                {
+                    LabelField("Horizontal Input", $"{Target.horizontalInput}");
+                    LabelField("Vertical Input", $"{Target.verticalInput}");
 
-                LabelField("Follower", EditorStyles.boldLabel);
-                LabelField("Phase", $"{Target.phases}");
-                LabelField("Debug", Target.followDebugInfo);
-                LabelField("Can jump", $"{Target.avatar.Move.CanJump()}");
-                LabelField("Jump State", $"{Target.jumpState}", multilineStyle);
+                    LabelField("Follower", EditorStyles.boldLabel);
+                    LabelField("Phase", $"{Target.phases}");
+                    LabelField("Debug", Target.followDebugInfo);
+                    LabelField("Can jump", $"{Target.avatar.Move.CanJump()}");
+                    LabelField("Jump State", $"{Target.jumpState}", multilineStyle);
 
-                LabelField("Agent", EditorStyles.boldLabel);
+                    LabelField("Agent", EditorStyles.boldLabel);
+                }
+                catch (System.Exception exception)
+                {
+
+                }
+
                 var agent = Target.agent;
                 if (agent != null)
                 {

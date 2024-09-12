@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Windows;
 
-namespace Avatar
+namespace LPDC
 {
     [System.Serializable]
     public class SpriteHandlerParameters
@@ -62,7 +62,7 @@ namespace Avatar
 
                 spriteRenderer.flipX = !avatar.Move.IsFacingRight;
             }
-            
+
         }
 
         // J'ajoute une fonction qui se d�clenche quand un dialogue se d�clenche, et une autre quand le dialogue se termine. (Dim)

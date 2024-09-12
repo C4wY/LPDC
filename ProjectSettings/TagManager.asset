@@ -7,6 +7,7 @@ TagManager:
   - Follower
   - GPE
   - Ground
+  - Ennemy
   layers:
   - Default
   - TransparentFX
@@ -14,14 +15,14 @@ TagManager:
   - Ground
   - Water
   - UI
-  - Joueur
-  - BG
+  - Leader
+  - Follower
   - LevelBlock
   - OneSidedPlatform
   - "D\xE9bris"
   - "Fant\xF4me"
   - Outline Objet
-  - 
+  - Enemy
   - Danger
   - 
   - 

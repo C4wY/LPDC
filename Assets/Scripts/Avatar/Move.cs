@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-namespace Avatar
+namespace LPDC
 {
     [System.Serializable]
     public class MoveParameters

@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace Avatar
+namespace LPDC
 {
     [ExecuteAlways]
     public class Avatar : MonoBehaviour

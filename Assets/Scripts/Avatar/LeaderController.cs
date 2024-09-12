@@ -1,7 +1,7 @@
 using Unity.Cinemachine;
 using UnityEngine;
 
-namespace Avatar
+namespace LPDC
 {
     public struct InputEntry
     {
@@ -29,8 +29,8 @@ namespace Avatar
     [ExecuteAlways]
     public class LeaderController : MonoBehaviour
     {
-        public bool dialoguePause = false; // Pour la fonction de pause, ajouté par Dim
-        
+        public bool dialoguePause = false; // Pour la fonction de pause, ajoutï¿½ par Dim
+
         public readonly Trace trace = new();
 
         public InputEntry input;
@@ -108,13 +108,13 @@ namespace Avatar
 
             wannaJump |= Input.GetButtonDown("Jump");
 
-            if (!dialoguePause) // J'empêche le personnage de se déplacer pendant les dialogues (Dim)
+            if (!dialoguePause) // J'empï¿½che le personnage de se dï¿½placer pendant les dialogues (Dim)
             {
                 JumpUpdate();
                 DashUpdate();
                 CameraFollowUpdate();
             }
-            
+
         }
 
         void FixedUpdate()
@@ -132,14 +132,14 @@ namespace Avatar
 
             wannaJump = false;
 
-            if (!dialoguePause) // J'empêche le personnage de se déplacer pendant les dialogues (Dim)
+            if (!dialoguePause) // J'empï¿½che le personnage de se dï¿½placer pendant les dialogues (Dim)
             {
                 avatar.Move.HorizontalUpdate(input.horizontal);
                 avatar.Move.VerticalUpdate(input.vertical);
                 avatar.Move.UpdateZ();
                 TraceUpdate();
             }
-            
+
         }
 
         void OnDrawGizmos()
@@ -148,8 +148,8 @@ namespace Avatar
                 trace.DrawGizmos();
         }
 
-        // J'ajoute une fonction qui se déclenche quand un dialogue se déclenche, et une autre quand le dialogue se termine. (Dim)
-        
+        // J'ajoute une fonction qui se dï¿½clenche quand un dialogue se dï¿½clenche, et une autre quand le dialogue se termine. (Dim)
+
         void OnPauseForDialogue()
         {
             dialoguePause = true;
