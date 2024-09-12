@@ -122,6 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 228f43c4f82864c0cb3806c20ede92ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialoguePause: 0
 --- !u!1 &302890210898737814
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,6 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bea51a205808d43fd8b05775580e20fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  navGraphColor: {r: 0, g: 0.5, b: 1, a: 1}
 --- !u!114 &5521968873106261111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,6 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea5ee7589ac3024699507768cde6617, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialoguePause: 0
 --- !u!114 &6426018546672864112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,4 +424,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameters: {fileID: 0}
-  role: 0
+  avatarRole: 0
+  avatarName: 0
