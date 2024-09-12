@@ -13,7 +13,7 @@ public class dim_Teleporteur : MonoBehaviour
         if (collider.gameObject.tag == "Player")
         {
             // Test : le collider est bien le leader
-            var isLeader = Avatar.Avatar.GetLeader() == collider.GetComponentInParent<Avatar.Avatar>();
+            var isLeader = LPDC.Avatar.GetLeader() == collider.GetComponentInParent<LPDC.Avatar>();
             if (isLeader)
             {
                 player = collider.gameObject;
@@ -28,13 +28,13 @@ public class dim_Teleporteur : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
 }

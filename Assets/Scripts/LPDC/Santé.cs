@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI; // Ajoutez cette directive pour utiliser la classe Text
 
-namespace Avatar
+namespace LPDC
 {
     public class Santé : MonoBehaviour
     {

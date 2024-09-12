@@ -1,7 +1,8 @@
 using System;
+using TMPro;
 using UnityEngine;
 
-namespace Avatar
+namespace LPDC
 {
     [System.Serializable]
     public class MoveParameters
@@ -46,11 +47,13 @@ namespace Avatar
             Time.time < JumpTime + Parameters.jumpCooldown;
 
         public float DashTime { get; private set; } = -1;
+        public float DashDirection { get; private set; } = 1;
         public bool IsDashing =>
             Time.time < DashTime + Parameters.dashDuration;
 
         public MoveFacing facing = MoveFacing.Right;
         public bool IsFacingRight => facing == MoveFacing.Right;
+        public float FacingDirection => facing == MoveFacing.Right ? 1 : -1;
 
         public MoveMode mode = MoveMode.Normal;
 
@@ -120,6 +123,9 @@ namespace Avatar
         void Dash()
         {
             DashTime = Time.time;
+            DashDirection = facing == MoveFacing.Left
+                ? -1
+                : 1;
 
             Avatar.Santé.compteurInvincibilité = 0.15f;
         }
@@ -167,7 +173,7 @@ namespace Avatar
             {
                 // Normal mode.
                 var x = IsDashing
-                    ? horizontalInput * Parameters.dashVelocity
+                    ? DashDirection * Parameters.dashVelocity
                     : horizontalInput * Parameters.runVelocity;
 
                 var y = avatar.Rigidbody.velocity.y;

@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // Importer l'espace de noms Avatar
-using Avatar;
+using LPDC;
 
 public class MIC_Ennemi_Mouvement_Attaque_V3 : MonoBehaviour
 {
     // Référence à l'Avatar qui perd de la vie
-    public Avatar.Avatar target;
+    public LPDC.Avatar target;
     public Transform pointA;
     public Transform pointB;
     public float speed = 2.0f;
@@ -143,7 +143,7 @@ public class MIC_Ennemi_Mouvement_Attaque_V3 : MonoBehaviour
         if (!isAttacking)
         {
             // Vérifier si l'Avatar a un composant de santé
-            Avatar.Santé targetHealth = target.GetComponent<Avatar.Santé>();
+            LPDC.Santé targetHealth = target.GetComponent<LPDC.Santé>();
             if (targetHealth != null)
             {
                 // Vérifier si l'Avatar a suffisamment de points de vie pour subir des dégâts

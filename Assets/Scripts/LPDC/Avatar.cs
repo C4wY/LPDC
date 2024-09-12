@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Unity.VisualScripting;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace Avatar
+namespace LPDC
 {
     [ExecuteAlways]
     public class Avatar : MonoBehaviour
@@ -45,11 +47,19 @@ namespace Avatar
         public Rigidbody Rigidbody { get; private set; }
         public OneSidedPlatformAgent OneSidedPlatformAgent { get; private set; }
         public Santé Santé { get; private set; }
+        public Attack Attack { get; private set; }
 
         void RoleUpdate()
         {
             LeaderController.enabled = avatarRole == Role.Leader;
             FollowerController.enabled = avatarRole == Role.Follower;
+
+            var layerName = avatarRole == Role.Leader ? "Leader" : "Follower";
+            var layer = LayerMask.NameToLayer(layerName);
+            gameObject.layer = layer;
+            var descendants = GetComponentsInChildren<Transform>();
+            foreach (var descendant in descendants)
+                descendant.gameObject.layer = layer;
 
 #if UNITY_EDITOR
             // Do not change the name of the object in prefab mode.
@@ -67,6 +77,7 @@ namespace Avatar
             Rigidbody = GetComponent<Rigidbody>();
             OneSidedPlatformAgent = GetComponentInChildren<OneSidedPlatformAgent>();
             Santé = GetComponent<Santé>();
+            Attack = GetComponent<Attack>();
 
             RoleUpdate();
         }

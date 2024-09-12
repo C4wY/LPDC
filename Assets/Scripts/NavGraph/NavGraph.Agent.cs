@@ -113,8 +113,23 @@ public partial class NavGraph
         public float CurrentProgress =>
             CurrentDistance / TotalLength;
 
-        public Vector3 CurrentPosition =>
-            segments[segmentIndex].PositionAt(segmentProgress);
+        public Vector3 CurrentPosition
+        {
+            get
+            {
+                if (segments.Length == 0)
+                {
+                    Debug.LogWarning("No segments in path!");
+                    return Vector3.zero;
+                }
+                if (segmentIndex >= segments.Length || segmentIndex < 0)
+                {
+                    Debug.LogWarning($"Segment index out of bounds ({segmentIndex})!");
+                    return Vector3.zero;
+                }
+                return segments[segmentIndex].PositionAt(segmentProgress);
+            }
+        }
 
         public Vector3 CurrentDirection =>
             segments[segmentIndex].Direction;
@@ -272,8 +287,11 @@ public partial class NavGraph
                 }
             }
 
-            Gizmos.color = Colors.Hex("6FF");
-            Gizmos.DrawSphere(segments[segmentIndex].PositionAt(segmentProgress), 0.1f);
+            if (segmentIndex >= 0 && segmentIndex < segments.Length)
+            {
+                Gizmos.color = Colors.Hex("6FF");
+                Gizmos.DrawSphere(segments[segmentIndex].PositionAt(segmentProgress), 0.1f);
+            }
         }
     }
 }
