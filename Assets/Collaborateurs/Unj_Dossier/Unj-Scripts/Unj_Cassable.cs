@@ -13,7 +13,7 @@ public class Unj_Cassable : MonoBehaviour
     {
         if (other.rigidbody.gameObject.CompareTag("Player"))
         {
-            Avatar.Move ausecours = other.rigidbody.GetComponent<Avatar.Move>();
+            LPDC.Move ausecours = other.rigidbody.GetComponent<LPDC.Move>();
 
             if (ausecours.IsDashing)
             {

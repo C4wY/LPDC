@@ -33,7 +33,7 @@ public class NPCDialogueTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        var isLeader = Avatar.Avatar.GetLeader() == other.GetComponentInParent<Avatar.Avatar>();
+        var isLeader = LPDC.Avatar.GetLeader() == other.GetComponentInParent<LPDC.Avatar>();
         if (isLeader)
         {
             hintText.enabled = true;
@@ -43,7 +43,7 @@ public class NPCDialogueTrigger : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        var isLeader = Avatar.Avatar.GetLeader() == other.GetComponentInParent<Avatar.Avatar>();
+        var isLeader = LPDC.Avatar.GetLeader() == other.GetComponentInParent<LPDC.Avatar>();
         if (isLeader)
         {
             hintText.enabled = false;

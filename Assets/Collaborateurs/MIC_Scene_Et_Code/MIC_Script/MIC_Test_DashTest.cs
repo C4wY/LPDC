@@ -5,7 +5,7 @@ using UnityEngine;
 public class MIC_Unj_DashTest : MonoBehaviour
 {
     public float moveSpeed;
-    Avatar.Avatar avatar;
+    LPDC.Avatar avatar;
     public Vector2 moveInput;
 
     public float activemoveSpeed;
@@ -18,7 +18,7 @@ public class MIC_Unj_DashTest : MonoBehaviour
 
     void OnEnable()
     {
-        avatar = GetComponent<Avatar.Avatar>();
+        avatar = GetComponent<LPDC.Avatar>();
     }
     // Start is called before the first frame update
     void Start()

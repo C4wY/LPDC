@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Avatar
+namespace LPDC
 {
     [CreateAssetMenu(fileName = "AvatarParameters", menuName = "LPDC/AvatarParameters", order = 1)]
     public class AvatarParameters : ScriptableObject

@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-namespace Avatar
+namespace LPDC
 {
     [System.Serializable]
     public class MoveParameters
@@ -53,6 +53,7 @@ namespace Avatar
 
         public MoveFacing facing = MoveFacing.Right;
         public bool IsFacingRight => facing == MoveFacing.Right;
+        public float FacingDirection => facing == MoveFacing.Right ? 1 : -1;
 
         public MoveMode mode = MoveMode.Normal;
 

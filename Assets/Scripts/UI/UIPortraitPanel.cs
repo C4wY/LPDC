@@ -13,7 +13,7 @@ public class UIPortraitPanel : MonoBehaviour
     public Transform healthLeader, healthFollower;
     public Sprite fullHeart, emptyHeart;
 
-    void UpdateHealth(Transform healthTransform, Avatar.Avatar avatar)
+    void UpdateHealth(Transform healthTransform, LPDC.Avatar avatar)
     {
         if (avatar == null)
         {
@@ -46,7 +46,7 @@ public class UIPortraitPanel : MonoBehaviour
 
     void Update()
     {
-        var (leader, follower) = Avatar.Avatar.GetLeaderFollower();
+        var (leader, follower) = LPDC.Avatar.GetLeaderFollower();
         UpdateHealth(healthLeader, leader);
         UpdateHealth(healthFollower, follower);
     }

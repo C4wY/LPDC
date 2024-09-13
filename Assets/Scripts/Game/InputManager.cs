@@ -32,4 +32,9 @@ public class InputManager : MonoBehaviour
     {
         return DebugFollowerRespawn() || Input.GetKey(KeyCode.I);
     }
+
+    public bool LeaderAttack()
+    {
+        return Input.GetKey(KeyCode.R);
+    }
 }

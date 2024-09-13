@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // Importer l'espace de noms Avatar
-using Avatar;
+using LPDC;
 
 public class MIC_Prox_Apparition_PlatformesV2 : MonoBehaviour
 {
@@ -70,12 +70,12 @@ public class MIC_Prox_Apparition_PlatformesV2 : MonoBehaviour
             }
             leverActivated = true;
             Debug.Log("Le levier a été activé !");
-            
+
             // Jouer le son du levier
             if (audioSource && leverSound)
             {
                 audioSource.PlayOneShot(leverSound);
-            }   
+            }
         }
     }
 }

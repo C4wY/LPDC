@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Avatar
+namespace LPDC
 {
     public class MIC_Santé : MonoBehaviour
     {

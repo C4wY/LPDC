@@ -7,7 +7,7 @@ using Ink.Runtime;
 using UnityEditor;
 #endif
 
-namespace Avatar
+namespace LPDC
 {
     [System.Serializable]
     public class GroundParameters

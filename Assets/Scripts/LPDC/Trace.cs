@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Avatar
+namespace LPDC
 {
     public struct TracePoint
     {
