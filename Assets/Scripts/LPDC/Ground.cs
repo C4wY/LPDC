@@ -107,7 +107,7 @@ namespace LPDC
             var y = transform.position.y;
             var z = transform.position.z;
 
-            var layerMask = ~LayerMask.GetMask("Joueur");
+            var layerMask = ~LayerMask.GetMask("Leader", "Follower");
 
             raycastInfos = layerZPositions
                 .Select(layerZPosition =>
