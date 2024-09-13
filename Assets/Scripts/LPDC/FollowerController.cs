@@ -23,8 +23,11 @@ namespace LPDC
         [Tooltip("The width in world units of the nav graph samples (samples are centered on the x position of the avatar).")]
         public int navGraphSampleWidth = 100;
 
-        [Tooltip("The time in seconds to wait before refreshing the navigation graph (and the path).")]
-        public float navGraphObsolenceTime = 1.0f;
+        [Tooltip("The time in seconds to wait before any being able to refresh the navigation graph (and the path).")]
+        public float navGraphValidTime = 0.2f;
+
+        [Tooltip("The time in seconds to wait before \"auto-refresh\" of the navigation graph (and the path).")]
+        public float navGraphObsolenceTime = 2.0f;
 
         [System.Flags]
         public enum GizmosMode
@@ -75,6 +78,9 @@ namespace LPDC
 
         Phases phases = Phases.NONE;
 
+        /// <summary>
+        /// Jump state of the follower.
+        /// </summary>
         class JumpState
         {
             public const float POST_JUMP_TIMER_LIMIT = 0.2f;
@@ -90,7 +96,10 @@ namespace LPDC
             public NavGraph.Agent.AgentSegment AgentSegment =>
                 segmentIndex != -1 ? agent.segments[segmentIndex] : null;
 
-            public JumpState(NavGraph.Agent agent) { this.agent = agent; }
+            public JumpState(NavGraph.Agent agent)
+            {
+                this.agent = agent;
+            }
 
             public bool PostJumpTimerComplete()
             {
@@ -117,6 +126,7 @@ namespace LPDC
                     + $"\nPost Jump Timer: {postJumpTimer:F3} {100 * PostJumpTimerProgress:F1}%";
             }
         }
+
         readonly JumpState jumpState;
 
         float horizontalInput = 0;
@@ -134,11 +144,14 @@ namespace LPDC
             var dx = (leaderAvatar.Move.IsFacingRight ? -1 : 1) * 0.25f;
             var dy = 0.5f;
             var position = leaderAvatar.Ground.LastGroundPosition + new Vector3(dx, dy, 0);
+            avatar.Rigidbody.velocity = Vector3.zero;
             avatar.Move.TeleportTo(position);
         }
 
-        void RefreshNavGraph()
+        long RefreshNavGraph()
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+
             var x = Mathf.FloorToInt(avatar.Ground.FeetPosition.x);
             var width = Parameters.navGraphSampleWidth;
 
@@ -148,12 +161,26 @@ namespace LPDC
             navGraph.CreateGroundSegments();
             navGraph.CreateAirSegments();
 
+            sw.Stop();
+            return sw.ElapsedMilliseconds;
+        }
+
+        void TryRefreshNavGraph()
+        {
+            // Simple heuristic to avoid refreshing the nav graph too often.
+            if (Time.time < navGraphTime + Parameters.navGraphValidTime)
+                return;
+
+            var ms = RefreshNavGraph();
+
             navGraphTime = Time.time;
+
+            // Debug.Log($"Refreshing nav graph {ms}ms");
         }
 
         void FindPath()
         {
-            RefreshNavGraph();
+            TryRefreshNavGraph();
             agent.FindPath(navGraph, avatar.Ground.FeetPosition, leaderAvatar.Ground.FeetPosition);
         }
 
@@ -318,7 +345,7 @@ namespace LPDC
                 // Only if the avatar is grounded, refresh the nav graph.
                 if (avatar.Ground.IsGroundedFor(3))
                 {
-                    RefreshNavGraph();
+                    TryRefreshNavGraph();
                     agent.ClearPath();
                 }
             }
