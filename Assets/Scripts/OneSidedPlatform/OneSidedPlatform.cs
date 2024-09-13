@@ -6,7 +6,7 @@ public class OneSidedPlatform : MonoBehaviour
 {
     public static readonly HashSet<OneSidedPlatform> instances = new();
 
-    public bool snap = true;
+    public bool snap = false;
 
     public BoxCollider boxCollider;
 
