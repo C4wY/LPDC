@@ -132,7 +132,7 @@ namespace Avatar
         public bool TryToDash()
         {
             var cooldownOk = Time.time > DashTime + Parameters.dashCooldown;
-            if (cooldownOk)
+            if (cooldownOk && avatar.IsSora)
             {
                 Dash();
                 return true;
