@@ -28,6 +28,7 @@ namespace LPDC
     {
         Normal,
         Switching,
+        Hoverboard,
     }
 
     public enum MoveFacing
