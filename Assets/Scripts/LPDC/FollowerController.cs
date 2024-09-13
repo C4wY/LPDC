@@ -356,7 +356,7 @@ namespace LPDC
                 }
             }
 
-            avatar.Move.UpdateZ();
+            avatar.Move.DepthUpdate();
         }
 
         void OnDrawGizmos()

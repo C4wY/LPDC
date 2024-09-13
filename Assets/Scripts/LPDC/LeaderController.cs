@@ -136,7 +136,7 @@ namespace LPDC
             {
                 avatar.Move.HorizontalUpdate(input.horizontal);
                 avatar.Move.VerticalUpdate(input.vertical);
-                avatar.Move.UpdateZ();
+                avatar.Move.DepthUpdate();
                 TraceUpdate();
             }
 

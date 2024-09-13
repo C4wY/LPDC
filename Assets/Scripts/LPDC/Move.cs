@@ -61,8 +61,7 @@ namespace LPDC
         public Vector3 switchTargetPosition;
 
         Avatar avatar;
-        Avatar Avatar =>
-            avatar != null ? avatar : avatar = GetComponent<Avatar>();
+        Avatar Avatar => avatar != null ? avatar : avatar = GetComponent<Avatar>();
 
         MoveParameters Parameters =>
             Avatar.SafeParameters.move;
@@ -186,7 +185,7 @@ namespace LPDC
             }
         }
 
-        public void UpdateZ()
+        public void DepthUpdate()
         {
             if (avatar.Ground.HasGroundPoint)
             {
