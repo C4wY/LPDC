@@ -9,7 +9,7 @@ namespace LPDC
         public int damageAmount = 1;
         public float cooldown = 1.5f;
         public float hitDuration = 0.2f;
-
+        public bool debug = false;
 
         Collider hitbox;
         float timeAttack = -1;
@@ -54,7 +54,7 @@ namespace LPDC
 
             // Debug visualization helper:
             foreach (var meshRenderer in GetComponents<MeshRenderer>())
-                meshRenderer.enabled = IsAttacking();
+                meshRenderer.enabled = debug && IsAttacking();
         }
 
         void OnTriggerEnter(Collider other)
@@ -62,13 +62,12 @@ namespace LPDC
             if (other.gameObject.CompareTag("Enemy"))
             {
                 var enemyHealth = other.GetComponent<EnemyHealth>();
+
                 if (enemyHealth == null)
                     enemyHealth = other.GetComponentInParent<EnemyHealth>();
 
                 if (enemyHealth != null)
-                {
                     enemyHealth.ApplyDamage(damageAmount);
-                }
             }
         }
     }
