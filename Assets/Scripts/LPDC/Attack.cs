@@ -13,9 +13,9 @@ namespace LPDC
 
         Collider hitbox;
         float timeAttack = -1;
+
         Avatar avatar;
-        Avatar Avatar =>
-            avatar != null ? avatar : avatar = GetComponentInParent<Avatar>();
+        Avatar Avatar => avatar == null ? avatar = GetComponentInParent<Avatar>() : avatar;
 
         void Start()
         {
