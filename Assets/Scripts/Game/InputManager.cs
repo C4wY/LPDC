@@ -1,7 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [ExecuteAlways]
 public class InputManager : MonoBehaviour
@@ -35,6 +34,6 @@ public class InputManager : MonoBehaviour
 
     public bool LeaderAttack()
     {
-        return Input.GetKey(KeyCode.R);
+        return Input.GetMouseButton((int)MouseButton.LeftMouse);
     }
 }

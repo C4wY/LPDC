@@ -7,7 +7,7 @@ namespace LPDC
     public class Attack : MonoBehaviour
     {
         public int damageAmount = 1;
-        public float cooldown = 1.5f;
+        public float cooldown = 0.2f;
         public float hitDuration = 0.2f;
 
 
