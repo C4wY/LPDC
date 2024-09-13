@@ -545,6 +545,11 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 181208504973187476, guid: 852b0e47ebbdec3498856ec259cc68da,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.88
+      objectReference: {fileID: 0}
     - target: {fileID: 351878429402260546, guid: 852b0e47ebbdec3498856ec259cc68da,
         type: 3}
       propertyPath: offsetY
@@ -1839,7 +1844,7 @@ SpriteRenderer:
   m_Size: {x: 89.53005, y: 80}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &599181606
@@ -2290,7 +2295,7 @@ SpriteRenderer:
   m_Size: {x: 77.94355, y: 59.979996}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &775187466
@@ -3313,7 +3318,7 @@ Transform:
   m_GameObject: {fileID: 1013888499}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18, y: 13.5, z: 3}
+  m_LocalPosition: {x: 18, y: 11.5, z: 3}
   m_LocalScale: {x: 2, y: 1, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3436,7 +3441,7 @@ PrefabInstance:
     - target: {fileID: 2589524148557594862, guid: 2315a403b99781842847d09849a60562,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.65
+      value: 14.48
       objectReference: {fileID: 0}
     - target: {fileID: 2589524148557594862, guid: 2315a403b99781842847d09849a60562,
         type: 3}
@@ -3487,6 +3492,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2928473160445729364, guid: 2315a403b99781842847d09849a60562,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2928473160445729364, guid: 2315a403b99781842847d09849a60562,
         type: 3}
@@ -4705,12 +4715,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activationKey: 102
   interactionDistance: 4
-  leverText: {fileID: 0}
+  leverText: {fileID: 761810268}
   platformsToActivate:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1688591348}
+  - {fileID: 1215771256}
   leverSound: {fileID: 0}
   audioSource: {fileID: 0}
 --- !u!65 &1501947806
@@ -4795,7 +4803,7 @@ Transform:
   m_GameObject: {fileID: 1501947804}
   serializedVersion: 2
   m_LocalRotation: {x: -0.68044287, y: 0.1923466, z: 0.19234663, w: 0.6804433}
-  m_LocalPosition: {x: -0.05443742, y: 1.4017206, z: -0.004087277}
+  m_LocalPosition: {x: -0.054, y: 0.31, z: -0.0041}
   m_LocalScale: {x: 0.09474087, y: -0.12930727, z: 3.4436505}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5633,6 +5641,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4182794664660031847, guid: b11fa3e38f9b5a942b31f7d1d27abc19,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

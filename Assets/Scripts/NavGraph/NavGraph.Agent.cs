@@ -217,6 +217,11 @@ public partial class NavGraph
                 .ToArray();
         }
 
+        /// <summary>
+        /// If the singleSegmentIndex is provided, the agent position is updated
+        /// only for that segment. Otherwise, the agent position can change to the
+        /// nearest point on any segment.
+        /// </summary>
         public void UpdatePosition(Vector3 sourcePosition, int singleSegmentIndex = -1)
         {
             if (segments.Length == 0)
