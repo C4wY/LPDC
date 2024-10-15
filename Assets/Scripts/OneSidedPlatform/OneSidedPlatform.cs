@@ -10,8 +10,10 @@ public class OneSidedPlatform : MonoBehaviour
 
     public new Collider collider;
 
-    public Vector3 Top =>
-        new(collider.bounds.center.x, collider.bounds.max.y, collider.bounds.center.z);
+    public Vector3 anchorOffset = Vector3.zero;
+
+    public Vector3 Anchor =>
+        transform.position + anchorOffset;
 
     void Snap()
     {
@@ -58,7 +60,24 @@ public class OneSidedPlatform : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(Top, 0.05f);
+        Gizmos.color = Color.yellow;
+        DrawOneSidedPlatformGizmos();
+    }
+
+    public void DrawOneSidedPlatformGizmos()
+    {
+        Gizmos.DrawSphere(Anchor, 0.05f);
+
+        var meshCollider = collider as MeshCollider;
+        if (meshCollider != null)
+        {
+            Gizmos.matrix = meshCollider.transform.localToWorldMatrix;
+            Gizmos.DrawWireMesh(meshCollider.sharedMesh);
+        }
+        else
+        {
+            Gizmos.matrix = Matrix4x4.identity;
+            Gizmos.DrawWireCube(collider.bounds.center, collider.bounds.size);
+        }
     }
 }

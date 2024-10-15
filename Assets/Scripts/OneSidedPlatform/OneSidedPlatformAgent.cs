@@ -27,7 +27,7 @@ public class OneSidedPlatformAgent : MonoBehaviour
         if (collidersToIgnore.Contains(platform.collider))
             return true;
 
-        return transform.position.y < platform.Top.y;
+        return transform.position.y < platform.Anchor.y;
     }
 
     void OnEnable()
@@ -50,18 +50,7 @@ public class OneSidedPlatformAgent : MonoBehaviour
         foreach (var platform in OneSidedPlatform.instances)
         {
             Gizmos.color = ShouldIgnore(platform) ? Color.red : Color.green;
-
-            var meshCollider = platform.collider as MeshCollider;
-            if (meshCollider != null)
-            {
-                Gizmos.matrix = meshCollider.transform.localToWorldMatrix;
-                Gizmos.DrawWireMesh(meshCollider.sharedMesh);
-            }
-            else
-            {
-                Gizmos.DrawWireCube(platform.collider.bounds.center, platform.collider.bounds.size);
-            }
-
+            platform.DrawOneSidedPlatformGizmos();
         }
     }
 }
