@@ -19,12 +19,12 @@ public class OneSidedPlatformAgent : MonoBehaviour
         return rigidbody;
     }
 
-    bool Ignore(OneSidedPlatform platform)
+    bool ShouldIgnore(OneSidedPlatform platform)
     {
         if (ignoreAll)
             return true;
 
-        if (collidersToIgnore.Contains(platform.boxCollider))
+        if (collidersToIgnore.Contains(platform.collider))
             return true;
 
         return transform.position.y < platform.Top.y;
@@ -39,9 +39,9 @@ public class OneSidedPlatformAgent : MonoBehaviour
     {
         foreach (var platform in OneSidedPlatform.instances)
         {
-            var ignore = Ignore(platform);
+            var ignore = ShouldIgnore(platform);
             foreach (var collider in selfColliders)
-                Physics.IgnoreCollision(collider, platform.boxCollider, ignore);
+                Physics.IgnoreCollision(collider, platform.collider, ignore);
         }
     }
 
@@ -49,8 +49,19 @@ public class OneSidedPlatformAgent : MonoBehaviour
     {
         foreach (var platform in OneSidedPlatform.instances)
         {
-            Gizmos.color = Ignore(platform) ? Color.red : Color.green;
-            Gizmos.DrawWireCube(platform.boxCollider.bounds.center, platform.boxCollider.bounds.size);
+            Gizmos.color = ShouldIgnore(platform) ? Color.red : Color.green;
+
+            var meshCollider = platform.collider as MeshCollider;
+            if (meshCollider != null)
+            {
+                Gizmos.matrix = meshCollider.transform.localToWorldMatrix;
+                Gizmos.DrawWireMesh(meshCollider.sharedMesh);
+            }
+            else
+            {
+                Gizmos.DrawWireCube(platform.collider.bounds.center, platform.collider.bounds.size);
+            }
+
         }
     }
 }

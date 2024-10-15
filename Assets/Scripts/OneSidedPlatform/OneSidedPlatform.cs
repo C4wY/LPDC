@@ -8,10 +8,10 @@ public class OneSidedPlatform : MonoBehaviour
 
     public bool snap = false;
 
-    public BoxCollider boxCollider;
+    public new Collider collider;
 
     public Vector3 Top =>
-        new(boxCollider.bounds.center.x, boxCollider.bounds.max.y, boxCollider.bounds.center.z);
+        new(collider.bounds.center.x, collider.bounds.max.y, collider.bounds.center.z);
 
     void Snap()
     {
@@ -38,7 +38,7 @@ public class OneSidedPlatform : MonoBehaviour
     void OnEnable()
     {
         instances.Add(this);
-        boxCollider = GetComponent<BoxCollider>();
+        collider = GetComponent<Collider>();
         gameObject.layer = LayerMask.NameToLayer("OneSidedPlatform");
     }
 
