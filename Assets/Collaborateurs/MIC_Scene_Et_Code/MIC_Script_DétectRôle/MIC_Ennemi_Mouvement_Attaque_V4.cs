@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // Importer l'espace de noms Avatar
-using Avatar;
+using LPDC;
 
 public class MIC_Ennemi_Mouvement_Attaque_V4 : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class MIC_Ennemi_Mouvement_Attaque_V4 : MonoBehaviour
     public float attackRange = 1.5f;
     public int damage = 1;
 
-    private Avatar.Avatar leaderAvatar;
+    private LPDC.Avatar leaderAvatar;
     private Transform targetPoint;
     private bool isAttacking = false;
 
@@ -80,7 +80,7 @@ public class MIC_Ennemi_Mouvement_Attaque_V4 : MonoBehaviour
         if (!isAttacking)
         {
             // Infliger des dégâts à l'Avatar Leader
-            Avatar.Santé leaderHealth = leaderAvatar.GetComponent<Avatar.Santé>();
+            LPDC.Santé leaderHealth = leaderAvatar.GetComponent<LPDC.Santé>();
             if (leaderHealth != null)
             {
                 leaderHealth.FaireDégâts(damage);
@@ -98,11 +98,11 @@ public class MIC_Ennemi_Mouvement_Attaque_V4 : MonoBehaviour
         isAttacking = false;
     }
 
-    private Avatar.Avatar FindLeaderAvatar()
+    private LPDC.Avatar FindLeaderAvatar()
     {
         // Rechercher tous les objets dans la scène ayant le script Avatar et filtrer ceux avec le rôle Leader
-        Avatar.Avatar[] avatars = FindObjectsByType<Avatar.Avatar>(FindObjectsSortMode.None);
-        foreach (Avatar.Avatar avatar in avatars)
+        LPDC.Avatar[] avatars = FindObjectsByType<LPDC.Avatar>(FindObjectsSortMode.None);
+        foreach (LPDC.Avatar avatar in avatars)
         {
             if (IsLeader(avatar.gameObject))
             {

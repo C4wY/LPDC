@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Avatar;
+using LPDC;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +21,7 @@ public class MIC_Ennemi_Mouvement_Attaque : MonoBehaviour
     private float timeSinceLastSeenPlayer = 0.0f;
     public Text attackText; // Référence au texte d'attaque
     public GameObject attackTextObject; // Référence au GameObject contenant le texte d'attaque
-    HashSet<Avatar.Avatar> avatarsEnContact = new();
+    HashSet<LPDC.Avatar> avatarsEnContact = new();
 
     void Start()
     {
@@ -141,7 +141,7 @@ public class MIC_Ennemi_Mouvement_Attaque : MonoBehaviour
     {
         if (other.attachedRigidbody.gameObject.CompareTag("Player"))
         {
-            var avatar = other.attachedRigidbody.GetComponent<Avatar.Avatar>();
+            var avatar = other.attachedRigidbody.GetComponent<LPDC.Avatar>();
             if (avatarsEnContact.Contains(avatar) == false)
             {
                 avatar.Santé.FaireDégâts(dégâts);
@@ -154,7 +154,7 @@ public class MIC_Ennemi_Mouvement_Attaque : MonoBehaviour
     {
         if (other.attachedRigidbody.gameObject.CompareTag("Player"))
         {
-            var avatar = other.attachedRigidbody.GetComponent<Avatar.Avatar>();
+            var avatar = other.attachedRigidbody.GetComponent<LPDC.Avatar>();
             if (avatarsEnContact.Contains(avatar) == true)
             {
                 avatarsEnContact.Remove(avatar);

@@ -113,8 +113,23 @@ public partial class NavGraph
         public float CurrentProgress =>
             CurrentDistance / TotalLength;
 
-        public Vector3 CurrentPosition =>
-            segments[segmentIndex].PositionAt(segmentProgress);
+        public Vector3 CurrentPosition
+        {
+            get
+            {
+                if (segments.Length == 0)
+                {
+                    Debug.LogWarning("No segments in path!");
+                    return Vector3.zero;
+                }
+                if (segmentIndex >= segments.Length || segmentIndex < 0)
+                {
+                    Debug.LogWarning($"Segment index out of bounds ({segmentIndex})!");
+                    return Vector3.zero;
+                }
+                return segments[segmentIndex].PositionAt(segmentProgress);
+            }
+        }
 
         public Vector3 CurrentDirection =>
             segments[segmentIndex].Direction;
@@ -202,6 +217,11 @@ public partial class NavGraph
                 .ToArray();
         }
 
+        /// <summary>
+        /// If the singleSegmentIndex is provided, the agent position is updated
+        /// only for that segment. Otherwise, the agent position can change to the
+        /// nearest point on any segment.
+        /// </summary>
         public void UpdatePosition(Vector3 sourcePosition, int singleSegmentIndex = -1)
         {
             if (segments.Length == 0)
@@ -272,8 +292,11 @@ public partial class NavGraph
                 }
             }
 
-            Gizmos.color = Colors.Hex("6FF");
-            Gizmos.DrawSphere(segments[segmentIndex].PositionAt(segmentProgress), 0.1f);
+            if (segmentIndex >= 0 && segmentIndex < segments.Length)
+            {
+                Gizmos.color = Colors.Hex("6FF");
+                Gizmos.DrawSphere(segments[segmentIndex].PositionAt(segmentProgress), 0.1f);
+            }
         }
     }
 }

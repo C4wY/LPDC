@@ -45,7 +45,7 @@ public class MIC_Ennemi_Mouvement_Attaque_V2 : MonoBehaviour
         // Vérifier si le joueur est à portée de détection
         if (Vector3.Distance(transform.position, target.transform.position) <= detectionRange)
         {
-            
+
             // Le joueur est détecté, réinitialiser le compteur de temps
             timeSinceLastSeenPlayer = 0.0f;
             // Joueur détecté, jouer la musique
@@ -60,7 +60,7 @@ public class MIC_Ennemi_Mouvement_Attaque_V2 : MonoBehaviour
             {
                 audioSource.Play();
             }
-            
+
 
             // Vérifier si le joueur est à portée d'attaque
             if (Vector3.Distance(transform.position, target.transform.position) <= attackRange)
@@ -108,7 +108,7 @@ public class MIC_Ennemi_Mouvement_Attaque_V2 : MonoBehaviour
         transform.Translate(direction * speed * Time.deltaTime);
         PlayMusic();
         // Activer l'objet contenant le texte d'attaque
-                attackTextObject.SetActive(true);
+        attackTextObject.SetActive(true);
     }
 
     void MoveBetweenPoints()
@@ -126,7 +126,7 @@ public class MIC_Ennemi_Mouvement_Attaque_V2 : MonoBehaviour
                 targetPoint = pointB;
             else
                 targetPoint = pointA;
-                attackTextObject.SetActive(false);
+            attackTextObject.SetActive(false);
         }
     }
 
@@ -136,66 +136,66 @@ public class MIC_Ennemi_Mouvement_Attaque_V2 : MonoBehaviour
     }
 
     void Attack()
-{
-    // Vérifier si l'ennemi n'est pas déjà en train d'attaquer
-    if (!isAttacking)
     {
-        // Vérifier si le joueur a un composant de santé
-        Avatar.Santé targetHealth = target.GetComponent<Avatar.Santé>();
-        if (targetHealth != null)
+        // Vérifier si l'ennemi n'est pas déjà en train d'attaquer
+        if (!isAttacking)
         {
-            // Vérifier si le joueur a suffisamment de points de vie pour subir des dégâts
-            if (targetHealth.PV > 0)
+            // Vérifier si le joueur a un composant de santé
+            LPDC.Santé targetHealth = target.GetComponent<LPDC.Santé>();
+            if (targetHealth != null)
             {
-                // L'ennemi est en train d'attaquer
-                isAttacking = true;
-
-                ENMSprite.enabled = false;
-
-                //Active l'anim d'attaque
-                attackENM.SetActive(true);
-
-                //Jouer le son de l'attaque
-                if (ENMAttack != null && AudioAtk != null)
+                // Vérifier si le joueur a suffisamment de points de vie pour subir des dégâts
+                if (targetHealth.PV > 0)
                 {
-                    AudioAtk.PlayOneShot(ENMAttack);
+                    // L'ennemi est en train d'attaquer
+                    isAttacking = true;
+
+                    ENMSprite.enabled = false;
+
+                    //Active l'anim d'attaque
+                    attackENM.SetActive(true);
+
+                    //Jouer le son de l'attaque
+                    if (ENMAttack != null && AudioAtk != null)
+                    {
+                        AudioAtk.PlayOneShot(ENMAttack);
+                    }
+
+                    // Activer l'objet contenant le texte d'attaque
+                    attackTextObject.SetActive(true);
+
+                    // Infliger des dégâts au joueur
+                    targetHealth.FaireDégâts(dégâts);
+
+                    // Réinitialiser l'attaque de l'ennemi après un certain délai
+                    StartCoroutine(ResetAttack());
                 }
-
-                // Activer l'objet contenant le texte d'attaque
-                attackTextObject.SetActive(true);
-
-                // Infliger des dégâts au joueur
-                targetHealth.FaireDégâts(dégâts);
-
-                // Réinitialiser l'attaque de l'ennemi après un certain délai
-                StartCoroutine(ResetAttack());
             }
         }
     }
-}
-IEnumerator ResetAttack()
-{
-    // Attendre un certain délai avant de réinitialiser l'attaque de l'ennemi
-    yield return new WaitForSeconds(attackInterval);
-    attackTextObject.SetActive(false);
-    attackENM.SetActive(false);
-    // Réactiver le SpriteRenderer de l'ennemi
-    ENMSprite.enabled = true;
-    // Mettre à jour le dernier temps d'attaque
-    lastAttackTime = Time.time;
+    IEnumerator ResetAttack()
+    {
+        // Attendre un certain délai avant de réinitialiser l'attaque de l'ennemi
+        yield return new WaitForSeconds(attackInterval);
+        attackTextObject.SetActive(false);
+        attackENM.SetActive(false);
+        // Réactiver le SpriteRenderer de l'ennemi
+        ENMSprite.enabled = true;
+        // Mettre à jour le dernier temps d'attaque
+        lastAttackTime = Time.time;
 
-    // Réinitialiser l'attaque de l'ennemi
-    isAttacking = false;
-}
-
+        // Réinitialiser l'attaque de l'ennemi
+        isAttacking = false;
+    }
 
 
-void DisableAttackText()
-{
-    // Désactiver l'objet contenant le texte d'attaque
-    attackTextObject.SetActive(false);
-}
-void PlayMusic()
+
+    void DisableAttackText()
+    {
+        // Désactiver l'objet contenant le texte d'attaque
+        attackTextObject.SetActive(false);
+    }
+    void PlayMusic()
     {
         if (!audioSource.isPlaying)
         {

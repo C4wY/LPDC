@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Avatar
+namespace LPDC
 {
     public class MIC_Santé_Joueur : MonoBehaviour
     {

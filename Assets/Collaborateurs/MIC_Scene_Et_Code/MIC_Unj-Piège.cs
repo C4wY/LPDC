@@ -6,13 +6,13 @@ public class MIC_UnjPiège : MonoBehaviour
 {
     public int dégâts = 1;
 
-    HashSet<Avatar.Avatar> avatarsEnContact = new();
+    HashSet<LPDC.Avatar> avatarsEnContact = new();
 
     void OnTriggerEnter(Collider other)
     {
         if (other.attachedRigidbody.gameObject.CompareTag("Player"))
         {
-            var avatar = other.attachedRigidbody.GetComponent<Avatar.Avatar>();
+            var avatar = other.attachedRigidbody.GetComponent<LPDC.Avatar>();
             if (avatarsEnContact.Contains(avatar) == false)
             {
                 avatar.Santé.FaireDégâts(dégâts);
@@ -25,7 +25,7 @@ public class MIC_UnjPiège : MonoBehaviour
     {
         if (other.attachedRigidbody.gameObject.CompareTag("Player"))
         {
-            var avatar = other.attachedRigidbody.GetComponent<Avatar.Avatar>();
+            var avatar = other.attachedRigidbody.GetComponent<LPDC.Avatar>();
             if (avatarsEnContact.Contains(avatar) == true)
             {
                 avatarsEnContact.Remove(avatar);

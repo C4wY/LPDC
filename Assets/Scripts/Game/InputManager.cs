@@ -1,7 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [ExecuteAlways]
 public class InputManager : MonoBehaviour
@@ -31,5 +30,10 @@ public class InputManager : MonoBehaviour
     public bool DebugBothRespawn()
     {
         return DebugFollowerRespawn() || Input.GetKey(KeyCode.I);
+    }
+
+    public bool LeaderAttack()
+    {
+        return Input.GetMouseButton((int)MouseButton.LeftMouse);
     }
 }
