@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MIC_Prox_Apparition_Platformes : MonoBehaviour
-
-
 {
     public KeyCode activationKey = KeyCode.F;
     public float interactionDistance = 3f;
@@ -12,7 +10,6 @@ public class MIC_Prox_Apparition_Platformes : MonoBehaviour
     public GameObject[] platformsToActivate;
     public AudioClip leverSound;
     public AudioSource audioSource;
-    
 
     private bool isPlayerInRange = false;
     private bool leverActivated = false;
@@ -25,41 +22,44 @@ public class MIC_Prox_Apparition_Platformes : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    HashSet<Collider> colliders = new HashSet<Collider>();
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            isPlayerInRange = true;
-            leverText.SetActive(true);
+            colliders.Add(other);
+            if (colliders.Count == 1)
+            {
+                isPlayerInRange = true;
+                leverText.SetActive(true);
+            }
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            isPlayerInRange = false;
-            leverText.SetActive(false);
+            colliders.Remove(other);
+            if (colliders.Count == 0)
+            {
+                isPlayerInRange = false;
+                leverText.SetActive(false);
+            }
         }
     }
 
-    private void ActivateLever()
+    void ActivateLever()
     {
         if (!leverActivated)
         {
-            foreach (GameObject platform in platformsToActivate)
-            {
-                platform.SetActive(true);
-            }
             leverActivated = true;
-            Debug.Log("Le levier a été activé !");
-            
-                        if (audioSource && leverSound)
-            {
-                audioSource.PlayOneShot(leverSound);
-            }
 
-            
+            foreach (GameObject platform in platformsToActivate)
+                platform.SetActive(true);
+
+            if (audioSource && leverSound)
+                audioSource.PlayOneShot(leverSound);
         }
     }
 }
