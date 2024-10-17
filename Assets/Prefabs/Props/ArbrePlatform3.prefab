@@ -122,7 +122,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snap: 0
-  boxCollider: {fileID: 0}
+  collider: {fileID: 5076032817177571015}
+  anchorOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &1772425011171148678
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +151,7 @@ Transform:
   m_GameObject: {fileID: 1772425011171148678}
   serializedVersion: 2
   m_LocalRotation: {x: -0.70441604, y: -0.06162845, z: 0.061628442, w: 0.70441604}
-  m_LocalPosition: {x: 0.36105815, y: 0.47696993, z: 0}
+  m_LocalPosition: {x: 0.39, y: 0.82, z: 0}
   m_LocalScale: {x: 327.25363, y: 327.25366, z: 327.25363}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -235,7 +236,7 @@ Transform:
   m_GameObject: {fileID: 2075948688748509860}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071069, y: 0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -0, y: -0.65756595, z: 0}
+  m_LocalPosition: {x: 0, y: -0.36, z: 0}
   m_LocalScale: {x: 327.25366, y: 327.25366, z: 327.25366}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -407,7 +408,7 @@ Transform:
   m_GameObject: {fileID: 4090407465694270605}
   serializedVersion: 2
   m_LocalRotation: {x: -0.10751174, y: 0.6988764, z: 0.6988856, w: -0.107572794}
-  m_LocalPosition: {x: 2.863274, y: 7.7303553, z: -0.8239133}
+  m_LocalPosition: {x: 2.73, y: 8.14, z: 0.26}
   m_LocalScale: {x: 100.002, y: 178.59079, z: 22.384756}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -500,7 +501,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snap: 0
-  boxCollider: {fileID: 0}
+  collider: {fileID: 8465825619768760715}
+  anchorOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &4872903873957635420
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,7 +750,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snap: 0
-  boxCollider: {fileID: 0}
+  collider: {fileID: 9214210698109785800}
+  anchorOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &6727547067224953725
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,7 +781,7 @@ Transform:
   m_GameObject: {fileID: 6727547067224953725}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7065796, y: 0.027299855, z: -0.027299859, w: 0.70657957}
-  m_LocalPosition: {x: -1.8171967, y: 5.482233, z: 0.00000003185241}
+  m_LocalPosition: {x: -1.79, y: 5.72, z: 0.74}
   m_LocalScale: {x: 100, y: 100, z: 22.380018}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -871,7 +874,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snap: 0
-  boxCollider: {fileID: 0}
+  collider: {fileID: 5361901251716854912}
+  anchorOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &8523478509715090051
 GameObject:
   m_ObjectHideFlags: 0
