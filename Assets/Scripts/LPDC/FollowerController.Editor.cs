@@ -51,6 +51,9 @@ namespace LPDC
                 GUIStyle multilineStyle = new(EditorStyles.label) { wordWrap = true };
                 base.OnInspectorGUI();
 
+                if (Target.enabled == false)
+                    return;
+
                 try
                 {
                     LabelField("Horizontal Input", $"{Target.horizontalInput}");

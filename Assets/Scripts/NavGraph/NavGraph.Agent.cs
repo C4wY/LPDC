@@ -227,6 +227,9 @@ public partial class NavGraph
             if (segments.Length == 0)
                 return;
 
+            if (segmentIndex >= segments.Length)
+                segmentIndex = -1;
+
             if (singleSegmentIndex != -1)
             {
                 var segment = segments[singleSegmentIndex];
