@@ -68,9 +68,13 @@ public partial class NavGraph
                 for (var i = 0; i < raycastHitCount; i++)
                 {
                     var hit = raycastHits[i];
+                    // "overlapCount" is used to ignore nodes that are actually colliding with the level blocks.
+                    var capsuleBottom = hit.point + Vector3.up * 0.75f;
+                    var capsuleTop = hit.point + Vector3.up * 1.5f;
+                    var capsuleRadius = 0.45f;
                     var overlapCount = hit.collider.gameObject.layer == oneSidedLayer
                         ? 0 // Ignoring one-sided platforms overlaps.
-                        : Physics.OverlapCapsuleNonAlloc(hit.point + Vector3.up * 0.5f, hit.point + Vector3.up * 1.5f, 0.45f, overlaps, mask);
+                        : Physics.OverlapCapsuleNonAlloc(capsuleBottom, capsuleTop, capsuleRadius, overlaps, mask);
                     if (overlapCount == 0)
                     {
                         var node = new Node { position = new(x, hit.point.y, z) };
