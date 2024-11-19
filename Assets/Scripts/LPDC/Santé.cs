@@ -15,19 +15,9 @@ namespace LPDC
 
         // Référence au script de l'animation de dégâts
         public MIC_JGmO_Sprite_Dégât animationDégâts;
-
-        public GameObject gameOverScreen; // Référence au GameObject de l'écran de fin de jeu
         public Text deathText; // Référence au Text affichant "Vous êtes mort"
         public Image background; // Référence à l'image de fond
-        public GameObject BarredeVie; // Référence au GameObject de la barre de vie
-
-        void Start()
-        {
-            // Désactivez l'écran de fin de jeu au démarrage
-            if (gameOverScreen != null)
-                gameOverScreen.SetActive(false);
-        }
-
+        public GameObject gameOverScreen;
         void Update()
         {
             if (compteurInvincibilité > 0)
@@ -52,13 +42,10 @@ namespace LPDC
                 if (PV <= 0)
                 {
                     // Afficher l'écran de fin de jeu avec le texte "Vous êtes mort"
-                    gameOverScreen.SetActive(true);
-                    // Désactiver la barre de vie
-                    BarredeVie.SetActive(false);
+                    Instantiate(gameOverScreen);
                     Time.timeScale = 0f;
-                    deathText.text = "Vous êtes mort";
-                    background.enabled = true; // Activer l'image de fond
-                                               // Mettre en pause le jeu ou effectuer d'autres actions nécessaires lorsque le joueur est mort
+
+
                 }
             }
         }

@@ -11,7 +11,8 @@ public class KillZone : MonoBehaviour
             var avatar = other.attachedRigidbody.GetComponent<LPDC.Avatar>();
             if (avatar != null)
             {
-                avatar.Santé.FaireDégâts(1);
+                if (avatar.IsLeader)
+                    avatar.Santé.FaireDégâts(1);
                 avatar.Move.TeleportTo(avatar.Ground.LastGroundPosition);
             }
         }
