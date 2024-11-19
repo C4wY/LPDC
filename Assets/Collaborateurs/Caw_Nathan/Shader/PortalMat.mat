@@ -43,11 +43,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _MaskScale: 1.01
+    - _MaskScale: 1
     - _Power: 2.02
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Scale: 3.02
+    - _Scale: 3.2
     - _Speed: 0.22
     - _TwirlStrenght: 14.5
     m_Colors:

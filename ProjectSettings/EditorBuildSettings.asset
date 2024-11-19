@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_Tuto Final.unity
     guid: a064d842f074aa64bb282f2adb6d9bfe
   - enabled: 1
+    path: Assets/Collaborateurs/Biz_Dossier/Biz_Lobby.unity
+    guid: b7655ded204c47940b7bef23e2b38157
+  - enabled: 1
     path: Assets/Collaborateurs/moo_Marie/Main Menu/Scenes/Jouer.unity
     guid: 8f40f17fdd24fd544a732fe6dc0b7398
   - enabled: 0
