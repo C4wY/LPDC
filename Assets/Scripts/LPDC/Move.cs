@@ -188,7 +188,11 @@ namespace LPDC
                     : horizontalInput * Parameters.runVelocity;
 
                 var y = avatar.Rigidbody.velocity.y;
-                y = Mathf.Clamp(y, float.NegativeInfinity, Parameters.maxAscendingVelocity);
+
+                // Clamp y velocity when NOT jumping (avoid dash exploit).
+                if (!IsJumping)
+                    y = Mathf.Clamp(y, float.NegativeInfinity, Parameters.maxAscendingVelocity);
+
                 avatar.Rigidbody.velocity = new(x, y, 0);
 
                 if (horizontalInput > 0.1f)
