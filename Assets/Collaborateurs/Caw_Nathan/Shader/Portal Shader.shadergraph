@@ -271,20 +271,6 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
-                    "m_Id": "74733de7864c45c1a2d1de985155962c"
-                },
-                "m_SlotId": 2
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "e0d2c5b5d2ff41aa98fe39e60b6b62f9"
-                },
-                "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
                     "m_Id": "80efe60da4044a6f909eabdc1a9c8cb7"
                 },
                 "m_SlotId": 0
@@ -348,6 +334,20 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "d2f5ca58bee34584bcd458c5d3485901"
+                },
+                "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "ab9aefbd43d0476d9c534adeaf0a8026"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "e0d2c5b5d2ff41aa98fe39e60b6b62f9"
                 },
                 "m_SlotId": 0
             }
@@ -4037,7 +4037,7 @@
     "m_WorkflowMode": 1,
     "m_NormalDropOffSpace": 0,
     "m_ClearCoat": false,
-    "m_BlendModePreserveSpecular": true
+    "m_BlendModePreserveSpecular": false
 }
 
 {
