@@ -10,8 +10,11 @@ using UnityEditor;
 [ExecuteAlways]
 public class UIPortraitPanel : MonoBehaviour
 {
-    public Transform healthLeader, healthFollower;
+    public Transform healthSora, healthDooms;
     public Sprite fullHeart, emptyHeart;
+    public Animator portraitAnimator;
+
+    bool leaderIsSora = true;
 
     void UpdateHealth(Transform healthTransform, LPDC.Avatar avatar)
     {
@@ -44,11 +47,26 @@ public class UIPortraitPanel : MonoBehaviour
         animator.Update(0);
     }
 
+    void Start()
+    {
+        var (sora, _) = LPDC.Avatar.GetSoraDooms();
+        portraitAnimator.SetBool("Sora Is Leader On Start", sora.IsLeader);
+    }
+
     void Update()
     {
-        var (leader, follower) = LPDC.Avatar.GetLeaderFollower();
-        UpdateHealth(healthLeader, leader);
-        UpdateHealth(healthFollower, follower);
+        var (sora, dooms) = LPDC.Avatar.GetSoraDooms();
+        if (leaderIsSora != sora.IsLeader)
+        {
+            leaderIsSora = sora.IsLeader;
+            TransformUtils.SwapRectTransform(healthSora, healthDooms);
+
+            var trigger = sora.IsLeader ? "Dooms > Sora" : "Sora > Dooms";
+            portraitAnimator.SetTrigger(trigger);
+
+        }
+        UpdateHealth(healthSora, sora);
+        UpdateHealth(healthDooms, dooms);
     }
 
 #if UNITY_EDITOR
@@ -57,27 +75,26 @@ public class UIPortraitPanel : MonoBehaviour
     {
         void DebugAndTest()
         {
+            var panel = (UIPortraitPanel)target;
+
             GUILayout.Space(10);
             GUILayout.Label("Debug / Test", EditorStyles.boldLabel);
 
             GUI.enabled = Application.isPlaying;
             if (GUILayout.Button("Play transition Sora > Dooms"))
             {
-                var panel = (UIPortraitPanel)target;
                 var animator = panel.GetComponentInChildren<Animator>();
                 animator.SetTrigger("Sora > Dooms");
             }
 
             if (GUILayout.Button("Play transition Dooms > Sora"))
             {
-                var panel = (UIPortraitPanel)target;
                 var animator = panel.GetComponentInChildren<Animator>();
                 animator.SetTrigger("Dooms > Sora");
             }
 
             if (GUILayout.Button("Display First Portrait Image"))
             {
-                var panel = (UIPortraitPanel)target;
                 panel.DisplayFirstPortraitImage();
             }
         }

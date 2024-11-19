@@ -26,6 +26,7 @@ namespace LPDC
         {
             Raycasts = 1 << 0,
             GroundPoint = 1 << 1,
+            GroundPath = 1 << 2,
         }
         public GizmosMode gizmos = (GizmosMode)~0;
     }
@@ -85,6 +86,7 @@ namespace LPDC
         public bool IsGrounded { get; private set; }
         public float GroundEnterTime { get; private set; }
         public float GroundLeaveTime { get; private set; }
+        public SimplePath GroundPath { get; private set; } = new();
 
         /// <summary>
         /// Last ground position when the avatar was on the ground. 
@@ -213,13 +215,21 @@ namespace LPDC
                     IsGrounded = value;
 
                     if (value)
+                    {
                         GroundEnterTime = Time.time;
+                        GroundPath.Clear();
+                    }
                     else
+                    {
                         GroundLeaveTime = Time.time;
+                    }
                 }
 
                 if (IsGrounded)
+                {
                     LastGroundPosition = transform.position;
+                    GroundPath.TryAdd(transform.position);
+                }
             }
 
             if (HasGroundPoint)
@@ -278,12 +288,19 @@ namespace LPDC
                     GizmosUtils.DrawCircle(GroundPoint, Vector3.up, 0.3f);
                 }
             }
+
+            if (Parameters.gizmos.HasFlag(GroundParameters.GizmosMode.GroundPath))
+            {
+                Gizmos.color = Color.yellow;
+                GroundPath.DrawGizmos();
+            }
         }
 
 #if UNITY_EDITOR
         [CustomEditor(typeof(Ground))]
         public class GroundEditor : Editor
         {
+            bool drawGroundPath;
             public override void OnInspectorGUI()
             {
                 DrawDefaultInspector();

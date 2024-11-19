@@ -522,10 +522,10 @@ MonoBehaviour:
   "compteurInvincibilit\xE9": 0
   PV: 3
   "animationD\xE9g\xE2ts": {fileID: 0}
-  gameOverScreen: {fileID: 0}
   deathText: {fileID: 0}
   background: {fileID: 0}
-  BarredeVie: {fileID: 0}
+  gameOverScreen: {fileID: 4552371024471193871, guid: 244c17901e556254cbec66bcf99629a2,
+    type: 3}
 --- !u!114 &3495746251417432276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe4beb86fd94e4479f19e443c2eb7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnPoint: {x: 0, y: 0, z: 0}
+  respawnPoint: {x: -5, y: 2, z: 0}
 --- !u!114 &719985179100331000
 MonoBehaviour:
   m_ObjectHideFlags: 0

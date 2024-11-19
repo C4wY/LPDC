@@ -4,8 +4,6 @@ using UnityEngine;
 [ExecuteAlways]
 public class GameManager : MonoBehaviour
 {
-    public Animator portraitAnimator;
-
     const float SWITCH_COOLDOWN = 0.5f;
     float lastSwitchTime = 0;
     void DoSwitch()
@@ -35,23 +33,6 @@ public class GameManager : MonoBehaviour
 
         lastSwitchTime = Time.time;
         LPDC.Avatar.UpdateAllAvatar();
-
-        //update UI
-        if (portraitAnimator != null)
-        {
-            var trigger = leader.avatarName == LPDC.Avatar.Name.Sora ? "Sora > Dooms" : "Dooms > Sora";
-            portraitAnimator.SetTrigger(trigger);
-        }
-    }
-
-    void Start()
-    {
-        if (portraitAnimator != null)
-        {
-            var leader = LPDC.Avatar.GetLeader();
-            var soraIsLeader = leader.avatarName == LPDC.Avatar.Name.Sora;
-            portraitAnimator.SetBool("Sora Is Leader On Start", soraIsLeader);
-        }
     }
 
     void Update()

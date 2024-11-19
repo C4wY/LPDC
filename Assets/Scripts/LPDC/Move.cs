@@ -12,6 +12,7 @@ namespace LPDC
         public float jumpHeightRatioWhileDashing = 2;
         public float walkVelocity = 3.5f;
         public float runVelocity = 7;
+        public float maxAscendingVelocity = 10;
 
         [Tooltip("The time in seconds to wait before being able to dash again.")]
         public float dashDuration = 0.15f;
@@ -106,7 +107,10 @@ namespace LPDC
 
         public bool CanJump()
         {
-            return avatar.Ground.IsGrounded && Time.time > JumpTime + Parameters.jumpCooldown;
+            return
+                avatar.Ground.IsGrounded
+                && Time.time > JumpTime + Parameters.jumpCooldown
+                && !IsDashing;
         }
 
         public bool TryToJump()
@@ -130,10 +134,17 @@ namespace LPDC
             Avatar.Santé.compteurInvincibilité = 0.15f;
         }
 
+        public bool CanDash()
+        {
+            return
+                Time.time > DashTime + Parameters.dashCooldown
+                && !IsJumping
+                && avatar.Ground.IsGrounded;
+        }
+
         public bool TryToDash()
         {
-            var cooldownOk = Time.time > DashTime + Parameters.dashCooldown;
-            if (cooldownOk && avatar.IsSora)
+            if (avatar.IsSora && CanDash())
             {
                 Dash();
                 return true;
@@ -177,6 +188,11 @@ namespace LPDC
                     : horizontalInput * Parameters.runVelocity;
 
                 var y = avatar.Rigidbody.velocity.y;
+
+                // Clamp y velocity when NOT jumping (avoid dash exploit).
+                if (!IsJumping)
+                    y = Mathf.Clamp(y, float.NegativeInfinity, Parameters.maxAscendingVelocity);
+
                 avatar.Rigidbody.velocity = new(x, y, 0);
 
                 if (horizontalInput > 0.1f)
