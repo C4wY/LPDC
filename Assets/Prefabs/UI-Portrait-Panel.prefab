@@ -1343,11 +1343,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af41fc2dbc3844c39a49cf5a2f19fe84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthLeader: {fileID: 6540036809901495326}
-  healthFollower: {fileID: 4862327205952854109}
+  healthSora: {fileID: 6540036809901495326}
+  healthDooms: {fileID: 4862327205952854109}
   fullHeart: {fileID: 21300000, guid: da6f3e587033637468991da496c41729, type: 3}
   emptyHeart: {fileID: 21300000, guid: e1cd3f7f1840c7c49902b56f5475fb73, type: 3}
-  greyedOutColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!1001 &616730100638828688
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -10,8 +10,10 @@ using UnityEditor;
 [ExecuteAlways]
 public class UIPortraitPanel : MonoBehaviour
 {
-    public Transform healthLeader, healthFollower;
+    public Transform healthSora, healthDooms;
     public Sprite fullHeart, emptyHeart;
+
+    bool leaderIsSora = true;
 
     void UpdateHealth(Transform healthTransform, LPDC.Avatar avatar)
     {
@@ -46,9 +48,14 @@ public class UIPortraitPanel : MonoBehaviour
 
     void Update()
     {
-        var (leader, follower) = LPDC.Avatar.GetLeaderFollower();
-        UpdateHealth(healthLeader, leader);
-        UpdateHealth(healthFollower, follower);
+        var (sora, dooms) = LPDC.Avatar.GetSoraDooms();
+        if (leaderIsSora != sora.IsLeader)
+        {
+            leaderIsSora = sora.IsLeader;
+            TransformUtils.SwapRectTransform(healthSora, healthDooms);
+        }
+        UpdateHealth(healthSora, sora);
+        UpdateHealth(healthDooms, dooms);
     }
 
 #if UNITY_EDITOR
@@ -57,27 +64,26 @@ public class UIPortraitPanel : MonoBehaviour
     {
         void DebugAndTest()
         {
+            var panel = (UIPortraitPanel)target;
+
             GUILayout.Space(10);
             GUILayout.Label("Debug / Test", EditorStyles.boldLabel);
 
             GUI.enabled = Application.isPlaying;
             if (GUILayout.Button("Play transition Sora > Dooms"))
             {
-                var panel = (UIPortraitPanel)target;
                 var animator = panel.GetComponentInChildren<Animator>();
                 animator.SetTrigger("Sora > Dooms");
             }
 
             if (GUILayout.Button("Play transition Dooms > Sora"))
             {
-                var panel = (UIPortraitPanel)target;
                 var animator = panel.GetComponentInChildren<Animator>();
                 animator.SetTrigger("Dooms > Sora");
             }
 
             if (GUILayout.Button("Display First Portrait Image"))
             {
-                var panel = (UIPortraitPanel)target;
                 panel.DisplayFirstPortraitImage();
             }
         }
