@@ -405,7 +405,7 @@ GameObject:
   - component: {fileID: 4862327205952854109}
   - component: {fileID: 2664089818107605068}
   m_Layer: 5
-  m_Name: Panel-HealthFollower
+  m_Name: Panel-Health-Dooms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -718,7 +718,7 @@ GameObject:
   - component: {fileID: 6540036809901495326}
   - component: {fileID: 5764657579140967308}
   m_Layer: 5
-  m_Name: Panel-HealthLeader
+  m_Name: Panel-Health-Sora
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
