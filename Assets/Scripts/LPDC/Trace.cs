@@ -39,6 +39,11 @@ namespace LPDC
             Count = 0;
         }
 
+        public void Clear()
+        {
+            Count = 0;
+        }
+
         public void Add(TracePoint movePoint)
         {
             points[index] = movePoint;
