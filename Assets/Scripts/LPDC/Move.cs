@@ -106,7 +106,9 @@ namespace LPDC
 
         public bool CanJump()
         {
-            return avatar.Ground.IsGrounded && Time.time > JumpTime + Parameters.jumpCooldown;
+            return avatar.Ground.IsGrounded &&
+                   Time.time > JumpTime + Parameters.jumpCooldown &&
+                   !IsDashing;
         }
 
         public bool TryToJump()
@@ -132,14 +134,23 @@ namespace LPDC
 
         public bool TryToDash()
         {
-            var cooldownOk = Time.time > DashTime + Parameters.dashCooldown;
-            if (cooldownOk && avatar.IsSora)
+            if (avatar.IsSora && CanDash())
             {
                 Dash();
                 return true;
             }
 
             return false;
+        }
+
+        public bool CanDash()
+        {
+            return Time.time > DashTime + Parameters.dashCooldown &&
+            !IsJumping &&
+            avatar.Ground.IsGrounded;
+
+
+
         }
 
         public void HorizontalUpdate(float horizontalInput)
