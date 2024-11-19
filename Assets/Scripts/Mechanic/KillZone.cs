@@ -13,7 +13,10 @@ public class KillZone : MonoBehaviour
             {
                 if (avatar.IsLeader)
                     avatar.Santé.FaireDégâts(1);
-                avatar.Move.TeleportTo(avatar.Ground.LastGroundPosition);
+
+                // Teleport the avatar to a safe location.
+                var position = avatar.Ground.GroundPath.FromEnd(0.5f).position;
+                avatar.Move.TeleportTo(position);
             }
         }
     }
