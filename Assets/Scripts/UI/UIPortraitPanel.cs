@@ -12,6 +12,7 @@ public class UIPortraitPanel : MonoBehaviour
 {
     public Transform healthSora, healthDooms;
     public Sprite fullHeart, emptyHeart;
+    public Animator portraitAnimator;
 
     bool leaderIsSora = true;
 
@@ -46,6 +47,12 @@ public class UIPortraitPanel : MonoBehaviour
         animator.Update(0);
     }
 
+    void Start()
+    {
+        var (sora, _) = LPDC.Avatar.GetSoraDooms();
+        portraitAnimator.SetBool("Sora Is Leader On Start", sora.IsLeader);
+    }
+
     void Update()
     {
         var (sora, dooms) = LPDC.Avatar.GetSoraDooms();
@@ -53,6 +60,10 @@ public class UIPortraitPanel : MonoBehaviour
         {
             leaderIsSora = sora.IsLeader;
             TransformUtils.SwapRectTransform(healthSora, healthDooms);
+
+            var trigger = sora.IsLeader ? "Dooms > Sora" : "Sora > Dooms";
+            portraitAnimator.SetTrigger(trigger);
+
         }
         UpdateHealth(healthSora, sora);
         UpdateHealth(healthDooms, dooms);
