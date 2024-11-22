@@ -48,5 +48,8 @@ EditorBuildSettings:
   - enabled: 1
     path: "Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/Unj_moo Sc\xE8nes/Unj_son.unity"
     guid: 4e16fe5e39ce05c43b3e8cd10cf2d97b
+  - enabled: 1
+    path: Assets/Collaborateurs/kir_Kira/kir_AnimationChargement/AnimationChargement.unity
+    guid: 7bbe098026b2bd246994e06ffe1040db
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
