@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,19 +9,31 @@ using UnityEditor;
 public class Portal : MonoBehaviour
 {
     [SerializeField] private Object targetScene;
+    [SerializeField] private Animator transitionAnimator;
+    [SerializeField] private float transitionDuration = 2f;
 
     private string sceneName;
     private bool isPlayerInPortal = false;
 
     private void Start()
-    {
+{
 #if UNITY_EDITOR
-        if (targetScene != null && targetScene is SceneAsset sceneAsset)
-        {
-            sceneName = sceneAsset.name;
-        }
-#endif
+    if (targetScene != null && targetScene is SceneAsset sceneAsset)
+    {
+        sceneName = sceneAsset.name;
     }
+#endif
+
+    if (transitionAnimator == null)
+    {
+        // Recherche automatique de l'Animator dans les enfants si non assigné
+        transitionAnimator = GetComponentInChildren<Animator>();
+        if (transitionAnimator == null)
+        {
+            Debug.LogError("Aucun Animator trouvé dans les enfants de Trigger Box !");
+        }
+    }
+}
 
     private void OnTriggerEnter(Collider other)
     {
@@ -42,19 +55,27 @@ public class Portal : MonoBehaviour
     {
         if (isPlayerInPortal && Input.GetKeyDown(KeyCode.F))
         {
-            LoadTargetScene();
+            StartCoroutine(LoadTargetScene());
         }
     }
 
-    private void LoadTargetScene()
+    private IEnumerator LoadTargetScene()
     {
         if (!string.IsNullOrEmpty(sceneName))
         {
+            if (transitionAnimator != null)
+            {
+                transitionAnimator.SetTrigger("Start");
+                yield return new WaitForSeconds(transitionDuration);
+            }
+
             SceneManager.LoadScene(sceneName);
         }
         else
         {
-            Debug.LogWarning("Aucune cible");
+            Debug.LogWarning("Aucune cible spécifiée.");
         }
     }
+    
 }
+
