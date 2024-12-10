@@ -4,10 +4,7 @@ using TMPro;
 using UnityEngine;
 using Ink.Runtime;
 using UnityEngine.UI;
-using Unity.VisualScripting;
-using UnityEditor.VersionControl;
 using System;
-using UnityEditor.Rendering;
 
 public class dim_NPCDialogueManager : MonoBehaviour
 {
