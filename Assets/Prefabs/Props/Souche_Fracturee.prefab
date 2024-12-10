@@ -1505,7 +1505,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3678231967584815093}
-  - component: {fileID: 210393955336744001}
   m_Layer: 12
   m_Name: Souche_Fracturee
   m_TagString: Untagged
@@ -1529,21 +1528,6 @@ Transform:
   - {fileID: 1082033695229642329}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &210393955336744001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053350509683236175}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 670a1ae7e4efe164da8c4198d96f1e76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  "pr\xE9fabSuperCass\xE9": {fileID: 0}
-  explosionForce: 2000
-  "d\xE9calage": 1.5
 --- !u!1 &4064249552684147768
 GameObject:
   m_ObjectHideFlags: 0

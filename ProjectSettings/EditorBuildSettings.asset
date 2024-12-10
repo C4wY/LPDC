@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Collaborateurs/moo_Marie/Main Menu/Scenes/Jouer.unity
     guid: 8f40f17fdd24fd544a732fe6dc0b7398
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
