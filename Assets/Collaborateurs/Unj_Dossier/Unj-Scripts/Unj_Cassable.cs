@@ -36,7 +36,7 @@ public class Unj_Cassable : MonoBehaviour
             Vector3 force = direction2D * explosionForce;
             rb.AddForce(force);
 
-            var tempsDespawnCubes = UnityEngine.Random.Range(0.5f, 4f);
+            var tempsDespawnCubes = UnityEngine.Random.Range(0.5f, 3f);
             StartCoroutine(ScaleDownAndDestroy(rb.gameObject, tempsDespawnCubes));
         }
 
