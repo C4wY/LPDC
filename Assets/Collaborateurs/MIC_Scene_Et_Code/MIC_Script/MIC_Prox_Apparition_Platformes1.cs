@@ -10,8 +10,8 @@ public class MIC_Prox_Apparition_Platformes : MonoBehaviour
     public GameObject[] platformsToActivate;
     public AudioClip leverSound;
     public AudioSource audioSource;
-    public Transform leverHandle; // Référence au levier à faire pivoter
-    public Vector3 leverActivatedRotation; // Rotation cible lorsque le levier est activé
+    public Transform leverHandle;
+    public Vector3 leverActivatedRotation;
 
     private bool isPlayerInRange = false;
     private bool leverActivated = false;
