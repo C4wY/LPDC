@@ -11,9 +11,11 @@ public class dim_NPCDialogueManager : MonoBehaviour
     // Variables Publiques
     public KeyCode activationKey = KeyCode.F; // La touche pour activer les dialogues.
     public TextAsset globalsInkJSON; // Le Json contenant les dialogues.
-    public string DialogueStart = "Press F to talk";
+    public string DialogueStart = "Clique pour intéragir";
     public Canvas canvas; // Le canvas contenant les �l�ments d'UI.
     public Sprite SpriteNPC1;
+
+    public GameObject hpDisplay;
 
     // Variables Priv�es
     private Story story;
@@ -31,6 +33,8 @@ public class dim_NPCDialogueManager : MonoBehaviour
     private string leaderSpeaker;
     private float updateCooldown;
     private bool skip = false;
+
+    private GameObject HPdisplay;
 
     private Sprite angryDoomsIcon;
     private Sprite classicDoomsIcon;
@@ -208,12 +212,14 @@ public class dim_NPCDialogueManager : MonoBehaviour
     {
         // On fige les personnages et pi�ges pendant le dialogue
         SetPauseForDialogue();
+        hpDisplay.SetActive(false);
 
         // Initialisations
         story = new Story(globalsInkJSON.text);
         isDialogueActive = true;
 
         playersIcon.gameObject.SetActive(true);
+        // HPdisplay.gameObject.SetActive(false);
 
         // Si Sora commence le dialogue
 
@@ -245,33 +251,33 @@ public class dim_NPCDialogueManager : MonoBehaviour
     void EndDialogue()
     {
         // On remet les sprites de portrait de base
-        GameObject doomsIcon = GameObject.Find("UI_PortraitsDooms_0");
-        if (doomsIcon != null)
-        {
-            Image image = doomsIcon.GetComponent<Image>();
-            image.sprite = classicDoomsIcon;
-        }
+        // GameObject doomsIcon = GameObject.Find("UI_PortraitsDooms_0");
+        // if (doomsIcon != null)
+        // {
+        //     Image image = doomsIcon.GetComponent<Image>();
+        //     image.sprite = classicDoomsIcon;
+        // }
 
-        GameObject doomsIcon2 = GameObject.Find("UI_PortraitsDoomsSecondaire_0");
-        if (doomsIcon2 != null)
-        {
-            Image image2 = doomsIcon2.GetComponent<Image>();
-            //image2.sprite = classicDoomsIcon;
-        }
+        // GameObject doomsIcon2 = GameObject.Find("UI_PortraitsDoomsSecondaire_0");
+        // if (doomsIcon2 != null)
+        // {
+        //     Image image2 = doomsIcon2.GetComponent<Image>();
+        //     //image2.sprite = classicDoomsIcon;
+        // }
 
-        GameObject soraIcon = GameObject.Find("UI_PortraitsSora_0");
-        if (soraIcon != null)
-        {
-            Image image3 = soraIcon.GetComponent<Image>();
-            image3.sprite = classicSoraIcon;
-        }
+        // GameObject soraIcon = GameObject.Find("UI_PortraitsSora_0");
+        // if (soraIcon != null)
+        // {
+        //     Image image3 = soraIcon.GetComponent<Image>();
+        //     image3.sprite = classicSoraIcon;
+        // }
 
-        GameObject soraIcon2 = GameObject.Find("UI_PortraitsSoraSecondaire_0");
-        if (soraIcon != null)
-        {
-            Image image4 = soraIcon2.GetComponent<Image>();
-            //image4.sprite = classicSoraIcon;
-        }
+        // GameObject soraIcon2 = GameObject.Find("UI_PortraitsSoraSecondaire_0");
+        // if (soraIcon != null)
+        // {
+        //     Image image4 = soraIcon2.GetComponent<Image>();
+        //     image4.sprite = classicSoraIcon;
+        // }
 
         // On d�sactive les UI de dialogue et on remet � z�ro les bool�ens.
         textPanelNPC.gameObject.SetActive(false);
@@ -281,6 +287,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
         playersIcon.gameObject.SetActive(false);
         npcIcon.gameObject.SetActive(false);
         isDialogueActive = false;
+        hpDisplay.SetActive(true);
 
         // On d�sactive ce script
         StopPauseForDialogue();
@@ -430,7 +437,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
             if (i < _choices.Count)
             {
                 button.gameObject.SetActive(true);
-                button.image.color = buttonColorList[i];
+                // button.image.color = buttonColorList[i];
                 TextMeshProUGUI buttonText = button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
                 buttonText.text = _choices[i].text;
                 yield return null;
@@ -524,5 +531,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
             actor.SendMessage("OffPauseForDialogue", SendMessageOptions.DontRequireReceiver);
         }
     }
+
+
 
 }
