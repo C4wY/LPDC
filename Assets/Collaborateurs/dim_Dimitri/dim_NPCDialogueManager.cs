@@ -15,7 +15,8 @@ public class dim_NPCDialogueManager : MonoBehaviour
     public string DialogueStart = "Clique pour intéragir";
     public Canvas canvas; // Le canvas contenant les �l�ments d'UI.
     public Sprite SpriteNPC1;
-
+    public LPDC.Avatar.Name leaderOverride;
+    public bool isLeaderOverrided;
     public GameObject hpDisplay;
 
     // Variables Priv�es
@@ -100,18 +101,22 @@ public class dim_NPCDialogueManager : MonoBehaviour
         classicSoraIcon = Resources.Load<Sprite>("Sprites/dim_RessourcesDialogues/UI_PortraitsSora");
         Debug.Log(classicSoraIcon);
 
-        // On r�cup�re le leader pour lancer l'animator
 
-        var (sora, dooms) = LPDC.Avatar.GetSoraDooms();
 
-        if (sora.IsLeader)
+        if (isLeaderOverrided)
         {
-            portraitAnimator.SetTrigger("EntrySoraLeader");
+            if (leaderOverride == LPDC.Avatar.Name.Sora)
+                portraitAnimator.SetTrigger("EntrySoraLeader");
+            else
+                portraitAnimator.SetTrigger("EntryDoomsLeader");
         }
-
-        if (dooms.IsLeader)
+        else // On récupère le leader pour lancer l'animator
         {
-            portraitAnimator.SetTrigger("EntryDoomsLeader");
+            var (sora, dooms) = LPDC.Avatar.GetSoraDooms();
+            if (sora.IsLeader)
+                portraitAnimator.SetTrigger("EntrySoraLeader");
+            else
+                portraitAnimator.SetTrigger("EntryDoomsLeader");
         }
 
         // Initialisations
@@ -234,9 +239,11 @@ public class dim_NPCDialogueManager : MonoBehaviour
         EndDialogue();
     }
 
-    public void EnterDialogue(TextAsset inkDialogue)
+    public void EnterDialogue(TextAsset inkDialogue, bool isLeaderOverrided = false, LPDC.Avatar.Name leaderOverride = LPDC.Avatar.Name.Dooms)
     {
         currentInkDialogue = inkDialogue;
+        this.isLeaderOverrided = isLeaderOverrided;
+        this.leaderOverride = leaderOverride;
 
         if (!isDialogueActive)
         {

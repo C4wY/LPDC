@@ -6,6 +6,8 @@ public class dim_NPCDialogueEnter : MonoBehaviour
 {
     public bool triggerOnlyOnce = true;
     public TextAsset inkDialogue;
+    public bool isLeaderOverrided = true;
+    public LPDC.Avatar.Name leaderOverride;
 
     int triggerCount = 0;
 
@@ -24,7 +26,7 @@ public class dim_NPCDialogueEnter : MonoBehaviour
                 var dialogueManager = FindFirstObjectByType<dim_NPCDialogueManager>();
                 if (dialogueManager != null)
                 {
-                    dialogueManager.EnterDialogue(inkDialogue);
+                    dialogueManager.EnterDialogue(inkDialogue, isLeaderOverrided, leaderOverride);
                     triggerCount++;
                 }
             }
