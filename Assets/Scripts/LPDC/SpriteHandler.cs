@@ -15,7 +15,8 @@ namespace LPDC
 
     public class SpriteHandler : MonoBehaviour
     {
-        public bool dialoguePause = false; // Pour la fonction de pause, ajout� par Dim
+        public bool dialoguePause = false; // Pour la fonction de pause, ajouté par Dim
+        bool dialoguePauseOld = false;
 
         Avatar avatar;
         Animator animator;
@@ -51,11 +52,20 @@ namespace LPDC
                 realIsGrounded = realIsGroundedNew;
             }
 
-            if (!dialoguePause) // J'emp�che le personnage de se d�placer pendant les dialogues (Dim)
+            if (dialoguePause)
             {
+                animator.SetFloat("HSpeed", 0);
+                animator.SetBool("IsGrounded", true);
+                animator.SetBool("IsDashing", false);
+            }
+            else
+            {
+                // Sinon, je le laisse se déplacer (Dim)
+
                 var x = avatar.IsLeader
                  ? avatar.LeaderController.input.horizontal
                  : avatar.Rigidbody.velocity.x;
+
                 animator.SetFloat("HSpeed", Mathf.Abs(x));
                 animator.SetBool("IsGrounded", SpriteIsGrounded);
                 animator.SetBool("IsDashing", avatar.Move.IsDashing);
@@ -63,6 +73,7 @@ namespace LPDC
                 spriteRenderer.flipX = !avatar.Move.IsFacingRight;
             }
 
+            dialoguePauseOld = dialoguePause;
         }
 
         // J'ajoute une fonction qui se d�clenche quand un dialogue se d�clenche, et une autre quand le dialogue se termine. (Dim)

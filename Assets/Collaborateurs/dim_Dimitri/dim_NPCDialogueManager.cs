@@ -6,11 +6,12 @@ using Ink.Runtime;
 using UnityEngine.UI;
 using System;
 
+[ExecuteAlways]
 public class dim_NPCDialogueManager : MonoBehaviour
 {
     // Variables Publiques
     public KeyCode activationKey = KeyCode.F; // La touche pour activer les dialogues.
-    public TextAsset globalsInkJSON; // Le Json contenant les dialogues.
+    public TextAsset currentInkDialogue; // Le Json contenant les dialogues.
     public string DialogueStart = "Clique pour intéragir";
     public Canvas canvas; // Le canvas contenant les �l�ments d'UI.
     public Sprite SpriteNPC1;
@@ -46,9 +47,28 @@ public class dim_NPCDialogueManager : MonoBehaviour
     private bool isDialoguePlaying = false;
 
 
+    private void OnEnable()
+    {
+        gameObject.name = "NPC Dialogue Manager";
+
+        // Auto-assignation du canvas si non défini.
+        if (canvas == null)
+        {
+            canvas = GetComponent<Canvas>();
+            Debug.Log($"Canvas not set, trying to get it from the object: {canvas}");
+        }
+
+        if (hpDisplay == null)
+        {
+            hpDisplay = GameObject.Find("HPdisplay");
+            Debug.Log($"HPdisplay not set, trying to get it from the object: {hpDisplay}");
+        }
+    }
 
     private void Start()
     {
+        if (Application.isPlaying == false)
+            return;
 
         // On r�cup�re les diff�rents �l�ments de l'UI depuis le canvas
 
@@ -56,16 +76,16 @@ public class dim_NPCDialogueManager : MonoBehaviour
         dialogueText.gameObject.SetActive(false);
 
         textPanelNPC = GameObject.Find("TextPanelNPC");
-        textPanelNPC.gameObject.SetActive(false);
+        textPanelNPC.SetActive(false);
         textPanelDooms = GameObject.Find("TextPanelDooms");
-        textPanelDooms.gameObject.SetActive(false);
+        textPanelDooms.SetActive(false);
         textPanelSora = GameObject.Find("TextPanelSora");
-        textPanelSora.gameObject.SetActive(false);
+        textPanelSora.SetActive(false);
 
         playersIcon = GameObject.Find("PlayersIcon");
-        playersIcon.gameObject.SetActive(false);
+        playersIcon.SetActive(false);
         npcIcon = GameObject.Find("NPC_Icon");
-        npcIcon.gameObject.SetActive(false);
+        npcIcon.SetActive(false);
 
         portraitAnimator = playersIcon.GetComponentInChildren<Animator>();
 
@@ -131,16 +151,19 @@ public class dim_NPCDialogueManager : MonoBehaviour
         }
     }
 
-
     void Update()
     {
+        if (Application.isPlaying == false)
+            return;
+
         // On cr�e un cooldown pour �viter que le jeu ne per�oive un input durant plusieurs frm�aes cons�cutives, car le joueur garde le doit appuy� sur la touche plus longtemps qu'une frame.
 
         updateCooldown += Time.deltaTime;
 
-        // On v�rifie si le joueur appuie sur F et si le dialogue n'est pas d�j� en train de se jouer.
+        // On v�rifie si le joueur appuie sur F et si le dialogue n'est pas déjà en train de se jouer.
 
-        if ((Input.GetKey(activationKey)) && (!isDialoguePlaying))
+
+        if ((Input.GetMouseButton(0) || Input.GetKey(activationKey)) && (!isDialoguePlaying))
         {
             // Si le joueur se trouve dans la zone de d�tection du NPC, on active le dialogue.
 
@@ -187,11 +210,14 @@ public class dim_NPCDialogueManager : MonoBehaviour
             {
                 if (!isDialogueActive)
                 {
-                    // On affiche le texte de d�part, proposant au joueur de lancer le dialogue.
-                    npcIcon.gameObject.SetActive(true);
-                    Image image = npcIcon.GetComponent<Image>();
-                    image.sprite = SpriteNPC1;
-                    textPanelNPC.gameObject.SetActive(true);
+                    // On affiche le texte de départ, proposant au joueur de lancer le dialogue.
+                    if (npcIcon != null)
+                    {
+                        npcIcon.SetActive(true);
+                        Image image = npcIcon.GetComponent<Image>();
+                        image.sprite = SpriteNPC1;
+                    }
+                    textPanelNPC.SetActive(true);
                     dialogueText.gameObject.SetActive(true);
                     dialogueText.text = DialogueStart;
                     dialogueTriggered = true;
@@ -208,6 +234,28 @@ public class dim_NPCDialogueManager : MonoBehaviour
         EndDialogue();
     }
 
+    public void EnterDialogue(TextAsset inkDialogue)
+    {
+        currentInkDialogue = inkDialogue;
+
+        if (!isDialogueActive)
+        {
+            // On affiche le texte de départ, proposant au joueur de lancer le dialogue.
+            if (npcIcon != null)
+            {
+                npcIcon.SetActive(true);
+                Image image = npcIcon.GetComponent<Image>();
+                image.sprite = SpriteNPC1;
+            }
+            textPanelNPC.SetActive(true);
+            dialogueText.gameObject.SetActive(true);
+            dialogueText.text = DialogueStart;
+            dialogueTriggered = true;
+        }
+
+        StartDialogue();
+    }
+
     void StartDialogue()
     {
         // On fige les personnages et pi�ges pendant le dialogue
@@ -215,10 +263,10 @@ public class dim_NPCDialogueManager : MonoBehaviour
         hpDisplay.SetActive(false);
 
         // Initialisations
-        story = new Story(globalsInkJSON.text);
+        story = new Story(currentInkDialogue.text);
         isDialogueActive = true;
 
-        playersIcon.gameObject.SetActive(true);
+        playersIcon.SetActive(true);
         // HPdisplay.gameObject.SetActive(false);
 
         // Si Sora commence le dialogue
@@ -513,7 +561,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
         // on r�cup�re tous les objets de la sc�ne
         GameObject[] gameObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.None);
 
-        // On d�clenche la fonction OnPauseForDialogue pour chaque objet en poss�dant une
+        // On déclenche la fonction OnPauseForDialogue pour chaque objet en poss�dant une
         foreach (GameObject actor in gameObjects)
         {
             actor.SendMessage("OnPauseForDialogue", SendMessageOptions.DontRequireReceiver);
