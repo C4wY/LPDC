@@ -7,6 +7,6 @@ public class Unj_LancerTuto : MonoBehaviour
 {
     public void LancerTuto()
     {
-        SceneManager.LoadScene("Unj_Tuto Final");
+        SceneManager.LoadScene("Cinematique");
     }
 }

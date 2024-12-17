@@ -15,8 +15,8 @@ public class CameraShake : MonoBehaviour
         while (elapsed < duration)
         {
             // Randomize the x and y positions for shake
-            float x = Random.Range(-1f, 1f) * magnitude;
-            float y = Random.Range(-1f, 1f) * magnitude;
+            float x = Random.Range(-0.3f, 0.3f) * magnitude;
+            float y = Random.Range(-0.3f, 0.3f) * magnitude;
 
             // Apply the new shake position while keeping the z position fixed
             offset.Offset = new Vector3(x, y, 0);
@@ -39,7 +39,7 @@ public class CameraShake : MonoBehaviour
         }
     }
 
-    public void Trigger(float duration = 0.5f, float amplitude = 0.2F)
+    public void Trigger(float duration = 0.3f, float amplitude = 0.2F)
     {
         StartCoroutine(Shake(duration, amplitude));
     }
