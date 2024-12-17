@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 2172343341116298835}
   - component: {fileID: 6740784725401728283}
   - component: {fileID: 7769495928166516422}
-  - component: {fileID: 3637539705461890866}
+  - component: {fileID: 2342242733636841446}
   m_Layer: 5
   m_Name: GameOverCanvas
   m_TagString: GameOverScreen
@@ -254,18 +254,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 865c5bad4f59e034a8a51333cc5e7a57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3637539705461890866
-MonoBehaviour:
+--- !u!95 &2342242733636841446
+Animator:
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4552371024471193871}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80e475db0fa696f44b21b6753f20ddc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c0b3dc40d1fdd345a8a232cfbaf2941, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5112355307884199404
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,6 +288,7 @@ GameObject:
   - component: {fileID: 8218616891168644468}
   - component: {fileID: 6284717207265421985}
   - component: {fileID: 1007774954031149901}
+  - component: {fileID: 2459107189004681041}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -387,18 +398,33 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3637539705461890866}
-        m_TargetAssemblyTypeName: RespawnButton, Assembly-CSharp
-        m_MethodName: ReloadScene
+      - m_Target: {fileID: 11500000, guid: 5a3882d07cbe0ae4dba8d0bdb10a46db, type: 3}
+        m_TargetAssemblyTypeName: UnityEngine.Object, UnityEngine
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 1
+        m_CallState: 2
+--- !u!114 &2459107189004681041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5112355307884199404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a3882d07cbe0ae4dba8d0bdb10a46db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeAnimator: {fileID: 2342242733636841446}
+  fadeOutTrigger: Start
+  animationDuration: 1
 --- !u!1 &6717513645813586997
 GameObject:
   m_ObjectHideFlags: 0
