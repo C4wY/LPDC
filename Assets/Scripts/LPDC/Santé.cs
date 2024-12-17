@@ -29,23 +29,16 @@ namespace LPDC
             }
         }
 
-        public void FaireDégâts(int dégâts = 1)
+        /// <summary>
+        /// Tente d'appliquer des dégâts à l'avatar, return true if successful. 
+        /// </summary>
+        public bool FaireDégâts(int dégâts = 1)
         {
             // Check if the player actually loses health
             if (dégâts > 0)
             {
                 Debug.Log("OUCH");
                 PV -= dégâts;  // Reduce health
-
-               if (cameraShake != null)
-                {
-                    StartCoroutine(cameraShake.Shake(0.5f, 1.5f));
-                }
-                else
-                {
-                    Debug.LogWarning("CameraShake reference is missing!");
-                }
-
 
                 // Appeler la méthode de l'animation de dégâts si elle est définie
                 if (animationDégâts != null)
@@ -59,7 +52,10 @@ namespace LPDC
                     Instantiate(gameOverScreen);
                     Time.timeScale = 0f;
                 }
+                return true;
             }
+
+            return false;
         }
     }
 }

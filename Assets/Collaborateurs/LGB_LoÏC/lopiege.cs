@@ -19,7 +19,13 @@ public class lopiege : MonoBehaviour
             var avatar = other.attachedRigidbody.GetComponent<LPDC.Avatar>();
             if (avatar != null && !avatarsEnContact.Contains(avatar))
             {
-                avatar.Santé.FaireDégâts(dégâts);
+                var successful = avatar.Santé.FaireDégâts(dégâts);
+                if (successful)
+                {
+                    var shake = FindFirstObjectByType<CameraShake>();
+                    if (shake != null)
+                        shake.Trigger();
+                }
                 avatarsEnContact.Add(avatar);
 
                 GameObject spike = Instantiate(spikePrefab, transform.position, Quaternion.Euler(-68.5f, -90f, 90f));
