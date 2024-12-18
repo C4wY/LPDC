@@ -10,6 +10,7 @@ namespace LPDC
         public static MainSettings Instance { get; private set; }
 
         public GameObject gameOverScreen;
+        public GameObject cheatScreen;
 
         MainSettings()
         {

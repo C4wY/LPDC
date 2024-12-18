@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameOverScreen: {fileID: 4552371024471193871, guid: 244c17901e556254cbec66bcf99629a2,
     type: 3}
+  cheatScreen: {fileID: 4049343930422267508, guid: 59ae7deff31524c34ba064e47d94ab5f,
+    type: 3}

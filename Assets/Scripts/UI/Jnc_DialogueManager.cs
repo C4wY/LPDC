@@ -10,6 +10,8 @@ public class Jnc_DialogueManager : MonoBehaviour
 {
     Story story;
 
+    TMPro.TextMeshProUGUI mainText;
+
     public void EnterDialogue(TextAsset inkDialogue)
     {
         story = new Story(inkDialogue.text);
@@ -21,9 +23,20 @@ public class Jnc_DialogueManager : MonoBehaviour
         while (story.canContinue)
         {
             var text = story.Continue();
-            Debug.Log(text);
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                yield return new WaitForSeconds(0.1f);
+                mainText.text = text[..i];
+            }
             yield break;
         }
+    }
+
+    void Start()
+    {
+        mainText = transform.Find("MainText").GetComponent<TMPro.TextMeshProUGUI>();
+        mainText.text = "";
     }
 
     public TextAsset debugInkDialogue;

@@ -32,6 +32,22 @@ public class InputManager : MonoBehaviour
         return DebugFollowerRespawn() || Input.GetKey(KeyCode.I);
     }
 
+    float debugCheatTime = 0;
+    const float DebugCheatCooldown = 0.5f;
+    public bool DebugCheat()
+    {
+        if (Time.time - debugCheatTime > DebugCheatCooldown)
+        {
+            if (Input.GetKey(KeyCode.K) && Input.GetKey(KeyCode.O))
+            {
+                debugCheatTime = Time.time;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public bool LeaderAttack()
     {
         return Input.GetMouseButton((int)MouseButton.LeftMouse);

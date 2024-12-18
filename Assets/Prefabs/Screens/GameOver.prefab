@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 7769495928166516422}
   - component: {fileID: 2342242733636841446}
   m_Layer: 5
-  m_Name: GameOverCanvas
+  m_Name: GameOver
   m_TagString: GameOverScreen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
