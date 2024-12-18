@@ -8,6 +8,8 @@ using UnityEditor;
 [ExecuteAlways]
 public class GameManager : MonoBehaviour
 {
+    public MainSettings mainSettings;
+
     const float SWITCH_COOLDOWN = 0.5f;
     float lastSwitchTime = 0;
     void DoSwitch()
@@ -37,6 +39,12 @@ public class GameManager : MonoBehaviour
 
         lastSwitchTime = Time.time;
         LPDC.Avatar.UpdateAllAvatar();
+    }
+
+    void Start()
+    {
+        Debug.Log("Game Started!");
+        Debug.Log($"MainSettings.Instance: {MainSettings.Instance}");
     }
 
     void Update()
