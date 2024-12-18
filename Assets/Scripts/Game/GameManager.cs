@@ -1,5 +1,9 @@
 using LPDC;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 
 [ExecuteAlways]
 public class GameManager : MonoBehaviour
@@ -55,4 +59,24 @@ public class GameManager : MonoBehaviour
             DoSwitch();
         }
     }
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(GameManager))]
+    public class GameManagerEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+
+            var target = (GameManager)base.target;
+
+            if (GUILayout.Button("Switch Avatars"))
+                target.DoSwitch();
+
+            GUI.enabled = Application.isPlaying;
+            if (GUILayout.Button("Trigger Game Over!"))
+                Instantiate(MainSettings.Instance.gameOverScreen);
+        }
+    }
+#endif
 }

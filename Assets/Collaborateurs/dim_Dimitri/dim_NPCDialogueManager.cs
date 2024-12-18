@@ -161,6 +161,9 @@ public class dim_NPCDialogueManager : MonoBehaviour
         if (Application.isPlaying == false)
             return;
 
+        if (story == null)
+            return;
+
         // On cr�e un cooldown pour �viter que le jeu ne per�oive un input durant plusieurs frm�aes cons�cutives, car le joueur garde le doit appuy� sur la touche plus longtemps qu'une frame.
 
         updateCooldown += Time.deltaTime;

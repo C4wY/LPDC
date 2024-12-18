@@ -4,22 +4,21 @@ using UnityEngine.SceneManagement;
 
 public class Caw_RespawnButton2 : MonoBehaviour
 {
-    public Animator fadeAnimator;
+    public string levelLoaderName = "Level Loader";
     public string fadeOutTrigger = "Start";
     public float animationDuration = 1f;
 
     public void OnRespawnButtonClicked()
     {
         StartCoroutine(ReloadScene());
+
+        GameObject.Find(levelLoaderName)
+            .GetComponentInChildren<Animator>()
+            .SetTrigger(fadeOutTrigger);
     }
 
     private IEnumerator ReloadScene()
     {
-        if (fadeAnimator != null)
-        {
-            fadeAnimator.SetTrigger(fadeOutTrigger);
-        }
-
         yield return new WaitForSeconds(animationDuration);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
