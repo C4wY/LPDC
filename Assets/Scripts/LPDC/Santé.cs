@@ -42,6 +42,9 @@ namespace LPDC
         /// </summary>
         public bool FaireDégâts(int dégâts = 1)
         {
+            if (avatar.IsFollower)
+                return false;
+
             if (compteurInvincibilité > 0)
                 return false;
 
@@ -52,6 +55,7 @@ namespace LPDC
                 return false;
 
             Debug.Log("OUCH");
+
             compteurInvincibilité = 3;
 
             PV -= dégâts;  // Reduce health
