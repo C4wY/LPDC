@@ -58,6 +58,11 @@ public class GameManager : MonoBehaviour
         {
             DoSwitch();
         }
+
+        if (InputManager.Instance.DebugCheat())
+        {
+            DebugCheat.Toggle();
+        }
     }
 
 #if UNITY_EDITOR
