@@ -68,7 +68,7 @@ public class Portal : MonoBehaviour
                 yield return new WaitForSeconds(transitionDuration);
             }
 
-            SceneManager.LoadScene("Biz_Tuto");
+            SceneManager.LoadScene("Biz_Lobby");
         }
         else
         {
