@@ -19,7 +19,9 @@ public class Caw_RespawnButton2 : MonoBehaviour
 
     private IEnumerator ReloadScene()
     {
-        yield return new WaitForSeconds(animationDuration);
+        yield return TimeUtils.WaitUnscaledTime(animationDuration);
+
+        Time.timeScale = 1f;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
