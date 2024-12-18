@@ -1,21 +1,26 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 
 public class Caw_CineToTuto : MonoBehaviour
 {
-    private VideoPlayer videoPlayer;
-
     [SerializeField] private string nextSceneName;
 
     void Start()
     {
-        videoPlayer = GetComponent<VideoPlayer>();
+        var videoPlayer = GetComponent<VideoPlayer>();
 
-        videoPlayer.loopPointReached += OnVideoEnd;
+        if (videoPlayer.clip == null)
+        {
+            OnVideoEnd();
+            return;
+        }
+
+        videoPlayer.loopPointReached += _ => OnVideoEnd();
     }
 
-    private void OnVideoEnd(VideoPlayer vp)
+    void OnVideoEnd()
     {
         SceneManager.LoadScene(nextSceneName);
     }
