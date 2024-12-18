@@ -26,11 +26,10 @@ public class Portal : MonoBehaviour
 
     if (transitionAnimator == null)
     {
-        // Recherche automatique de l'Animator dans les enfants si non assigné
         transitionAnimator = GetComponentInChildren<Animator>();
         if (transitionAnimator == null)
         {
-            Debug.LogError("Aucun Animator trouvé dans les enfants de Trigger Box !");
+            Debug.LogError("Aucun Animator trouvé");
         }
     }
 }
@@ -69,11 +68,11 @@ public class Portal : MonoBehaviour
                 yield return new WaitForSeconds(transitionDuration);
             }
 
-            SceneManager.LoadScene(sceneName);
+            SceneManager.LoadScene("Biz_Tuto");
         }
         else
         {
-            Debug.LogWarning("Aucune cible spécifiée.");
+            Debug.LogWarning("Aucune cible");
         }
     }
     
