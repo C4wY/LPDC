@@ -1,14 +1,45 @@
 using LPDC;
 using UnityEngine;
+using UnityEngine.Events;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+public struct DualPortraitEventProps
+{
+    public LPDC.Avatar.Name mainAvatar;
+}
+
+public class DualPortraitEvent : UnityEvent<DualPortraitEventProps> { }
 
 [ExecuteAlways]
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+
+    public static GameManager GetInstanceOrThrow()
+    {
+        if (Instance == null)
+            throw new System.Exception("GameManager instance is null! Please make sure GameManager is in the scene.");
+
+        return Instance;
+    }
+
+    public static bool TryGetInstance(out GameManager instance)
+    {
+        instance = Instance;
+        return instance != null;
+    }
+
+    public static void DispatchDualPortraitEvent(DualPortraitEventProps props)
+    {
+        GetInstanceOrThrow().dualPortraitEvent.Invoke(props);
+    }
+
     public MainSettings mainSettings;
+
+    public DualPortraitEvent dualPortraitEvent = new();
 
     const float SWITCH_COOLDOWN = 0.5f;
     float lastSwitchTime = 0;
@@ -39,6 +70,25 @@ public class GameManager : MonoBehaviour
 
         lastSwitchTime = Time.time;
         LPDC.Avatar.UpdateAllAvatar();
+    }
+
+    void OnEnable()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("Multiple GameManager instances detected!");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        Debug.Log("GameManager is enabled!");
+
+        if (mainSettings == null)
+        {
+            Debug.LogError("MainSettings is not set!");
+            return;
+        }
     }
 
     void Start()
