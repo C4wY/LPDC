@@ -526,6 +526,7 @@ MonoBehaviour:
   background: {fileID: 0}
   gameOverScreen: {fileID: 4552371024471193871, guid: 244c17901e556254cbec66bcf99629a2,
     type: 3}
+  cameraShake: {fileID: 0}
 --- !u!114 &3495746251417432276
 MonoBehaviour:
   m_ObjectHideFlags: 0
