@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Ink.Runtime;
 using UnityEngine;
 using System.Linq;
@@ -13,6 +12,8 @@ public class Jnc_DialogueManager : MonoBehaviour
     public float characterDelay = 0.033f;
 
     TMPro.TextMeshProUGUI mainText;
+    GameObject[] choices;
+    TMPro.TextMeshProUGUI[] choiceTexts;
 
     Story story;
     Coroutine displayTextCoroutine;
@@ -22,6 +23,9 @@ public class Jnc_DialogueManager : MonoBehaviour
         gameObject.SetActive(true);
         story = new Story(inkDialogue.text);
         displayTextCoroutine = StartCoroutine(DisplayText());
+
+        foreach (var choice in choices)
+            choice.SetActive(false);
     }
 
     public void EndCurrentDialogue()
@@ -34,18 +38,18 @@ public class Jnc_DialogueManager : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    // Does the user require to cut the current dialogue short?
-    bool requireCutShort = false;
+    // Does the user want to advance the text?
+    bool userAdvance = false;
 
-    bool UserRequireCutShort()
+    bool UserRequireAdvance()
     {
         return Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
     }
 
-    bool ConsumeCutShort()
+    bool ConsumeAdvance()
     {
-        var result = requireCutShort;
-        requireCutShort = false;
+        var result = userAdvance;
+        userAdvance = false;
         return result;
     }
 
@@ -53,6 +57,7 @@ public class Jnc_DialogueManager : MonoBehaviour
     {
         foreach (var tag in story.currentTags)
         {
+            // Tags are in the form of "key value", e.g. "speaker Sora"
             var parts = tag.Split(' ').Select(x => x.Trim().ToLower()).ToArray();
 
             if (parts.Length < 2)
@@ -64,11 +69,44 @@ public class Jnc_DialogueManager : MonoBehaviour
             switch (key)
             {
                 case "speaker":
-                    GameManager.GetInstanceOrThrow().dualPortraitEvent.Invoke(new()
+                    switch (value)
                     {
-                        mainAvatar = value == "sora" ? LPDC.Avatar.Name.Sora : LPDC.Avatar.Name.Dooms,
-                    });
+                        case "sora":
+                            GameManager.DispatchDualPortraitEvent(new()
+                            {
+                                mainAvatar = LPDC.Avatar.Name.Sora,
+                            });
+                            break;
+                        case "dooms":
+                            GameManager.DispatchDualPortraitEvent(new()
+                            {
+                                mainAvatar = LPDC.Avatar.Name.Dooms,
+                            });
+                            break;
+                        default:
+                            Debug.Log($"Unhandled speaker tag: {value}");
+                            break;
+                    }
                     break;
+            }
+        }
+    }
+
+    void CheckChoices()
+    {
+        for (int i = 0; i < choices.Length; i++)
+        {
+            var choice = choices[i];
+            var choiceText = choiceTexts[i];
+
+            if (story.currentChoices.Count > i)
+            {
+                choice.SetActive(true);
+                choiceText.text = story.currentChoices[i].text;
+            }
+            else
+            {
+                choice.SetActive(false);
             }
         }
     }
@@ -77,6 +115,7 @@ public class Jnc_DialogueManager : MonoBehaviour
     {
         mainText.text = "";
 
+        // Initial delay
         yield return new WaitForSeconds(characterDelay * 4);
 
         while (story.canContinue)
@@ -84,10 +123,12 @@ public class Jnc_DialogueManager : MonoBehaviour
             var text = story.Continue();
 
             CheckTags();
+            CheckChoices();
 
             for (int i = 0; i < text.Length; i++)
             {
-                if (ConsumeCutShort())
+                // Check if user wants to advance
+                if (ConsumeAdvance())
                     break;
 
                 var isWhiteSpace = char.IsWhiteSpace(text[i]);
@@ -98,11 +139,14 @@ public class Jnc_DialogueManager : MonoBehaviour
                 mainText.text = text[..i];
             }
 
+            // Ensure full text is displayed (in case user cut it off)
             mainText.text = text;
 
+            // Delay after finishing a line
             yield return new WaitForSeconds(characterDelay * 4);
 
-            yield return new WaitUntil(() => ConsumeCutShort());
+            // Wait for user to advance
+            yield return new WaitUntil(ConsumeAdvance);
         }
 
         EndCurrentDialogue();
@@ -111,20 +155,22 @@ public class Jnc_DialogueManager : MonoBehaviour
     void Awake()
     {
         mainText = transform.Find("MainText").GetComponent<TMPro.TextMeshProUGUI>();
+        choices = transform.Find("Choices").Cast<Transform>().Select(t => t.gameObject).ToArray();
+        choiceTexts = choices.Select(c => c.GetComponentInChildren<TMPro.TextMeshProUGUI>()).ToArray();
 
         EndCurrentDialogue();
     }
 
     void Update()
     {
-        requireCutShort = requireCutShort || UserRequireCutShort();
+        userAdvance = userAdvance || UserRequireAdvance();
 
         if (Input.GetKeyDown(KeyCode.Escape))
             EndCurrentDialogue();
     }
 
-    public TextAsset debugInkDialogue;
 #if UNITY_EDITOR
+    public TextAsset debugInkDialogue;
     [CustomEditor(typeof(Jnc_DialogueManager))]
     public class Jnc_DialogueManagerEditor : Editor
     {
