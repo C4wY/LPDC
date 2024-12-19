@@ -1,7 +1,7 @@
 using System.Collections;
-using Ink.Runtime;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
+using Ink.Runtime;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -18,7 +18,7 @@ public class Jnc_DialogueManager : MonoBehaviour
     Story story;
     Coroutine displayTextCoroutine;
 
-    public void EnterDialogue(TextAsset inkDialogue)
+    public void EnterNewDialogue(TextAsset inkDialogue)
     {
         gameObject.SetActive(true);
         story = new Story(inkDialogue.text);
@@ -181,9 +181,9 @@ public class Jnc_DialogueManager : MonoBehaviour
             var dm = (Jnc_DialogueManager)target;
 
             GUI.enabled = dm.debugInkDialogue != null && Application.isPlaying;
-            if (GUILayout.Button("Enter Dialogue"))
+            if (GUILayout.Button("Enter New Dialogue"))
                 if (dm.debugInkDialogue != null)
-                    dm.EnterDialogue(dm.debugInkDialogue);
+                    dm.EnterNewDialogue(dm.debugInkDialogue);
         }
     }
 #endif
