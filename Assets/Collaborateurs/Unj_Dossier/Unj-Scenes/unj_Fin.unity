@@ -458,6 +458,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4128986333530971976, guid: 8c6383cdd50e04344b7b83bfd21b903d,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4128986333530971976, guid: 8c6383cdd50e04344b7b83bfd21b903d,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4128986333530971976, guid: 8c6383cdd50e04344b7b83bfd21b903d,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4128986333530971976, guid: 8c6383cdd50e04344b7b83bfd21b903d,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4552371024471193871, guid: 8c6383cdd50e04344b7b83bfd21b903d,
         type: 3}
       propertyPath: m_Name
@@ -486,17 +506,37 @@ PrefabInstance:
     - target: {fileID: 5265797505220818569, guid: 8c6383cdd50e04344b7b83bfd21b903d,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1722.7263
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5265797505220818569, guid: 8c6383cdd50e04344b7b83bfd21b903d,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 778
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5265797505220818569, guid: 8c6383cdd50e04344b7b83bfd21b903d,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5265797505220818569, guid: 8c6383cdd50e04344b7b83bfd21b903d,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5265797505220818569, guid: 8c6383cdd50e04344b7b83bfd21b903d,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5265797505220818569, guid: 8c6383cdd50e04344b7b83bfd21b903d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2.4453125
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5265797505220818569, guid: 8c6383cdd50e04344b7b83bfd21b903d,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
