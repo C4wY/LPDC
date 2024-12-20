@@ -56,7 +56,7 @@ namespace LPDC
 
             Debug.Log("OUCH");
 
-            compteurInvincibilité = 3;
+            compteurInvincibilité = 1;
 
             PV -= dégâts;  // Reduce health
                            // Appeler la méthode de l'animation de dégâts si elle est définie
