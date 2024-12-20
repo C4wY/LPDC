@@ -54,5 +54,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Collaborateurs/Biz_Dossier/Biz_Lobby.unity
     guid: b7655ded204c47940b7bef23e2b38157
+  - enabled: 1
+    path: Assets/Collaborateurs/Unj_Dossier/Unj-Scenes/unj_Fin.unity
+    guid: 7fa4bcf470f47544189d3f9b5a64737b
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
