@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
         return Instance;
     }
 
+    public static bool CanSwitch { get; set; } = true;
+
     public static bool TryGetInstance(out GameManager instance)
     {
         instance = Instance;
@@ -47,6 +49,9 @@ public class GameManager : MonoBehaviour
     {
         if (Time.time - lastSwitchTime < SWITCH_COOLDOWN)
             return;
+        if (CanSwitch == false)
+            return;
+
 
         var (leader, follower) = LPDC.Avatar.GetLeaderFollower();
 
@@ -112,7 +117,7 @@ public class GameManager : MonoBehaviour
         }
 #endif
 
-        if (InputManager.Instance.TheSwitch())
+        if (InputManager.Instance.TheSwitch() && CanSwitch == true)
         {
             DoSwitch();
         }

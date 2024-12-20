@@ -244,6 +244,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
 
     public void EnterDialogue(TextAsset inkDialogue, bool isLeaderOverrided = false, LPDC.Avatar.Name leaderOverride = LPDC.Avatar.Name.Dooms)
     {
+        GameManager.CanSwitch = false;
         currentInkDialogue = inkDialogue;
         this.isLeaderOverrided = isLeaderOverrided;
         this.leaderOverride = leaderOverride;
@@ -338,6 +339,7 @@ public class dim_NPCDialogueManager : MonoBehaviour
         // }
 
         // On d�sactive les UI de dialogue et on remet � z�ro les bool�ens.
+        GameManager.CanSwitch = true;
         textPanelNPC.gameObject.SetActive(false);
         textPanelDooms.gameObject.SetActive(false);
         textPanelSora.gameObject.SetActive(false);
